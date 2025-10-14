@@ -1,0 +1,22 @@
+@font-face {
+    font-family: "apple"; /* the name you'll use in CSS */
+    src: url("./fonts/AppleFont/SF-Pro-Display-Bold.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "applethin"; /* the name you'll use in CSS */
+    src: url("./fonts/AppleFont/SF-Pro-Display-Regular.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "applemedium"; /* the name you'll use in CSS */
+    src: url("./fonts/AppleFont/SF-Pro-Display-Medium.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  
+  

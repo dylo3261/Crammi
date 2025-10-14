@@ -1,0 +1,81 @@
+.section-two {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background-color: white;
+    padding: 2rem 0;
+    position: relative;
+  }
+  
+  .anySubject {
+    color: rgb(101, 101, 101);
+    font-size: medium;
+    text-align: center;
+    font-family: applethin, arial, sans-serif;
+  }
+  
+  /* The scrolling container itself */
+  .scrolling-banner {
+    position: relative;
+    width: 75%;
+    overflow: hidden;
+  }
+  
+  /* Moving image strip */
+  .scroll-track {
+    display: flex;
+    width: max-content;
+    animation: scroll-left 35s linear infinite;
+  }
+  
+  /* Banner images */
+  .scroll-track img {
+    height: 130px;
+    width: auto;
+    flex-shrink: 0;
+    object-fit: cover;
+  }
+  
+  /* Left and right fade overlays */
+  .fade-left,
+  .fade-right {
+    position: absolute;
+    top: 0;
+    width: 80px;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+  }
+  
+  .fade-left {
+    left: 0;
+    background: linear-gradient(to right, white 0%, transparent 100%);
+  }
+  
+  .fade-right {
+    right: 0;
+    background: linear-gradient(to left, white 0%, transparent 100%);
+  }
+  
+  /* Infinite scroll animation */
+  @keyframes scroll-left {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-25%); /* move just enough for seamless repeat */
+    }
+  }
+  
+ 
+  
+  /* Responsiveness */
+  @media (max-width: 800px) {
+    .scroll-track img {
+      height: 100px;
+    }
+    .scrolling-banner {
+      width: 90%;
+    }
+  }
+  
