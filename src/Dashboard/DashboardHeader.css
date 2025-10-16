@@ -1,0 +1,12 @@
+.DashboardHeader{
+    height: 6vh;
+    border: 1px solid #ccc;   
+    position:fixed; 
+    width: 100%;
+}
+.sideBar{
+    height: 100%;
+    border: 1px solid #ccc;   
+    position:fixed; 
+    width: 25vh;
+}
