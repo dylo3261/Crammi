@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./Header.css";
+import { Link } from "react-router-dom";
+
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -30,18 +32,18 @@ export default function Header() {
         <h1 className="logo">Logo</h1>
       </div>
 
-      {/* Center Buttons */}
+      {/* Center Links */}
       <div className="header-box center-box">
-        <button className="centerBoxButtons">Product</button>
-        <button className="centerBoxButtons">About</button>
-        <button className="centerBoxButtons">Pricing</button>
+        <Link className="centerBoxButtons">Product</Link>
+        <Link className="centerBoxButtons">About</Link>
+        <Link className="centerBoxButtons">Pricing</Link>
       </div>
 
       {/* Right Buttons */}
       <div className="header-box right-box">
-        <button className="header-btn">Contact Sales</button>
-        <button className="header-btn">Log In</button>
-        <button className="header-btn outline">Use Crammi, It’s Free</button>
+        <Link className="header-btn headerButton">Contact Sales</Link>
+        <Link className="header-btn headerButton">Log In</Link>
+        <Link to='/Dashboard' className="header-btn outline"><span className='useCrammi'>Use Crammi, </span> It’s Free</Link>
       </div>
 
       {/* Hamburger */}
@@ -53,11 +55,11 @@ export default function Header() {
 
       {/* Dropdown */}
       <div ref={dropdownRef} className={`dropdown ${menuOpen ? "show" : ""}`}>
-        <button>Product</button>
-        <button>About</button>
-        <button>Pricing</button>
-        <button>Contact Sales</button>
-        <button>Log In</button>
+        <Link>Product</Link>
+        <Link>About</Link>
+        <Link>Pricing</Link>
+        <Link>Contact Sales</Link>
+        <Link>Log In</Link>
       </div>
     </header>
   );

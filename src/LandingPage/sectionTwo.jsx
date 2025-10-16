@@ -10,10 +10,10 @@ export default function SectionTwo() {
         <div className="scrolling-banner">
           <div className="fade-left"></div>
           <div className="scroll-track">
-            <img src="/CrammiBroad.png" alt="Scrolling Banner" />
-            <img src="/CrammiBroad.png" alt="Scrolling Banner Duplicate 1" />
-            <img src="/CrammiBroad.png" alt="Scrolling Banner Duplicate 2" />
-            <img src="/CrammiBroad.png" alt="Scrolling Banner Duplicate 3" />
+            <img src="/x2.png" alt="Scrolling Banner" />
+            <img src="/x2.png" alt="Scrolling Banner Duplicate 1" />
+            <img src="/x2.png" alt="Scrolling Banner Duplicate 2" />
+            <img src="/x2.png" alt="Scrolling Banner Duplicate 3" />
           </div>
           <div className="fade-right"></div>
         </div>

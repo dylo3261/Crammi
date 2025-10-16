@@ -113,7 +113,8 @@
   }
   
   .googleSignUp:hover {
-    background-color: #ededed;
+    border: 0.7px solid #AB9FF2; /* thicker border on hover */
+    border-radius: 2;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transform: translateY(-1px);
   }

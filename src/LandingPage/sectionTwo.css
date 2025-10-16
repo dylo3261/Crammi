@@ -1,3 +1,6 @@
+*{
+  text-decoration:none;
+}
 .section-two {
     width: 100%;
     display: flex;
@@ -25,7 +28,7 @@
   .scroll-track {
     display: flex;
     width: max-content;
-    animation: scroll-left 35s linear infinite;
+    animation: scroll-left 70s linear infinite;
   }
   
   /* Banner images */

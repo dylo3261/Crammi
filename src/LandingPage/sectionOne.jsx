@@ -1,6 +1,8 @@
 import React from "react";
 import "./sectionOne.css";
-import googleLogo from "../public/GoogleLogo.png"; // put your Google logo in src folder
+import googleLogo from "../../public/GoogleLogo.png"; // put your Google logo in src folder
+import { Link } from "react-router-dom";
+
 
 export default function SectionOne() {
   return (
@@ -16,13 +18,13 @@ export default function SectionOne() {
 
         {/* Buttons container */}
         <div className="buttonGroup">
-        <button className="signUpButton">
+        <Link className="signUpButton">
         <span className="useCrammi">Sign Up,</span> It's Free <span className="arrow">→</span>
-        </button>
-          <button className="googleSignUp">
+        </Link>
+          <Link className="googleSignUp">
             <img src={googleLogo} alt="Google logo" />
             Sign Up with Google
-          </button>
+          </Link>
         </div>
       </div>
 
