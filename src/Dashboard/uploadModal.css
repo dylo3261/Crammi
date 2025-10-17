@@ -1,0 +1,83 @@
+.uploadModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+}
+
+.uploadModalContent {
+  position: relative;
+  background-color: #fff;
+  width: 800px;
+  max-width: 90%;
+  height: 600px;
+  max-height: 90%;
+  border-radius: 10px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* button sticks to bottom */
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+.uploadModalContent h2 {
+  margin-bottom: 2rem;
+}
+
+.uploadDropZone {
+  flex: 1;
+  border: 3px dashed #ccc;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column; /* stack icon and text */
+  align-items: center;    /* horizontal center */
+  justify-content: center; /* vertical center */
+  cursor: pointer;
+  padding: 2rem;
+  margin-bottom: 1rem;
+  transition: background-color 0.2s, border-color 0.2s;
+  gap: 1rem; /* spacing between icon and text */
+}
+
+.uploadDropZone.dragOver {
+  background-color: #f0f0f0;
+  border-color: #AB9FF2;
+}
+.uploadFileText{
+  font-family: apple,arial,sans-serif;
+  margin-bottom: 10px;
+}
+.uploadDropZone p {
+  font-size: 1.2rem;
+  color: #555;
+}
+
+.uploadModalIcon {
+  width: 80px;
+  height: 80px;
+  filter: brightness(0) saturate(100%) invert(40%) sepia(0%) saturate(0%) hue-rotate(151deg) brightness(95%) contrast(90%); 
+
+}
+
+.closeUploadModal {
+  padding: 0.8rem 2rem;
+  background-color: #AB9FF2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  align-self: center; /* center at bottom */
+  margin-top: 1rem;
+}
+
+.closeUploadModal:hover {
+  background-color: #805de1;
+}

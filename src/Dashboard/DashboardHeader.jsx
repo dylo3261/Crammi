@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-
-function uploadBar(activeTab) {
+import UploadModal from './uploadModal.jsx'
+function UploadBar({activeTab,openUpload}) {
     const showUploadExisting = activeTab !== "Files";
-  
     return (
       <>
         <h1 className="bodyActiveTabLabel">{activeTab}</h1>
-        <button className="bodyUploadButton">
+        <button onClick={openUpload}className="bodyUploadButton">
           <img
             className="uploadNewIcon"
             src="https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../releases/preview/2012/png/iconmonstr-plus-6.png&r=255&g=255&b=255"
@@ -37,9 +36,8 @@ function uploadBar(activeTab) {
       </>
     );
   }
-  export default function DashboardHeader() {
+  export default function DashboardHeader({openUpload}) {
     const [activeTab,changeActiveTab]=useState("Exams");
-    
     return (
       <>
         <div className='DashboardHeader'>
@@ -69,7 +67,7 @@ function uploadBar(activeTab) {
         </div>
         <div className='dashboardBody'>
             <div className='dashboardBodyHeader'>
-            {uploadBar(activeTab)}
+            <UploadBar activeTab={activeTab} openUpload={openUpload} />
             </div>
           
         </div>

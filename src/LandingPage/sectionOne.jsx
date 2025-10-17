@@ -18,7 +18,7 @@ export default function SectionOne() {
 
         {/* Buttons container */}
         <div className="buttonGroup">
-        <Link className="signUpButton">
+        <Link className="signUpButton" to='/Dashboard'>
         <span className="useCrammi">Sign Up,</span> It's Free <span className="arrow">→</span>
         </Link>
           <Link className="googleSignUp">
