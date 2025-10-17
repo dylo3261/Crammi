@@ -92,6 +92,7 @@ html, body {
 }
 
 .header-btn.outline:hover {
+  background-color: #a393fc;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transform: translateY(-1.5px);
 }
