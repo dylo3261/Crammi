@@ -1,15 +1,19 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import * as pdfjsLib from "pdfjs-dist/build/pdf.mjs";
+pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.mjs";
+
 import "./uploadModal.css";
 
 export default function UploadModal({ isOpen, close }) {
-  const [dragOver, setDragOver] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [errorKey, setErrorKey] = useState(0);
+  const [dragOver, setDragOver] = useState(false);
+  const [pickPages, setPickPages] = useState(false);
+  const [pdfFile, setPdfFile] = useState(null);
+  const [pdfPages, setPdfPages] = useState([]); // store canvases
+
   const fileInputRef = useRef(null);
 
-  const maxImages = 10;
-
+  // Drag events
   const handleDragOver = (e) => {
     e.preventDefault();
     setDragOver(true);
@@ -19,65 +23,31 @@ export default function UploadModal({ isOpen, close }) {
     setDragOver(false);
   };
 
-  const showError = (msg) => {
-    setErrorMessage("");
-    setTimeout(() => {
-      setErrorMessage(msg);
-      setErrorKey((prev) => prev + 1);
-    }, 10);
-  };
-
+  // Process uploaded files
   const processFiles = (files) => {
-    setErrorMessage(""); // clear previous errors
+    setSelectedFiles((prev) => {
+      const newList = [...prev, ...files];
 
-    setSelectedFiles((prevFiles) => {
-      const newFiles = [];
+      // Only look for PDF in the new files
+      const pdf = files.find((f) => f.type === "application/pdf");
 
-      // Determine existing types
-      const hasPDF = prevFiles.some((f) => f.type === "application/pdf");
-      const hasImages = prevFiles.some((f) => f.type.startsWith("image/"));
-      let newImagesCount = 0;
-      let batchHasPDF = files.some((f) => f.type === "application/pdf");
-      let batchHasImages = files.some((f) => f.type.startsWith("image/"));
-
-      // Reject entire batch if mixing PDF and images
-      if ((batchHasPDF && batchHasImages) || (hasPDF && batchHasImages) || (hasImages && batchHasPDF)) {
-        showError("Cannot mix PDFs with images. No files were added.");
-        return prevFiles;
+      if (pdf) {
+        setPdfFile(pdf);
+        setPickPages(true);
+      } else {
+        // Clear PDF if no PDF uploaded
+        setPdfFile(null);
+        setPdfPages([]);
+        setPickPages(false);
       }
 
-      for (let file of files) {
-        // Only allow PDF or image
-        if (!(file.type.startsWith("image/") || file.type === "application/pdf")) {
-          showError("Only PDF or image files are allowed.");
-          return prevFiles;
-        }
-
-        // Only one PDF allowed
-        if (file.type === "application/pdf" && hasPDF) {
-          showError("Only one PDF can be uploaded.");
-          return prevFiles;
-        }
-
-        // Check max images
-        if (file.type.startsWith("image/")) {
-          newImagesCount++;
-          if (prevFiles.filter((f) => f.type.startsWith("image/")).length + newImagesCount > maxImages) {
-            showError("You can only upload up to 10 images.");
-            return prevFiles;
-          }
-        }
-
-        newFiles.push(file);
-      }
-
-      return [...prevFiles, ...newFiles];
+      return newList;
     });
   };
 
   const handleFileSelect = (e) => {
     processFiles(Array.from(e.target.files));
-    e.target.value = null; // reset input so same files can be re-added
+    e.target.value = null;
   };
 
   const handleDrop = (e) => {
@@ -88,101 +58,139 @@ export default function UploadModal({ isOpen, close }) {
 
   const openFileDialog = () => fileInputRef.current.click();
 
+  // Clear all uploaded files
   const clearFiles = () => {
     setSelectedFiles([]);
-    setErrorMessage("");
+    setPickPages(false); // optional: hide PDF modal
   };
 
+  // Clear only the PDF preview
+  const clearPDF = () => {
+    setPdfPages([]);
+    setPdfFile(null);
+    setPickPages(false);
+  };
+
+  // Remove single file from list
   const removeFile = (name) => {
-    setSelectedFiles((prevFiles) => prevFiles.filter((f) => f.name !== name));
+    setSelectedFiles((prev) => prev.filter((f) => f.name !== name));
   };
 
-  const remainingFiles =
-    maxImages - selectedFiles.filter((f) => f.type.startsWith("image/")).length;
+  // Render PDF to canvases
+  useEffect(() => {
+    if (!pdfFile) return;
+
+    const renderPDF = async () => {
+      const arrayBuffer = await pdfFile.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+      const pages = [];
+
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const viewport = page.getViewport({ scale: 1.5 });
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+
+        await page.render({ canvasContext: context, viewport }).promise;
+        pages.push(canvas.toDataURL());
+      }
+
+      setPdfPages(pages);
+    };
+
+    renderPDF();
+  }, [pdfFile]);
 
   return (
-    <div
-      className="uploadModalOverlay"
-      style={{ display: isOpen ? "flex" : "none" }}
-    >
-      <div className="uploadModalContent">
-        <div className="uploadFileHeader">
-          <h1 className="uploadFileText">Upload Files</h1>
-          <h3 className="filesRemaining">
-            {selectedFiles.some((f) => f.type.startsWith("image/")) && (
-              <>
-                Files Remaining:{" "}
-                <span className="filesRemainingNumber">{remainingFiles}</span>
-              </>
-            )}
-          </h3>
-        </div>
+    <>
+      {/* UPLOAD MODAL */}
+      <div
+        className="uploadModalOverlay"
+        style={{ display: isOpen ? "flex" : "none" }}
+      >
+        <div className="uploadModalContent">
+          <div className="uploadFileHeader">
+            <h1 className="uploadFileText">Upload Files</h1>
+          </div>
 
-        <div
-          className={`uploadDropZone ${dragOver ? "dragOver" : ""}`}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-          onClick={openFileDialog}
-        >
-          <img
-            className="uploadModalIcon"
-            src="https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../releases/preview/2017/png/iconmonstr-upload-21.png&r=0&g=0&b=0"
-            alt="Upload Icon"
-          />
-          <p className='uploadBoxDescription'>Drag and drop or click to upload</p>
-
-          {selectedFiles.length > 0 ? (
-            <ul className="fileList">
-              {selectedFiles.map((file, index) => (
-                <li key={index}>
-                  {file.name}
-                  <span
-                    className="removeFile"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      removeFile(file.name);
-                    }}
-                  >
-                    ×
-                  </span>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p></p>
-          )}
-
-          <input
-            type="file"
-            ref={fileInputRef}
-            multiple
-            onChange={handleFileSelect}
-            style={{ display: "none" }}
-          />
-        </div>
-
-        {errorMessage && (
-          <p key={errorKey} className="duplicateWarning">
-            {errorMessage}
-          </p>
-        )}
-
-        <div className="uploadButton">
-          <button
-            className="closeUploadModal"
-            onClick={() => {
-              close();
-              clearFiles();
-            }}
+          <div
+            className={`uploadDropZone ${dragOver ? "dragOver" : ""}`}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            onClick={openFileDialog}
           >
-            {selectedFiles.length > 0 ? "Cancel" : "Close"}
-          </button>
-          {selectedFiles.length > 0 && (
-            <button className="closeUploadModal">Upload</button>
-          )}
+            <img
+              className="uploadModalIcon"
+              src="https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../releases/preview/2017/png/iconmonstr-upload-21.png&r=0&g=0&b=0"
+              alt="Upload Icon"
+            />
+            <p className="uploadBoxDescription">
+              Drag and drop or click to upload
+            </p>
+
+            {selectedFiles.length > 0 && (
+              <ul className="fileList">
+                {selectedFiles.map((file, i) => (
+                  <li key={i}>
+                    {file.name}
+                    <span
+                      className="removeFile"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        removeFile(file.name);
+                      }}
+                    >
+                      ×
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            <input
+              type="file"
+              multiple
+              ref={fileInputRef}
+              onChange={handleFileSelect}
+              style={{ display: "none" }}
+            />
+          </div>
+
+          <div className="uploadButton">
+            <button
+              className="closeUploadModal"
+              onClick={() => {
+                close();
+                clearFiles();
+              }}
+            >
+              {selectedFiles.length > 0 ? "Cancel" : "Close"}
+            </button>
+
+            {selectedFiles.length > 0 && (
+              <button className="closeUploadModal">Upload</button>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* PDF PAGE GRID MODAL */}
+      <div
+        style={{ display: pickPages ? "flex" : "none" }}
+        className="selectPDFPages"
+      >
+        <button onClick={() => clearPDF()}>Close</button>
+        <div className="pdfGrid">
+          {pdfPages.map((src, i) => (
+            <div key={i} className="pdfPageContainer">
+              <img src={src} alt={`Page ${i + 1}`} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
   );
 }

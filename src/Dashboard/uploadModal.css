@@ -1,3 +1,4 @@
+/* Upload Modal Overlay */
 .uploadModalOverlay {
   position: fixed;
   top: 0;
@@ -11,9 +12,10 @@
   z-index: 3000;
 }
 
+/* Upload Modal Content */
 .uploadModalContent {
   position: relative;
-  background-color: #fff;
+  background-color: #ffffff;
   width: 800px;
   max-width: 90%;
   height: 600px;
@@ -28,6 +30,7 @@
   text-align: center;
 }
 
+/* Header */
 .uploadFileHeader {
   position: relative;
   display: flex;
@@ -42,16 +45,7 @@
   margin: 0;
 }
 
-.filesRemaining {
-  position: absolute;
-  left: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1rem;
-  color: #555;
-  font-family: applemedium,arial,sans-serif;
-}
-
+/* Drag & Drop Zone */
 .uploadDropZone {
   flex: 1;
   min-height: 300px;
@@ -85,6 +79,7 @@
   filter: brightness(0) saturate(100%) invert(40%) sepia(0%) saturate(0%) hue-rotate(151deg) brightness(95%) contrast(90%);
 }
 
+/* File List */
 .fileList {
   list-style-type: none;
   padding: 0;
@@ -104,79 +99,14 @@
   font-size: 1rem;
   color: #333;
   word-break: break-all;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: applemedium, arial, sans-serif;
 }
 
 .fileList li:hover {
   background-color: #f0f0f0;
-}
-
-@keyframes shake {
-  0% { transform: translateX(0); }
-  10% { transform: translateX(-5px); }
-  20% { transform: translateX(5px); }
-  30% { transform: translateX(-5px); }
-  40% { transform: translateX(5px); }
-  50% { transform: translateX(-5px); }
-  60% { transform: translateX(5px); }
-  70% { transform: translateX(-5px); }
-  80% { transform: translateX(5px); }
-  90% { transform: translateX(-5px); }
-  100% { transform: translateX(0); }
-}
-
-.duplicateWarning {
-  color: red;
-  font-size: 0.95rem;
-  margin-top: 0.3rem;
-  font-style: italic;
-  text-align: left;
-  font-family: applethin,arial,sans-serif;
-
-  /* Shake effect for errors */
-  animation: shake 0.5s;
-  animation-timing-function: ease-in-out;
-}
-
-.closeUploadModal {
-  padding: 0.8rem 2rem;
-  background-color: #AB9FF2;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  align-self: center;
-  margin-top: 1rem;
-  transition: background-color 0.2s ease;
-  font-family: applemedium,arial,sans-serif;
-}
-
-.uploadBoxDescription{
-  font-family: applethin,arial,sans-serif;
-}
-
-.closeUploadModal:hover {
-  background-color: #a393fc; 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
-
-.uploadButton {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-.fileList li {
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  margin: 0.3rem 0;
-  padding: 0.6rem 1rem;
-  font-size: 1rem;
-  color: #333;
-  word-break: break-all;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-family: applemedium,arial,sans-serif;
 }
 
 .removeFile {
@@ -189,4 +119,96 @@
 
 .removeFile:hover {
   color: black;
+}
+
+/* Buttons */
+.closeUploadModal {
+  padding: 0.8rem 2rem;
+  background-color: #AB9FF2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  align-self: center;
+  margin-top: 1rem;
+  transition: background-color 0.2s ease;
+  font-family: applemedium, arial, sans-serif;
+}
+
+.closeUploadModal:hover {
+  background-color: #a393fc; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+}
+
+.uploadButton {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.uploadBoxDescription {
+  font-family: applethin, arial, sans-serif;
+}
+.selectPDFPages {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  width: 90%;
+  max-width: 1500px;
+  height: 85%;
+  max-height: 85%;
+  border-radius: 10px;
+  padding: 1rem 1.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;       /* vertical scroll only */
+  overflow-x: hidden;     /* no horizontal scroll */
+  font-family: Arial, sans-serif;
+  text-align: center;
+  z-index: 5000;
+}
+.pdfPageContainer img {
+  width: auto;
+  max-width: 400px;
+  height: auto;
+  border-radius: 6px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: block;   /* still block so hover works */
+  margin: 0;        /* remove centering */
+}
+
+.selectPDFPages button {
+  align-self: flex-end;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+  background-color: #AB9FF2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: applemedium, arial, sans-serif;
+}
+
+/* PDF Grid */
+.pdfGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* bigger pages */
+  gap: 20px;
+  width: 100%;
+}
+
+.pdfPageContainer {
+  overflow: visible; /* hover scale won't cut off */
+}
+
+
+.pdfPageContainer img:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
 }

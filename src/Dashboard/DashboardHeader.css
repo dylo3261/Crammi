@@ -11,6 +11,7 @@ html, body {
     width: 100%; 
     z-index: 1000; 
     background-color: #ffffff; 
+    border-top: none;
   } 
   
   .sideBar {
