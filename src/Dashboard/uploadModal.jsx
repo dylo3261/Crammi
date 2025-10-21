@@ -8,41 +8,44 @@ export default function UploadModal({ isOpen, close }) {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [dragOver, setDragOver] = useState(false);
   const [pickPages, setPickPages] = useState(false);
-  const [pdfFile, setPdfFile] = useState(null);
-  const [pdfPages, setPdfPages] = useState([]); // store canvases
+  const [pdfFiles, setPdfFiles] = useState([]);
+  const [pdfPages, setPdfPages] = useState([]);
+  const [selectedPages, setSelectedPages] = useState([]);
 
   const fileInputRef = useRef(null);
 
+  // Toggle page selection
+  const togglePage = (index) => {
+    setSelectedPages((prev) =>
+      prev.includes(index)
+        ? prev.filter((i) => i !== index) // deselect
+        : [...prev, index] // select
+    );
+  };
+
   // Drag events
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    setDragOver(true);
-  };
-  const handleDragLeave = (e) => {
-    e.preventDefault();
-    setDragOver(false);
-  };
+  const handleDragOver = (e) => { e.preventDefault(); setDragOver(true); };
+  const handleDragLeave = (e) => { e.preventDefault(); setDragOver(false); };
 
   // Process uploaded files
   const processFiles = (files) => {
-    setSelectedFiles((prev) => {
-      const newList = [...prev, ...files];
+    const newSelectedFiles = files.filter(
+      (f) => !selectedFiles.some((file) => file.name === f.name)
+    );
+    if (!newSelectedFiles.length) return;
 
-      // Only look for PDF in the new files
-      const pdf = files.find((f) => f.type === "application/pdf");
+    setSelectedFiles((prev) => [...prev, ...newSelectedFiles]);
 
-      if (pdf) {
-        setPdfFile(pdf);
-        setPickPages(true);
-      } else {
-        // Clear PDF if no PDF uploaded
-        setPdfFile(null);
-        setPdfPages([]);
-        setPickPages(false);
-      }
+    // Filter PDFs
+    const newPDFs = newSelectedFiles.filter(
+      (f) => f.type === "application/pdf" && !pdfFiles.some((p) => p.name === f.name)
+    );
 
-      return newList;
-    });
+    if (newPDFs.length > 0) {
+      setPdfFiles((prev) => [...prev, ...newPDFs]);
+      setSelectedPages([]); // reset selections for new PDFs
+      setPickPages(true);
+    }
   };
 
   const handleFileSelect = (e) => {
@@ -61,55 +64,63 @@ export default function UploadModal({ isOpen, close }) {
   // Clear all uploaded files
   const clearFiles = () => {
     setSelectedFiles([]);
-    setPickPages(false); // optional: hide PDF modal
+    setPickPages(false);
+    setPdfFiles([]);
+    setPdfPages([]);
+    setSelectedPages([]);
   };
 
   // Clear only the PDF preview
   const clearPDF = () => {
     setPdfPages([]);
-    setPdfFile(null);
+    setPdfFiles([]);
     setPickPages(false);
+    setSelectedPages([]); // reset selected pages
   };
 
   // Remove single file from list
   const removeFile = (name) => {
     setSelectedFiles((prev) => prev.filter((f) => f.name !== name));
+    setPdfFiles((prev) => prev.filter((f) => f.name !== name));
+    setPdfPages((prev) => prev.filter((p) => p.name !== name));
+    setSelectedPages([]); // reset selections when a PDF is removed
   };
 
-  // Render PDF to canvases
+  // Render PDFs to canvases
   useEffect(() => {
-    if (!pdfFile) return;
+    if (pdfFiles.length === 0) {
+      setPdfPages([]);
+      return;
+    }
 
-    const renderPDF = async () => {
-      const arrayBuffer = await pdfFile.arrayBuffer();
-      const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
-      const pages = [];
+    const renderPDFs = async () => {
+      const allPages = [];
+      for (let pdfFile of pdfFiles) {
+        const arrayBuffer = await pdfFile.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
 
-      for (let i = 1; i <= pdf.numPages; i++) {
-        const page = await pdf.getPage(i);
-        const viewport = page.getViewport({ scale: 1.5 });
-        const canvas = document.createElement("canvas");
-        const context = canvas.getContext("2d");
-        canvas.width = viewport.width;
-        canvas.height = viewport.height;
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const viewport = page.getViewport({ scale: 1.5 });
+          const canvas = document.createElement("canvas");
+          const context = canvas.getContext("2d");
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
 
-        await page.render({ canvasContext: context, viewport }).promise;
-        pages.push(canvas.toDataURL());
+          await page.render({ canvasContext: context, viewport }).promise;
+          allPages.push({ src: canvas.toDataURL(), name: pdfFile.name, pageNumber: i });
+        }
       }
-
-      setPdfPages(pages);
+      setPdfPages(allPages);
     };
 
-    renderPDF();
-  }, [pdfFile]);
+    renderPDFs();
+  }, [pdfFiles]);
 
   return (
     <>
       {/* UPLOAD MODAL */}
-      <div
-        className="uploadModalOverlay"
-        style={{ display: isOpen ? "flex" : "none" }}
-      >
+      <div className="uploadModalOverlay" style={{ display: isOpen ? "flex" : "none" }}>
         <div className="uploadModalContent">
           <div className="uploadFileHeader">
             <h1 className="uploadFileText">Upload Files</h1>
@@ -138,10 +149,7 @@ export default function UploadModal({ isOpen, close }) {
                     {file.name}
                     <span
                       className="removeFile"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        removeFile(file.name);
-                      }}
+                      onClick={(e) => { e.stopPropagation(); removeFile(file.name); }}
                     >
                       ×
                     </span>
@@ -182,13 +190,25 @@ export default function UploadModal({ isOpen, close }) {
         style={{ display: pickPages ? "flex" : "none" }}
         className="selectPDFPages"
       >
-        <button onClick={() => clearPDF()}>Close</button>
+        <h1 className='selectPageHeader'>Select Pages</h1>
+
         <div className="pdfGrid">
-          {pdfPages.map((src, i) => (
-            <div key={i} className="pdfPageContainer">
-              <img src={src} alt={`Page ${i + 1}`} />
+          {pdfPages.map((page, i) => (
+            <div
+              key={i}
+              className={`pdfPageContainer ${selectedPages.includes(i) ? "selected" : ""}`}
+              onClick={() => togglePage(i)}
+            >
+              <div className="pdfPageLabel">
+                {page.name} - Page {page.pageNumber}
+              </div>
+              <img src={page.src} alt={`${page.name} - Page ${page.pageNumber}`} />
             </div>
           ))}
+        </div>
+
+        <div className='selectButtonsContainer'>
+          <button className="selectButtons" onClick={clearPDF}>Close</button>
         </div>
       </div>
     </>

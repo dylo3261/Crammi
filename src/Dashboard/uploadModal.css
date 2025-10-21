@@ -26,7 +26,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  font-family: Arial, sans-serif;
+  font-family: applethin,Arial, sans-serif;
   text-align: center;
 }
 
@@ -133,11 +133,17 @@
   margin-top: 1rem;
   transition: background-color 0.2s ease;
   font-family: applemedium, arial, sans-serif;
+  align-content: center;
 }
 
 .closeUploadModal:hover {
   background-color: #a393fc; 
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+}
+
+.selectPageHeader{
+  display:inline;
+  letter-spacing: 1px;
 }
 
 .uploadButton {
@@ -150,6 +156,8 @@
 .uploadBoxDescription {
   font-family: applethin, arial, sans-serif;
 }
+
+/* PDF Page Grid Modal */
 .selectPDFPages {
   position: fixed;
   top: 50%;
@@ -165,50 +173,98 @@
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
   display: flex;
   flex-direction: column;
-  overflow-y: auto;       /* vertical scroll only */
-  overflow-x: hidden;     /* no horizontal scroll */
-  font-family: Arial, sans-serif;
+  overflow-y: hidden; /* we'll scroll the grid separately */
+  font-family: applethin,Arial, sans-serif;
   text-align: center;
   z-index: 5000;
 }
-.pdfPageContainer img {
+
+/* Button Container at Bottom */
+.selectButtonsContainer {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
   width: auto;
-  max-width: 400px;
-  height: auto;
-  border-radius: 6px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-  display: block;   /* still block so hover works */
-  margin: 0;        /* remove centering */
 }
 
-.selectPDFPages button {
-  align-self: flex-end;
-  padding: 0.5rem 1rem;
-  margin-bottom: 1rem;
+.selectButtonsContainer .selectButtons {
+  padding: 0.8rem 2rem;
   background-color: #AB9FF2;
   color: white;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   font-family: applemedium, arial, sans-serif;
+  transition: all 0.2s ease;
+}
+
+.selectButtonsContainer .selectButtons:hover {
+  background-color: #a393fc; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* PDF Grid */
 .pdfGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* bigger pages */
-  gap: 20px;
-  width: 100%;
+  grid-template-columns: repeat(auto-fill, minmax(400px, max-content)); 
+  gap: 20px;  
+  padding: 16px;
+  overflow-y: auto;
+  max-height: 70vh;
+  justify-content: start; /* left align last row */
 }
 
+/* Individual PDF page container */
 .pdfPageContainer {
-  overflow: visible; /* hover scale won't cut off */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #f7f7f7;
+  padding: 10px; 
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  overflow: visible;
+
+  /* Prevent layout shift on border */
+  border: 4px solid transparent; /* invisible border by default */
+  box-sizing: border-box;
 }
 
 
-.pdfPageContainer img:hover {
-  transform: scale(1.02);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+/* Selected state (click to stay) */
+.pdfPageContainer.selected {
+  border: 4px solid #AB99F2;
+}
+
+/* Images of PDF pages */
+.pdfPageContainer img {
+  width: 100%;    
+  max-width: 450px; 
+  height: auto;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+
+
+/* PDF page label */
+.pdfPageLabel {
+  font-size: 13px; 
+  margin-bottom: 8px;
+  text-align: center;
+  word-break: break-word;
+}
+
+
+
+/* Selected state (click to stay) */
+.pdfPageContainer.selected {
+  border: 4px solid #AB99F2;
+  border-radius: 8px;
 }
