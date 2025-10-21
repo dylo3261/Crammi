@@ -18,8 +18,8 @@ export default function UploadModal({ isOpen, close }) {
   const togglePage = (index) => {
     setSelectedPages((prev) =>
       prev.includes(index)
-        ? prev.filter((i) => i !== index) // deselect
-        : [...prev, index] // select
+        ? prev.filter((i) => i !== index)
+        : [...prev, index]
     );
   };
 
@@ -27,23 +27,32 @@ export default function UploadModal({ isOpen, close }) {
   const handleDragOver = (e) => { e.preventDefault(); setDragOver(true); };
   const handleDragLeave = (e) => { e.preventDefault(); setDragOver(false); };
 
+  // Clear only the PDF preview
+  const clearPDF = () => {
+    setPdfPages([]);
+    setPdfFiles([]);
+    setPickPages(false);
+    setSelectedPages([]);
+  };
+
   // Process uploaded files
   const processFiles = (files) => {
+    // Filter non-PDF files
     const newSelectedFiles = files.filter(
-      (f) => !selectedFiles.some((file) => file.name === f.name)
+      (f) =>
+        !selectedFiles.some((file) => file.name === f.name) &&
+        f.type !== "application/pdf"
     );
-    if (!newSelectedFiles.length) return;
 
-    setSelectedFiles((prev) => [...prev, ...newSelectedFiles]);
+    if (newSelectedFiles.length > 0) {
+      setSelectedFiles((prev) => [...prev, ...newSelectedFiles]);
+    }
 
     // Filter PDFs
-    const newPDFs = newSelectedFiles.filter(
-      (f) => f.type === "application/pdf" && !pdfFiles.some((p) => p.name === f.name)
-    );
-
+    const newPDFs = files.filter((f) => f.type === "application/pdf");
     if (newPDFs.length > 0) {
-      setPdfFiles((prev) => [...prev, ...newPDFs]);
-      setSelectedPages([]); // reset selections for new PDFs
+      clearPDF(); // clear old PDFs before adding new
+      setPdfFiles(newPDFs);
       setPickPages(true);
     }
   };
@@ -64,18 +73,7 @@ export default function UploadModal({ isOpen, close }) {
   // Clear all uploaded files
   const clearFiles = () => {
     setSelectedFiles([]);
-    setPickPages(false);
-    setPdfFiles([]);
-    setPdfPages([]);
-    setSelectedPages([]);
-  };
-
-  // Clear only the PDF preview
-  const clearPDF = () => {
-    setPdfPages([]);
-    setPdfFiles([]);
-    setPickPages(false);
-    setSelectedPages([]); // reset selected pages
+    clearPDF();
   };
 
   // Remove single file from list
@@ -83,7 +81,7 @@ export default function UploadModal({ isOpen, close }) {
     setSelectedFiles((prev) => prev.filter((f) => f.name !== name));
     setPdfFiles((prev) => prev.filter((f) => f.name !== name));
     setPdfPages((prev) => prev.filter((p) => p.name !== name));
-    setSelectedPages([]); // reset selections when a PDF is removed
+    setSelectedPages([]);
   };
 
   // Render PDFs to canvases
@@ -117,6 +115,27 @@ export default function UploadModal({ isOpen, close }) {
     renderPDFs();
   }, [pdfFiles]);
 
+  const addSelectedPagesToFiles = () => {
+    const newFiles = selectedPages.map((index) => {
+      const page = pdfPages[index];
+      const arr = page.src.split(",");
+      const mime = arr[0].match(/:(.*?);/)[1];
+      const bstr = atob(arr[1]);
+      let n = bstr.length;
+      const u8arr = new Uint8Array(n);
+
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+
+      return new File([u8arr], `${page.name}-page${page.pageNumber}.png`, { type: mime });
+    });
+
+    setSelectedFiles((prev) => [...prev, ...newFiles]);
+    setPickPages(false);
+    setSelectedPages([]);
+  };
+
   return (
     <>
       {/* UPLOAD MODAL */}
@@ -138,9 +157,7 @@ export default function UploadModal({ isOpen, close }) {
               src="https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../releases/preview/2017/png/iconmonstr-upload-21.png&r=0&g=0&b=0"
               alt="Upload Icon"
             />
-            <p className="uploadBoxDescription">
-              Drag and drop or click to upload
-            </p>
+            <p className="uploadBoxDescription">Drag and drop or click to upload</p>
 
             {selectedFiles.length > 0 && (
               <ul className="fileList">
@@ -190,7 +207,7 @@ export default function UploadModal({ isOpen, close }) {
         style={{ display: pickPages ? "flex" : "none" }}
         className="selectPDFPages"
       >
-        <h1 className='selectPageHeader'>Select Pages</h1>
+        <h1 className='selectPageHeader'>Select PDF Pages</h1>
 
         <div className="pdfGrid">
           {pdfPages.map((page, i) => (
@@ -209,6 +226,13 @@ export default function UploadModal({ isOpen, close }) {
 
         <div className='selectButtonsContainer'>
           <button className="selectButtons" onClick={clearPDF}>Close</button>
+          <button
+            className="selectButtons"
+            style={{ display: selectedPages.length > 0 ? 'flex' : 'none' }}
+            onClick={addSelectedPagesToFiles}
+          >
+            Select Pages
+          </button>
         </div>
       </div>
     </>
