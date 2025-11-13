@@ -8,11 +8,19 @@ export default function UploadModal({ isOpen, close }) {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [dragOver, setDragOver] = useState(false);
   const [pickPages, setPickPages] = useState(false);
+  const [isWarning,setWarning]=useState(false);
   const [pdfFiles, setPdfFiles] = useState([]);
   const [pdfPages, setPdfPages] = useState([]);
   const [selectedPages, setSelectedPages] = useState([]);
+  const [numSelectedPages,setnNumSelectedPages]=useState(0);
 
+  const [remainingFiles,setRemainingFiles]=useState(10);
   const fileInputRef = useRef(null);
+
+  
+  //edge case variables
+  // let numFilesRemaining=10;
+
 
   // Toggle page selection
   const togglePage = (index) => {
@@ -39,19 +47,28 @@ export default function UploadModal({ isOpen, close }) {
   const processFiles = (files) => {
     // Filter non-PDF files
     const newSelectedFiles = files.filter(
-      (f) =>
-        !selectedFiles.some((file) => file.name === f.name) &&
-        f.type !== "application/pdf"
+      (f) =>{
+       
+          if(f.type.startsWith("image/")){
+            return true;
+          }
+        
+        setWarning(true);
+        return false;
+    }
     );
 
     if (newSelectedFiles.length > 0) {
       setSelectedFiles((prev) => [...prev, ...newSelectedFiles]);
+      setRemainingFiles((prev) => prev - newSelectedFiles.length);
+      setWarning(false);
     }
 
     // Filter PDFs
     const newPDFs = files.filter((f) => f.type === "application/pdf");
     if (newPDFs.length > 0) {
       clearPDF(); // clear old PDFs before adding new
+      setWarning(false);
       setPdfFiles(newPDFs);
       setPickPages(true);
     }
@@ -82,6 +99,7 @@ export default function UploadModal({ isOpen, close }) {
     setPdfFiles((prev) => prev.filter((f) => f.name !== name));
     setPdfPages((prev) => prev.filter((p) => p.name !== name));
     setSelectedPages([]);
+    setRemainingFiles((prev)=>prev+1);
   };
 
   // Render PDFs to canvases
@@ -132,17 +150,32 @@ export default function UploadModal({ isOpen, close }) {
     });
 
     setSelectedFiles((prev) => [...prev, ...newFiles]);
+    setRemainingFiles((prev) => prev - newFiles.length);
     setPickPages(false);
     setSelectedPages([]);
   };
-
   return (
     <>
       {/* UPLOAD MODAL */}
       <div className="uploadModalOverlay" style={{ display: isOpen ? "flex" : "none" }}>
         <div className="uploadModalContent">
           <div className="uploadFileHeader">
-            <h1 className="uploadFileText">Upload Files</h1>
+            <h1 className="uploadFileText">Upload Files <div className="tooltipWrapper">
+    <img
+      className="infoIcon"
+      src="https://uxwing.com/wp-content/themes/uxwing/download/signs-and-symbols/info-circle-icon.png"
+      alt="info about remaining files"
+    />
+    <span className="tooltipBox">*Your account plan limits the number of files <br/> you can upload in a single batch.</span>
+  </div></h1>
+            <h4 className="filesRemaining">
+  <span><span className="asterik"> * </span>Files Remaining: {remainingFiles}</span>
+
+ 
+</h4>
+
+
+
           </div>
 
           <div
@@ -157,7 +190,10 @@ export default function UploadModal({ isOpen, close }) {
               src="https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../releases/preview/2017/png/iconmonstr-upload-21.png&r=0&g=0&b=0"
               alt="Upload Icon"
             />
-            <p className="uploadBoxDescription">Drag and drop or click to upload</p>
+            <p className='warning'style={{ display: isWarning ? "block" : "none" }} >Please make sure to upload either photos or PDFs.</p>
+
+            <p className="uploadBoxDescription">Drag & drop or click to upload </p>
+            <p className="fileTypeSpecify">PDF and Image file types</p>
 
             {selectedFiles.length > 0 && (
               <ul className="fileList">
@@ -188,6 +224,8 @@ export default function UploadModal({ isOpen, close }) {
             <button
               className="closeUploadModal"
               onClick={() => {
+                setWarning(false);
+                setRemainingFiles(10);
                 close();
                 clearFiles();
               }}
@@ -198,7 +236,9 @@ export default function UploadModal({ isOpen, close }) {
             {selectedFiles.length > 0 && (
               <button className="closeUploadModal">Upload</button>
             )}
+            
           </div>
+
         </div>
       </div>
 
@@ -208,13 +248,25 @@ export default function UploadModal({ isOpen, close }) {
         className="selectPDFPages"
       >
         <h1 className='selectPageHeader'>Select PDF Pages</h1>
+        <h4>Files Selected: {numSelectedPages}</h4>
+        <h4>Files Remaining: {remainingFiles}</h4>
+
 
         <div className="pdfGrid">
           {pdfPages.map((page, i) => (
             <div
               key={i}
               className={`pdfPageContainer ${selectedPages.includes(i) ? "selected" : ""}`}
-              onClick={() => togglePage(i)}
+              onClick={() => {
+                togglePage(i);
+                if(selectedPages.includes(i)){
+                  setnNumSelectedPages((prev)=>prev - 1);
+                } 
+                else{
+                  setnNumSelectedPages((prev)=>prev + 1);
+                }
+              
+              }}
             >
               <div className="pdfPageLabel">
                 {page.name} - Page {page.pageNumber}
@@ -225,7 +277,7 @@ export default function UploadModal({ isOpen, close }) {
         </div>
 
         <div className='selectButtonsContainer'>
-          <button className="selectButtons" onClick={clearPDF}>Close</button>
+          <button className="selectButtons" onClick={()=>{clearPDF()}}>Close</button>
           <button
             className="selectButtons"
             style={{ display: selectedPages.length > 0 ? 'flex' : 'none' }}
