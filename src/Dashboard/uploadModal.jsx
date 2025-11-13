@@ -52,7 +52,7 @@ export default function UploadModal({ isOpen, close }) {
           if(f.type.startsWith("image/")){
             return true;
           }
-        
+        // alert("Please make sure to upload either photos or PDFs.");
         setWarning(true);
         return false;
     }
@@ -94,13 +94,14 @@ export default function UploadModal({ isOpen, close }) {
   };
 
   // Remove single file from list
-  const removeFile = (name) => {
-    setSelectedFiles((prev) => prev.filter((f) => f.name !== name));
-    setPdfFiles((prev) => prev.filter((f) => f.name !== name));
-    setPdfPages((prev) => prev.filter((p) => p.name !== name));
+  const removeFile = (index) => {
+    setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
+    setPdfFiles((prev) => prev.filter((_, i) => i !== index));
+    setPdfPages((prev) => prev.filter((_, i) => i !== index));
     setSelectedPages([]);
-    setRemainingFiles((prev)=>prev+1);
+    setRemainingFiles((prev) => prev + 1);
   };
+  
 
   // Render PDFs to canvases
   useEffect(() => {
@@ -185,30 +186,35 @@ export default function UploadModal({ isOpen, close }) {
             onDrop={handleDrop}
             onClick={openFileDialog}
           >
+                        <p className='warning'style={{ display: isWarning ? "block" : "none" }} >Please make sure to upload either photos or PDFs.</p>
+          
             <img
               className="uploadModalIcon"
               src="https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../releases/preview/2017/png/iconmonstr-upload-21.png&r=0&g=0&b=0"
               alt="Upload Icon"
             />
-            <p className='warning'style={{ display: isWarning ? "block" : "none" }} >Please make sure to upload either photos or PDFs.</p>
 
             <p className="uploadBoxDescription">Drag & drop or click to upload </p>
             <p className="fileTypeSpecify">PDF and Image file types</p>
 
             {selectedFiles.length > 0 && (
               <ul className="fileList">
-                {selectedFiles.map((file, i) => (
-                  <li key={i}>
-                    {file.name}
-                    <span
-                      className="removeFile"
-                      onClick={(e) => { e.stopPropagation(); removeFile(file.name); }}
-                    >
-                      ×
-                    </span>
-                  </li>
-                ))}
-              </ul>
+              {selectedFiles.map((file, i) => (
+                <li key={i}>
+                  {file.name}
+                  <span
+                    className="removeFile"
+                    onClick={(e) => { 
+                      e.stopPropagation(); 
+                      removeFile(i); 
+                    }}
+                  >
+                    ×
+                  </span>
+                </li>
+              ))}
+            </ul>
+            
             )}
 
             <input

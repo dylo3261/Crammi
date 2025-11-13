@@ -16,7 +16,7 @@
 .uploadModalContent {
   position: relative;
   background-color: #ffffff;
-  width: 550px;
+  width: 600px;
   max-width: 90%;
   height: 550px;
   max-height: 90%;
@@ -70,7 +70,6 @@
   flex: 1;
   min-height: 300px;
   border: 2.5px dashed #ccc;
-  border-radius: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -154,13 +153,12 @@
 }
 
 .fileList li {
-  background-color: #f9f9f9;
+  background-color: #ffffff;
   border: 1px solid #ddd;
-  border-radius: 6px;
   margin: 0.3rem 0;
-  padding: 0.6rem 1rem;
-  font-size: 1rem;
-  color: #333;
+  padding: 0.2rem 1rem;
+  font-size: .9rem;
+  color: #555;
   word-break: break-all;
   display: flex;
   justify-content: space-between;
@@ -312,6 +310,8 @@
   font-family: applethin,arial,sans-serif;
   font-style: italic;
   width: 100%;
+  margin-top: -2vh;
+  margin-bottom: -.8vh;
 }
 
 /* Selected state (click to stay) */
