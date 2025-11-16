@@ -18,8 +18,8 @@
   background-color: #ffffff;
   width: 600px;
   max-width: 90%;
-  height: 550px;
-  max-height: 90%;
+  height: auto;
+  max-height: 550px;
   padding: 1.5rem;
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
   display: flex;
@@ -61,6 +61,7 @@
 
   padding: 0.4rem 1rem; 
   text-align: left;
+  
 }
 
 
@@ -82,6 +83,13 @@
   transition: background-color 0.2s, border-color 0.2s;
   background-color: #f9f7f7;
 }
+@media (max-width: 400px) {
+  .uploadDropZone {
+    padding: 1rem;
+    border-width: 2px;
+  }
+}
+
 .asterik{
   color: red;
 }
@@ -94,7 +102,48 @@
   font-size: 1.2rem;
   color: #555;
 } */
+.addFileButton {
+  border: none;
+  background: transparent;
+  color: #007bff;     /* link blue */
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0;         /* remove button padding */
+  text-decoration: none; 
+  text-decoration: underline;
+  font-style: italic;
 
+
+}
+
+.addAnotherFile{
+  display:flex;
+  margin-bottom: 0.5vh;
+  font-family: applethin,Arial, sans-serif;
+  font-size: 13.5px ;
+  font-style: italic;
+
+  
+}
+
+
+
+.fileGraph{
+  font-family: applemedium,arial,sans-serif;
+  font-size: 14px;
+  display:flex;
+  border: 2px;
+  border-bottom: 2px solid #cbcbcb;
+  margin-bottom: 0.5vh;
+  margin-top: 0.5vh;
+}
+
+.bottomHeader{
+  border: 2px;
+  border-bottom: 2px solid #cbcbcb;
+  margin-bottom: 0.5vh;
+  margin-top: 0.5vh;
+}
 .uploadModalIcon {
   width: 80px;
   height: 80px;
@@ -150,6 +199,8 @@
   max-height: 250px;
   overflow-y: auto;
   text-align: left;
+  align-self: flex-start; /* <-- ensures it sticks to top */
+
 }
 
 .fileList li {
@@ -178,10 +229,48 @@
   font-size: 1.2rem;
 }
 
-.removeFile:hover {
-  color: black;
+
+
+.fileList li {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
 }
 
+.fileName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; /* long filenames won’t wrap */
+  
+}
+
+.chosenFileSize {
+  margin-left: auto; /* pushes size + X to the right */
+  margin-right: 0.5rem; /* small spacing before X */
+  white-space: nowrap;
+  flex-shrink: 0; /* prevent shrinking */
+  color:black;
+  font-size: 0.9rem;
+  font-family: apple,arial,sans-serif;
+  font-size: 13px;
+}
+.colorizeFileSize{
+  color:#555;
+  font-family: applethin,arial,sans-serif;
+}
+
+.removeFile {
+  cursor: pointer;
+  flex-shrink: 0;
+  color: red;
+}
+
+
+.fileSizeGraph{
+  margin-left: 16.5vw;
+  font-family: applemedium,arial,sans-serif;
+  font-size: 14px;
+}
 /* Buttons */
 .closeUploadModal {
   padding: 0.8rem 2rem;
@@ -190,12 +279,16 @@
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  align-self: center;
-  margin-top: 1rem;
   transition: background-color 0.2s ease;
   font-family: applemedium, arial, sans-serif;
-  align-content: center;
+
+  /* layout adjustments */
+  display: inline-flex;          /* good for centering content inside button */
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;              /* spacing from previous element */
 }
+
 
 .closeUploadModal:hover {
   background-color: #a393fc; 
@@ -212,6 +305,11 @@
   justify-content: center;
   gap: 1rem;
   margin-top: 1rem;
+
+  /* prevent flex-grow from stretching buttons */
+  flex-shrink: 0;
+  flex-grow: 0;
+  align-self: center;  /* center horizontally in modal */
 }
 
 .uploadBoxDescription {
@@ -246,6 +344,8 @@
   font-family: applethin,Arial, sans-serif;
   text-align: center;
   z-index: 5000;
+  padding-bottom: 4rem; /* give space for buttons */
+
 }
 
 /* Button Container at Bottom */
@@ -258,6 +358,7 @@
   left: 50%;
   transform: translateX(-50%);
   width: auto;
+  z-index: 10;
 }
 
 .selectButtonsContainer .selectButtons {
@@ -285,6 +386,7 @@
   overflow-y: auto;
   max-height: 70vh;
   justify-content: start; /* left align last row */
+  flex:1;
 }
 
 /* Individual PDF page container */
@@ -301,6 +403,22 @@
   /* Prevent layout shiftu on border */
   border: 4px solid transparent; /* invisible border by default */
   box-sizing: border-box;
+}
+@media (max-width: 600px) {
+  .pdfGrid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .pdfPageContainer img {
+    max-width: 100%;  /* fill container */
+    height: auto;
+  }
+
+  .pdfPageContainer {
+    padding: 6px;
+  }
 }
 
 .warning{

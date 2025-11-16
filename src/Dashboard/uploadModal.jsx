@@ -21,6 +21,17 @@ export default function UploadModal({ isOpen, close }) {
   //edge case variables
   // let numFilesRemaining=10;
 
+  //file conversion for sizing
+  const formatFileSize = (size) => {
+    if (size < 1024) return size;
+    else if (size < 1024 * 1024) return (size / 1024).toFixed(1) ;
+    else return (size / (1024 * 1024)).toFixed(1) ;
+  };
+  const formatFileSizeDecoration = (size) => {
+    if (size < 1024) return" B";
+    else if (size < 1024 * 1024) return" KB";
+    else return " MB";
+  };
 
   // Toggle page selection
   const togglePage = (index) => {
@@ -53,7 +64,7 @@ export default function UploadModal({ isOpen, close }) {
             return true;
           }
         // alert("Please make sure to upload either photos or PDFs.");
-        setWarning(true);
+        if(f.type !== "application/pdf")setWarning(true);
         return false;
     }
     );
@@ -96,7 +107,7 @@ export default function UploadModal({ isOpen, close }) {
   // Remove single file from list
   const removeFile = (index) => {
     setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
-    setPdfFiles((prev) => prev.filter((_, i) => i !== index));
+    setPdfFiles((prev) => prev+1);
     setPdfPages((prev) => prev.filter((_, i) => i !== index));
     setSelectedPages([]);
     setRemainingFiles((prev) => prev + 1);
@@ -161,70 +172,92 @@ export default function UploadModal({ isOpen, close }) {
       <div className="uploadModalOverlay" style={{ display: isOpen ? "flex" : "none" }}>
         <div className="uploadModalContent">
           <div className="uploadFileHeader">
-            <h1 className="uploadFileText">Upload Files <div className="tooltipWrapper">
-    <img
-      className="infoIcon"
-      src="https://uxwing.com/wp-content/themes/uxwing/download/signs-and-symbols/info-circle-icon.png"
-      alt="info about remaining files"
-    />
-    <span className="tooltipBox">*Your account plan limits the number of files <br/> you can upload in a single batch.</span>
-  </div></h1>
+            <h1 className="uploadFileText">
+              Upload Files
+              <div className="tooltipWrapper">
+                <img
+                  className="infoIcon"
+                  src="https://uxwing.com/wp-content/themes/uxwing/download/signs-and-symbols/info-circle-icon.png"
+                  alt="info about remaining files"
+                />
+                <span className="tooltipBox">
+                  *Your account plan limits the number of files <br /> you can upload in a single batch.
+                </span>
+              </div>
+            </h1>
             <h4 className="filesRemaining">
-  <span><span className="asterik"> * </span>Files Remaining: {remainingFiles}</span>
-
- 
-</h4>
-
+              <span><span className="asterik"> * </span>Files Remaining: {remainingFiles}</span>
+            </h4>
+        {/* file selection that appears once you uplaod a file */}
+            
+        
+          </div>
+          <div className="addAnotherFile " style={{display: selectedFiles.length>0 ? "flex" : "none"}}>
+          <p >Add files via Drag & Drop or <span><button className="addFileButton" 
+          onClick={openFileDialog} >Browse Files</button></span></p>
 
 
           </div>
 
-          <div
-            className={`uploadDropZone ${dragOver ? "dragOver" : ""}`}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-            onClick={openFileDialog}
-          >
-                        <p className='warning'style={{ display: isWarning ? "block" : "none" }} >Please make sure to upload either photos or PDFs.</p>
-          
-            <img
-              className="uploadModalIcon"
-              src="https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../releases/preview/2017/png/iconmonstr-upload-21.png&r=0&g=0&b=0"
-              alt="Upload Icon"
-            />
-
-            <p className="uploadBoxDescription">Drag & drop or click to upload </p>
-            <p className="fileTypeSpecify">PDF and Image file types</p>
-
-            {selectedFiles.length > 0 && (
-              <ul className="fileList">
+          <div className="fileGraph" style={{display: selectedFiles.length>0 ? "flex" : "none"}}>
+              <p>Name</p> <p className="fileSizeGraph">Size</p>
+           </div>
+          {/* Drag & Drop Zone */}
+          {selectedFiles.length === 0 && (
+            <div
+              className={`uploadDropZone ${dragOver ? "dragOver" : ""}`}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              onClick={openFileDialog}
+            >
+              <p className="warning" style={{ display: isWarning ? "block" : "none" }}>
+                Please make sure to upload either photos or PDFs.
+              </p>
+  
+              <img
+                className="uploadModalIcon"
+                src="https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../releases/preview/2017/png/iconmonstr-upload-21.png&r=0&g=0&b=0"
+                alt="Upload Icon"
+              />
+  
+              <p className="uploadBoxDescription">Drag & drop or click to upload</p>
+              <p className="fileTypeSpecify">PDF and Image file types</p>
+  
+             
+            </div>
+          )}
+           <input
+                type="file"
+                multiple
+                ref={fileInputRef}
+                onChange={handleFileSelect}
+                style={{ display: "none" }}
+              />
+          {/* File List */}
+          {selectedFiles.length > 0 && (
+            
+            <ul className="fileList">
               {selectedFiles.map((file, i) => (
-                <li key={i}>
-                  {file.name}
-                  <span
-                    className="removeFile"
-                    onClick={(e) => { 
-                      e.stopPropagation(); 
-                      removeFile(i); 
-                    }}
-                  >
-                    ×
-                  </span>
-                </li>
+              <li key={i}>
+              <span className="fileName">{file.name}</span>
+              <span className="chosenFileSize">{formatFileSize(file.size)} <span className="colorizeFileSize">{formatFileSizeDecoration(file.size)}</span></span>
+              <span
+                className="removeFile"
+                onClick={(e) => { 
+                  e.stopPropagation(); 
+                  removeFile(i); 
+                }}
+              >
+                ×
+              </span>
+            </li>
+            
+             
               ))}
             </ul>
-            
-            )}
-
-            <input
-              type="file"
-              multiple
-              ref={fileInputRef}
-              onChange={handleFileSelect}
-              style={{ display: "none" }}
-            />
-          </div>
+          )}
+          <div className="bottomHeader" style={{display: selectedFiles.length>0 ? "flex" : "none"}}></div>
 
           <div className="uploadButton">
             <button
@@ -238,26 +271,23 @@ export default function UploadModal({ isOpen, close }) {
             >
               {selectedFiles.length > 0 ? "Cancel" : "Close"}
             </button>
-
+  
             {selectedFiles.length > 0 && (
-              <button className="closeUploadModal">Upload</button>
+              <button className="closeUploadModal" onClick={openFileDialog}>Upload</button>
             )}
-            
           </div>
-
         </div>
       </div>
-
+  
       {/* PDF PAGE GRID MODAL */}
       <div
         style={{ display: pickPages ? "flex" : "none" }}
         className="selectPDFPages"
       >
-        <h1 className='selectPageHeader'>Select PDF Pages</h1>
-        <h4>Files Selected: {numSelectedPages}</h4>
-        <h4>Files Remaining: {remainingFiles}</h4>
-
-
+        <h1 className="selectPageHeader">Select PDF Pages</h1>
+        <h4><span className="asterik">* </span>Files Selected: {numSelectedPages}</h4>
+        <h4><span className="asterik">* </span>Files Remaining: {remainingFiles}</h4>
+       
         <div className="pdfGrid">
           {pdfPages.map((page, i) => (
             <div
@@ -265,13 +295,11 @@ export default function UploadModal({ isOpen, close }) {
               className={`pdfPageContainer ${selectedPages.includes(i) ? "selected" : ""}`}
               onClick={() => {
                 togglePage(i);
-                if(selectedPages.includes(i)){
-                  setnNumSelectedPages((prev)=>prev - 1);
-                } 
-                else{
-                  setnNumSelectedPages((prev)=>prev + 1);
+                if (selectedPages.includes(i)) {
+                  setnNumSelectedPages((prev) => prev - 1);
+                } else {
+                  setnNumSelectedPages((prev) => prev + 1);
                 }
-              
               }}
             >
               <div className="pdfPageLabel">
@@ -281,12 +309,12 @@ export default function UploadModal({ isOpen, close }) {
             </div>
           ))}
         </div>
-
-        <div className='selectButtonsContainer'>
-          <button className="selectButtons" onClick={()=>{clearPDF()}}>Close</button>
+  
+        <div className="selectButtonsContainer">
+          <button className="selectButtons" onClick={clearPDF}>Close</button>
           <button
             className="selectButtons"
-            style={{ display: selectedPages.length > 0 ? 'flex' : 'none' }}
+            style={{ display: selectedPages.length > 0 ? "flex" : "none" }}
             onClick={addSelectedPagesToFiles}
           >
             Select Pages
@@ -295,4 +323,5 @@ export default function UploadModal({ isOpen, close }) {
       </div>
     </>
   );
+  
 }
