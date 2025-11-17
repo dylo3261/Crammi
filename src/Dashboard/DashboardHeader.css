@@ -215,6 +215,7 @@ html, body {
     width: 25vw;
     margin-left: 10vw;
     transition: box-shadow 0.2s ease;
+    font-family: applethin,arial,sans-serif;
   }
   
   /* Outer ring with white gap */
