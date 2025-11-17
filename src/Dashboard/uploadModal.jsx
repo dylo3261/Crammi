@@ -35,6 +35,31 @@ export default function UploadModal({ isOpen, close }) {
     else return " MB";
   };
 
+
+  //PDF IMAGE LAZY LOADER HELPER
+  const renderPage = async (pageObj, index) => {
+    if (pageObj.src) return; // already rendered
+  
+    const page = await pageObj.pdf.getPage(pageObj.pageNumber);
+    const viewport = page.getViewport({ scale: 1.5 });
+  
+    const canvas = document.createElement("canvas");
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+  
+    await page.render({
+      canvasContext: canvas.getContext("2d"),
+      viewport
+    }).promise;
+  
+    setPdfPages(prev => {
+      const updated = [...prev];
+      updated[index] = { ...updated[index], src: canvas.toDataURL() };
+      return updated;
+    });
+  };
+  
+
   // Toggle page selection
   const togglePage = (index) => {
     setSelectedPages((prev) =>
@@ -126,35 +151,36 @@ export default function UploadModal({ isOpen, close }) {
   
 
   // Render PDFs to canvases
-  useEffect(() => {
-    if (pdfFiles.length === 0) {
-      setPdfPages([]);
-      return;
+ // Render PDFs lazily
+useEffect(() => {
+  if (pdfFiles.length === 0) {
+    setPdfPages([]);
+    return;
+  }
+
+  const loadPDF = async () => {
+    const placeholders = [];
+
+    for (let pdfFile of pdfFiles) {
+      const arrayBuffer = await pdfFile.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+
+      for (let i = 1; i <= pdf.numPages; i++) {
+        placeholders.push({
+          name: pdfFile.name,
+          pageNumber: i,
+          pdf,               // store reference for lazy loading
+          src: null          // NOT LOADED YET
+        });
+      }
     }
 
-    const renderPDFs = async () => {
-      const allPages = [];
-      for (let pdfFile of pdfFiles) {
-        const arrayBuffer = await pdfFile.arrayBuffer();
-        const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+    setPdfPages(placeholders);
+  };
 
-        for (let i = 1; i <= pdf.numPages; i++) {
-          const page = await pdf.getPage(i);
-          const viewport = page.getViewport({ scale: 1.5 });
-          const canvas = document.createElement("canvas");
-          const context = canvas.getContext("2d");
-          canvas.width = viewport.width;
-          canvas.height = viewport.height;
+  loadPDF();
+}, [pdfFiles]);
 
-          await page.render({ canvasContext: context, viewport }).promise;
-          allPages.push({ src: canvas.toDataURL(), name: pdfFile.name, pageNumber: i });
-        }
-      }
-      setPdfPages(allPages);
-    };
-
-    renderPDFs();
-  }, [pdfFiles]);
 
   const addSelectedPagesToFiles = () => {
     const newFiles = selectedPages.map((index) => {
@@ -347,7 +373,33 @@ export default function UploadModal({ isOpen, close }) {
             <div className="pdfPageLabel">
               {page.name} - Page {page.pageNumber}
             </div>
-            <img src={page.src} alt={`${page.name} - Page ${page.pageNumber}`} />
+            <div
+            className="lazyThumb"
+            data-index={i}
+            ref={(el) => {
+              if (!el) return;
+
+              const observer = new IntersectionObserver(
+                (entries) => {
+                  entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                      renderPage(pdfPages[i], i);
+                      observer.disconnect();
+                    }
+                  });
+                },
+                { rootMargin: "200px" } // load slightly before visible
+              );
+
+              observer.observe(el);
+            }}
+          >
+            {page.src ? (
+              <img src={page.src} alt={`${page.name} - Page ${page.pageNumber}`} />
+            ) : (
+              <div className="pdfPlaceholder">Loading…</div>
+            )}
+          </div>
           </div>
         ))}
       </div>
