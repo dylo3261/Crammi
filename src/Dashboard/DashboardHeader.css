@@ -1,245 +1,305 @@
+/* GLOBAL RESET & SCROLLING FIX */
+/* Prevent horizontal scrolling on all devices */
 html, body {
-    overflow-x: auto; /* allow horizontal scrolling */
-  }
-  
+  overflow-x: hidden; 
+}
+ 
+/* DASHBOARD HEADER */
 .DashboardHeader{ 
-    height: 6vh; 
-    border: 1px solid #ccc; 
-    position: fixed; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    z-index: 1000; 
-    background-color: #ffffff; 
-    border-top: none;
-  } 
-  
-  .sideBar {
-    height: 100vh;
-    border: 1px solid #ccc;
-    position: fixed;
-    top: 6vh;
-    left: 0;
-    width: 240px; /* fixed sidebar width */
-    z-index: 999;
-    border-top: none;
-    background-color: white;
-  }
-  
-  
-  .dashboardSideButtons { 
-    display: flex; 
-    align-items: center; 
-    border-radius: 6px; 
-    width: 90%; 
-    height: 5%; 
-    margin: 5% auto 0 auto; 
-    border: 2px solid transparent; 
-    padding: 1rem; 
-    cursor: pointer; 
-    font-size: 95%; 
-    text-align: left; 
-    gap: 0.5rem; 
-    font-family: applemedium,arial,sans-serif; 
-    background-color: white; 
-    color: rgb(78, 78, 78);
+  height: 6vh; 
+  border: 1px solid #ccc; 
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  width: 100%; 
+  z-index: 1000; 
+  background-color: #ffffff; 
+  border-top: none;
+} 
+ 
+/* SIDEBAR (Desktop Default) */
+.sideBar {
+  height: 100vh;
+  border: 1px solid #ccc;
+  position: fixed;
+  top: 6vh;
+  left: 0;
+  width: 240px; /* fixed sidebar width */
+  z-index: 999;
+  border-top: none;
+  background-color: white;
+}
+ 
+/* SIDEBAR BUTTONS */
+.dashboardSideButtons { 
+  display: flex; 
+  align-items: center; 
+  border-radius: 6px; 
+  width: 90%; 
+  height: 5%; 
+  margin: 5% auto 0 auto; 
+  border: 2px solid transparent; 
+  padding: 1rem; 
+  cursor: pointer; 
+  font-size: 95%; 
+  text-align: left; 
+  gap: 0.5rem; 
+  font-family: applemedium,arial,sans-serif; 
+  background-color: white; 
+  color: rgb(78, 78, 78);
+} 
 
-  } 
-  .bottomDashboardSideButtons {
-    display: flex; 
-    align-items: center; 
-    justify-content: flex-start; /* keeps icon + text aligned left inside the button */
-    border-radius: 6px; 
-    width: 90%; 
-    height: 50px; 
-    border: 2px solid transparent; 
-    padding: 1rem; 
-    cursor: pointer; 
-    font-size: 95%; 
-    text-align: left; 
-    gap: 0.5rem; 
-    font-family: applemedium, arial, sans-serif; 
-    background-color: white; 
-    color: rgb(78, 78, 78);
-    margin: 0 auto 0 auto; /* centers the button horizontally */
-  }
-  
-  .bottomDashboardSideButtons:hover{
-    background-color: rgb(234, 233, 233); 
+.bottomDashboardSideButtons {
+  display: flex; 
+  align-items: center; 
+  justify-content: flex-start; /* keeps icon + text aligned left inside the button */
+  border-radius: 6px; 
+  width: 90%; 
+  height: 50px; 
+  border: 2px solid transparent; 
+  padding: 1rem; 
+  cursor: pointer; 
+  font-size: 95%; 
+  text-align: left; 
+  gap: 0.5rem; 
+  font-family: applemedium, arial, sans-serif; 
+  background-color: white; 
+  color: rgb(78, 78, 78);
+  margin: 0 auto 0 auto; /* centers the button horizontally */
+}
 
-  }
-  .dashboardSideButtons:hover { 
-    background-color: rgb(234, 233, 233); 
-  } 
-  
-  .activeDashboardSideButtons { 
-    display: flex; 
-    align-items: center; 
-    border-radius: 6px; 
-    width: 90%; 
-    height: 5%; 
-    margin: 5% auto 0 auto; 
-    border: none; 
-    padding: 1rem; 
-    cursor: pointer; 
-    font-size: 95%; 
-    text-align: left; 
-    gap: 0.5rem; 
-    font-family: applemedium,arial,sans-serif; 
-    background-color: rgb(234, 233, 233); 
-    color: rgb(78, 78, 78);
-  } 
-  
-  .sidebarIcon { 
-    height: 1.1rem; 
-    width: auto; 
-    filter: brightness(0) saturate(100%) invert(40%) sepia(0%) saturate(0%) hue-rotate(151deg) brightness(95%) contrast(90%); 
-  } 
-  
-  .uploadNewIcon { 
-    height: 1.1rem; 
-    width: auto; 
-  } 
-  
-  .quizIcon { 
-    height: 1rem; 
-    width: auto; 
-  } 
+.bottomDashboardSideButtons:hover{
+  background-color: rgb(234, 233, 233); 
+}
+.dashboardSideButtons:hover { 
+  background-color: rgb(234, 233, 233); 
+} 
 
+.activeDashboardSideButtons { 
+  display: flex; 
+  align-items: center; 
+  border-radius: 6px; 
+  width: 90%; 
+  height: 5%; 
+  margin: 5% auto 0 auto; 
+  border: none; 
+  padding: 1rem; 
+  cursor: pointer; 
+  font-size: 95%; 
+  text-align: left; 
+  gap: 0.5rem; 
+  font-family: applemedium,arial,sans-serif; 
+  background-color: rgb(234, 233, 233); 
+  color: rgb(78, 78, 78);
+} 
+
+.sidebarIcon { 
+  height: 1.1rem; 
+  width: auto; 
+  filter: brightness(0) saturate(100%) invert(40%) sepia(0%) saturate(0%) hue-rotate(151deg) brightness(95%) contrast(90%); 
+} 
+
+.uploadNewIcon { 
+  height: 1.1rem; 
+  width: auto; 
+} 
+
+.quizIcon { 
+  height: 1rem; 
+  width: auto; 
+} 
+
+/* LOGOUT SECTION (Desktop Default) */
+.logOutSection {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 240px;
+  height: 145px;
+  z-index: 2000;
+  background-color: white;
+  border: 1px solid #ccc;
+ 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+ 
+/* DASHBOARD BODY (Desktop Default) */
+.dashboardBody {
+  margin-top: 6vh;
+  margin-left: 240px; /* same as sidebar width */
+  padding: 1rem;
+  background-color: #ffffff;
+  min-height: 94vh;
+}
+ 
+/* DASHBOARD BODY CONTENT */
+.dashboardBodyHeader { 
+  margin-top: 3vh; 
+  margin-left: 1vw; 
+  height: 3rem; 
+  display: flex; /* put label + button side by side */ 
+  align-items: center; /* vertically center them */ 
+  justify-content: flex-start; /* keep them aligned to the left */ 
+} 
+
+.bodyActiveTabLabel { 
+  font-family: apple, arial, sans-serif; 
+  font-size: 2.0rem; 
+  margin-right: 1rem; /* space between label and button */ 
+} 
+
+.dashboardHeaderText { 
+  margin-left: 5%; 
+} 
+
+.dashboardHeaderTextUpload { 
+  margin-left: 3%; 
+} 
+
+.bodyUploadButton { 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  border-radius: 6px; 
+  width: 130px; 
+  height: 35px; 
+  border: 2px solid transparent; 
+  cursor: pointer; 
+  font-size: 95%; 
+  font-family: applemedium, arial, sans-serif; 
+  background-color: #AB9FF2; 
+  color: white; 
+  flex-shrink: 0; /* Prevents shrinking */
+} 
+
+.bodyUploadButton:hover { 
+  background-color: #a393fc; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+} 
+
+.bodySecondUploadButton { 
+  margin-left: 0.7rem; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  border-radius: 6px; 
+  width: 150px; 
+  height: 32px; 
+  border: 1px solid #ccc; 
+  cursor: pointer; 
+  font-size: 95%; 
+  font-family: applethin, arial, sans-serif; 
+  background-color: white; 
+  color: rgb(101, 101, 101); 
+  flex-shrink: 0; /* Prevents shrinking */
+} 
+
+.uploadExistingIcon { 
+  height: 1.3rem; 
+  width: auto; 
+  filter: brightness(0) saturate(100%) invert(40%) sepia(0%) saturate(0%) hue-rotate(151deg) brightness(95%) contrast(90%); 
+} 
+
+.bodySecondUploadButton:hover { 
+  background-color: rgb(247, 247, 247); 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08); 
+} 
+
+.searchBarContainer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: white;
+  border: 1px solid #ccc; 
+  border-radius: 6px;
+  padding: 0.3rem 0.7rem;
+  width: 25vw;
+  margin-left: 10vw;
+  transition: box-shadow 0.2s ease;
+  font-family: applethin,arial,sans-serif;
+}
+/* Outer ring with white gap */
+.searchBarContainer:focus-within {
+  box-shadow: 
+    0 0 0 3px white, 
+    0 0 0 6px #AB9FF2; 
+}
+
+.searchInput { 
+  border: none; 
+  outline: none; 
+  flex: 1; 
+  font-size: 1rem; 
+  font-family: applethin, arial, sans-serif; 
+} 
+
+.searchIcon { 
+  height: 1rem; 
+  width: auto; 
+  margin-right: 0.5rem; 
+  filter: brightness(0) saturate(100%) invert(40%) sepia(0%) saturate(0%) hue-rotate(151deg) brightness(95%) contrast(90%);
+} 
+
+
+@media (max-width: 768px) {
+  
+  /* HIDE THE SIDEBAR AND LOGOUT SECTION */
+  .sideBar, 
   .logOutSection {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 240px;
-    height: 145px;
-    z-index: 2000;
-    background-color: white;
-    border: 1px solid #ccc;
-  
-    display: flex;           /* make it a flex container */
-    flex-direction: column;  /* stack buttons vertically */
-    justify-content: center; /* vertical centering */
-    align-items: center;     /* horizontal centering */
+    display: none;
   }
   
-
-  /*body-----------------*/ 
-
+  /* MAKE MAIN CONTENT FULL WIDTH */
   .dashboardBody {
-    margin-top: 6vh;
-    margin-left: 240px; /* same as sidebar width */
-    padding: 1rem;
-    background-color: #ffffff;
-    min-height: 94vh;
+    margin-left: 0; /* Remove space reserved for the sidebar */
+    padding-top: 1rem; /* Adjust padding if necessary */
   }
   
-  
+  /* ADJUST HEADER LAYOUT */
   .dashboardBodyHeader { 
-    margin-top: 3vh; 
-    margin-left: 1vw; 
-    height: 3rem; 
-    display: flex; /* put label + button side by side */ 
-    align-items: center; /* vertically center them */ 
-    justify-content: flex-start; /* keep them aligned to the left */ 
-  } 
-  
-  .bodyActiveTabLabel { 
-    font-family: apple, arial, sans-serif; 
-    font-size: 2.0rem; 
-    margin-right: 1rem; /* space between label and button */ 
-  } 
-  
-  .dashboardHeaderText { 
-    margin-left: 5%; 
-  } 
-  
-  .dashboardHeaderTextUpload { 
-    margin-left: 3%; 
-  } 
-  
-  .bodyUploadButton { 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    border-radius: 6px; 
-    width: 130px; 
-    height: 35px; 
-    border: 2px solid transparent; 
-    cursor: pointer; 
-    font-size: 95%; 
-    font-family: applemedium, arial, sans-serif; 
-    background-color: #AB9FF2; 
-    color: white; 
-  } 
-  
-  .bodyUploadButton:hover { 
-    background-color: #a393fc; 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-  } 
-  
-  .bodySecondUploadButton { 
-    margin-left: 0.7rem; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    border-radius: 6px; 
-    width: 150px; 
-    height: 32px; 
-    border: 1px solid #ccc; 
-    cursor: pointer; 
-    font-size: 95%; 
-    font-family: applethin, arial, sans-serif; 
-    background-color: white; 
-    color: rgb(101, 101, 101); 
-  } 
-  
-  .uploadExistingIcon { 
-    height: 1.3rem; 
-    width: auto; 
-    filter: brightness(0) saturate(100%) invert(40%) sepia(0%) saturate(0%) hue-rotate(151deg) brightness(95%) contrast(90%); 
-  } 
-  
-  .bodySecondUploadButton:hover { 
-    background-color: rgb(247, 247, 247); 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08); 
-  } 
+    flex-direction: column; /* Stack items vertically */
+    align-items: flex-start; /* Align stacked items to the left */
+    height: auto; 
+    margin-top: 1vh;
+    margin-left: 1vw;
+  }
+
+  .bodyActiveTabLabel {
+    width: 100%; /* Ensure label takes full width */
+    margin-bottom: 1rem; /* Add space below the main title */
+  }
+
+  /* BUTTON AND SEARCH BAR LAYOUT */
+  /* Put the upload buttons side-by-side, then the search bar below */
+  .dashboardBodyHeader > .bodyUploadButton,
+  .dashboardBodyHeader > .bodySecondUploadButton,
+  .dashboardBodyHeader > .searchBarContainer {
+      margin-left: 0; /* Remove left margins */
+      width:100%;
+  }
+
+  .dashboardBodyHeader {
+    /* Create a separate flex container for the buttons only */
+    display: flex;
+    flex-wrap: wrap; 
+  }
+
+  .bodyUploadButton {
+    margin-right: 0.7rem; /* Space between buttons */
+    margin-bottom: 1rem; /* Move to next line */
+  }
+
+  .bodySecondUploadButton {
+    margin-left: 0; /* Remove original margin-left: 0.7rem */
+    margin-bottom: 1rem;
+  }
   
   .searchBarContainer {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    background-color: white;
-    border: 1px solid #ccc; /* original border stays */
-    border-radius: 6px;
-    padding: 0.3rem 0.7rem;
-    width: 25vw;
-    margin-left: 10vw;
-    transition: box-shadow 0.2s ease;
-    font-family: applethin,arial,sans-serif;
+    width: 95%; /* Make search bar nearly full width */
+    margin-left: 0;
+    margin-top: 0.5rem; /* Space from buttons above */
   }
-  
-  /* Outer ring with white gap */
-  .searchBarContainer:focus-within {
-    box-shadow: 
-      0 0 0 3px white,       /* white gap */
-      0 0 0 6px #AB9FF2;     /* colored ring outside */
-  }
-  .searchInput { 
-    border: none; 
-    outline: none; 
-    flex: 1; 
-    font-size: 1rem; 
-    font-family: applethin, arial, sans-serif; 
-  } 
-  
-  .searchIcon { 
-    height: 1rem; 
-    width: auto; 
-    margin-right: 0.5rem; 
-    filter: brightness(0) saturate(100%) invert(40%) sepia(0%) saturate(0%) hue-rotate(151deg) brightness(95%) contrast(90%); /* rgb(101,101,101) */ 
-  } 
-  
-  .bodyUploadButton,
-.bodySecondUploadButton {
-  flex-shrink: 0; /* prevents the button from shrinking in flex container */
 }
