@@ -380,7 +380,7 @@ useEffect(() => {
         rows={2}
         maxLength={365}
       />
-      <p className="numChars" style={{display: (specialInstructions.length>0)&&!ismobile ? "block" : "none"}}>Characters: {specialInstructions.length} / 365 </p>
+      <p className="numChars" style={{display: (specialInstructions.length>0)&&!isMobile ? "block" : "none"}}>Characters: {specialInstructions.length} / 365 </p>
 
         </div>
       
@@ -398,6 +398,7 @@ useEffect(() => {
               setRemainingFiles(10);
               close();
               clearFiles();
+              setSpecialInstructions("");
             }}
           >
             {selectedFiles.length > 0 ? "Cancel" : "Close"}
