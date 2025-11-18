@@ -14,7 +14,7 @@
 
 /* Upload Modal Content */
 .uploadModalContent {
-  position: relative;
+  position: fixed;
   background-color: #ffffff;
   width: 600px;
   max-width: 90%;
@@ -29,6 +29,142 @@
   text-align: center;
   
 }
+
+@media (max-width: 600px) {
+
+  /* Keep modal at top */
+  .uploadModalOverlay {
+    align-items: flex-start !important;
+    padding-top: 0px;
+    position: fixed!important;
+    overflow-x: hidden;
+  }
+  /* PDF modal fixed to top on mobile */
+.selectPDFPages {
+  top: 0 !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+
+  width: 100% !important;
+  max-width: 90% !important;
+  height: 90% !important;
+  max-height: 100% !important;
+  box-sizing: border-box;
+  border-radius: 10 !important;
+  padding: 1rem !important;
+  overflow-y: auto !important;
+  overflow-x: hidden;
+
+}
+/* PDF modal buttons - keep size on mobile */
+.selectButtonsContainer .selectButtons {
+  flex-shrink: 0 !important;      /* prevent shrinking */
+  padding: 0.6rem 2rem !important; /* keep padding */
+  font-size: 1rem !important;      /* keep font size */
+  min-width: 100px;                /* optional: minimum width */
+}
+
+.ok{
+  z-index: 9999 !important;
+}
+  .infoIcon{
+    width:15px !important;
+    height:15px !important;
+  }
+  .filesRemaining{
+    margin-top: -7px!important;
+    box-sizing: border-box;
+    text-align: left;
+  }
+  .uploadFileText{
+    z-index: 9999 !important;
+  }
+  /* Compact modal — but still readable */
+  .uploadModalContent {
+    width: 90% !important;
+    max-width: 90% !important;
+    max-height: 70vh !important;
+    padding: 12px;
+    border-radius: 10px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;               /* prevents overlap */
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  
+  /* SAFE text shrink — not too small */
+  .uploadModalContent * {
+    font-size: 14px !important;
+    line-height: 1.2 !important;   /* FIX: prevents overlap */
+  }
+
+  /* Shrink header padding */
+  .uploadFileHeader {
+    margin-bottom: -25px;
+  }
+ 
+  .fileNameHeader,
+  .fileSizeHeader{
+    margin-top: -10px;
+  }
+  .bottomHeader{
+    margin-bottom: -10px!important;
+    margin-top: -10px!important;
+  }
+
+  .specialInstructions{
+    margin-top: -10px;
+    margin-bottom: 10px;
+    font-size: 16px!important;
+    height: 45px;
+  }
+  .numChars{
+    margin-bottom: 20px;
+  }
+  
+
+  /* Perfect small dropzone */
+  .uploadDropZone {
+    min-height: 170px !important;
+    max-height: 170px !important;
+    padding: 12px !important;
+    margin-top: 10px;
+    gap: 6px !important;
+  }
+
+  /* Reduce icon size cleanly */
+  .uploadModalIcon {
+    width: 50px !important;
+    height: 50px !important;
+  }
+
+  /* File list compact but readable */
+  .fileList {
+    max-height: 150px !important;
+    overflow-y: auto;
+  }
+
+  /* File rows spacing */
+  
+  .fileName {
+    max-width: 60%;
+  }
+
+  /* Buttons shrink proportionally */
+  .closeUploadModal {
+    padding: 10px !important;
+    font-size: 14px !important;
+    border-radius: 6px !important;
+    margin-top: 6px !important;
+  }
+}
+
+
+  
+
+
 
 /* Header */
 .uploadFileHeader {
@@ -316,7 +452,6 @@
   display: flex;
   justify-content: center;
   gap: 1rem;
-  margin-top: 1rem;
 
   /* prevent flex-grow from stretching buttons */
   flex-shrink: 0;
@@ -344,7 +479,7 @@
   transform: translate(-50%, -50%);
   background-color: #fff;
   width: 90%;
-  max-width: 1500px;
+  max-width: 1200px;
   height: 85%;
   max-height: 85%;
   border-radius: 10px;
@@ -358,7 +493,10 @@
   z-index: 5000;
   padding-bottom: 4rem; /* give space for buttons */
 }
-
+.PDFOverallHeader{
+  text-align: left;
+  margin-bottom: 1rem;
+}
 /* Button Container at Bottom */
 .selectButtonsContainer {
   display: flex;
@@ -487,7 +625,6 @@
   outline: none;
   box-sizing: border-box;
   transition: box-shadow 0.25s ease, border-color 0.25s ease;
-  margin-bottom: -2vh;
 }
 
 /* Focus ring */
@@ -502,4 +639,13 @@
 .specialInstructions::placeholder {
   color: #888;
   opacity: 1;
+}
+
+.numChars{
+  text-align: right;
+  font-family: applethin,arial,sans-serif;
+  color:#555;
+  font-size: 13px;
+  margin-top: 4px;
+  height:0px;
 }

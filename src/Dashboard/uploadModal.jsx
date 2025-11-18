@@ -20,6 +20,17 @@ export default function UploadModal({ isOpen, close }) {
   const fileInputRef = useRef(null);
 
 
+  //are we mobile
+  const [isMobile, setIsMobile] = useState(false);
+
+useEffect(() => {
+  const check = () => setIsMobile(window.innerWidth < 768);
+  check();
+  window.addEventListener("resize", check);
+  return () => window.removeEventListener("resize", check);
+}, []);
+
+
     //stop dashboard scrolling when modal open
   useEffect(() => {
     if (isOpen) {
@@ -268,9 +279,31 @@ useEffect(() => {
           </p>
           
         </div>
+        <div className="specialInstructionsCharacters">
+        <textarea
+        style={{
+          display: (selectedFiles.length > 0)&& isMobile ? "flex" : "none",
+          resize: "none",
+        }}
+      
+        className="specialInstructions"
+        placeholder="Special Instructions..."
+        value={specialInstructions}
+        onChange={(e) => {
+          setSpecialInstructions(e.target.value); // update state
+          // console.log(e.target.value);            // log current input
+        }}
+        rows={2}
+        maxLength={365}
+      />
+      <p className="numChars" style={{display: (specialInstructions.length > 0) && isMobile ? "block" : "none"}}>Characters: {specialInstructions.length} / 365 </p>
+
+        </div>
+      
         <p className="warning" style={{ display: isWarning ? "block" : "none" }}>
             Please make sure to upload either photos or PDFs.
           </p> 
+         
         {/* File List Header */}
         <div className="fileListHeader" style={{ display: selectedFiles.length > 0 ? "flex" : "none" }}>
           <span className="fileNameHeader">Name</span>
@@ -303,7 +336,7 @@ useEffect(() => {
           onChange={handleFileSelect}
           style={{ display: "none" }}
         />
-
+        
         {/* File List */}
         {selectedFiles.length > 0 && (
           <ul className="fileList">
@@ -329,17 +362,28 @@ useEffect(() => {
         )}
 
         <div className="bottomHeader" style={{ display: selectedFiles.length > 0 ? "flex" : "none" }}></div>
+        
+        <div className="specialInstructionsCharacters">
         <textarea
+        style={{
+          display: (selectedFiles.length > 0)&& !isMobile ? "flex" : "none",
+          resize: "none",
+        }}
+      
         className="specialInstructions"
         placeholder="Special Instructions..."
         value={specialInstructions}
         onChange={(e) => {
           setSpecialInstructions(e.target.value); // update state
-          console.log(e.target.value);            // log current input
+          // console.log(e.target.value);            // log current input
         }}
-        rows={3}
-        style={{ resize: "none" }} // prevent resizing
+        rows={2}
+        maxLength={365}
       />
+      <p className="numChars" style={{display: (specialInstructions.length>0)&&!ismobile ? "block" : "none"}}>Characters: {specialInstructions.length} / 365 </p>
+
+        </div>
+      
 
 
        
@@ -370,13 +414,18 @@ useEffect(() => {
 
     {/* PDF PAGE GRID MODAL */}
     <div style={{ display: pickPages ? "flex" : "none" }} className="selectPDFPages">
+      <div className="PDFOverallHeader">
       <h1 className="selectPageHeader">Select PDF Pages</h1>
+      
+      <h4 className="ok">
+        <span className="asterik">* </span>Files Remaining: {remainingFiles}
+      </h4>
       <h4>
         <span className="asterik">* </span>Files Selected: {numSelectedPages}
       </h4>
-      <h4>
-        <span className="asterik">* </span>Files Remaining: {remainingFiles}
-      </h4>
+
+      </div>
+    
       
       <div className="pdfGrid">
         {pdfPages.map((page, i) => (
