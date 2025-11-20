@@ -9,16 +9,21 @@ export default function UploadModal({ isOpen, close }) {
   const [dragOver, setDragOver] = useState(false);
   const [pickPages, setPickPages] = useState(false);
   const [isWarning,setWarning]=useState(false);
+  const [isWarning2, setWarning2]=useState(false);
   const [pdfFiles, setPdfFiles] = useState([]);
   const [pdfPages, setPdfPages] = useState([]);
   const [selectedPages, setSelectedPages] = useState([]);
   const [numSelectedPages,setnNumSelectedPages]=useState(0);
   const [specialInstructions, setSpecialInstructions] = useState(""); 
 
-
+  const [fileSizeRemaining, changeFileSizeRemaining]= useState(1 * 1024 * 1024);
+  const [isLegalFileSize, changeLegalFileSize] = useState(false);
   const [remainingFiles,setRemainingFiles]=useState(10);
   const fileInputRef = useRef(null);
 
+
+  //file size cap
+    const maxFileSize= 1 * 1024 * 1024; //20 mb
 
   //are we mobile
   const [isMobile, setIsMobile] = useState(false);
@@ -114,30 +119,48 @@ useEffect(() => {
 
   const processFiles = (files) => {
     let invalidFound = false;
+ 
   
-    // Check if any file is invalid
-    for (const f of files) {
-      const isImage = f.type.startsWith("image/");
-      const isPDF = f.type === "application/pdf";
-  
-      if (!isImage && !isPDF) {
-        invalidFound = true;
-        break;
-      }
-    }
-  
-    // If any invalid file found → reject entire batch
+
+    // If any invalid file found , reject entire batch
     if (invalidFound) {
       setWarning(true);
-      return; // ⛔ stop here
+      return; //stop here
     }
+  
   
     // If all files are valid, handle images
     const newSelectedFiles = files.filter((f) => f.type.startsWith("image/"));
     if (newSelectedFiles.length > 0) {
+      let PDFExceededFileSize=false;
+      let curRemaining=fileSizeRemaining;
+      let usedFileSize=0;
+      for (const f of newSelectedFiles) {
+        curRemaining-=f.size;
+        usedFileSize+=f.size;
+        console.log(curRemaining);
+  
+        if(curRemaining<0){
+          PDFExceededFileSize=true;
+          break;
+        }
+      }
+
+      //if file size has been exceeded, reject entire batch
+    if(PDFExceededFileSize){
+      setSelectedFiles((prev) =>prev);
+      setRemainingFiles((prev) => prev);
+      setWarning(false);
+      setWarning2(true);
+    }
+    else{
+      changeFileSizeRemaining(prev => prev - usedFileSize);
       setSelectedFiles((prev) => [...prev, ...newSelectedFiles]);
       setRemainingFiles((prev) => prev - newSelectedFiles.length);
       setWarning(false);
+      setWarning2(false);
+    }
+     
     }
   
     // Handle PDFs
@@ -145,6 +168,7 @@ useEffect(() => {
     if (newPDFs.length > 0) {
       clearPDF();
       setWarning(false);
+      setWarning2(false);
       setPdfFiles(newPDFs);
       setPickPages(true);
     }
@@ -229,10 +253,37 @@ useEffect(() => {
       return new File([u8arr], `${page.name}-page${page.pageNumber}.png`, { type: mime });
     });
 
-    setSelectedFiles((prev) => [...prev, ...newFiles]);
-    setRemainingFiles((prev) => prev - newFiles.length);
-    setPickPages(false);
-    setSelectedPages([]);
+    let PDFExceededFileSize=false;
+    let curRemaining=fileSizeRemaining;
+    let usedFileSize=0;
+    for (const f of newFiles) {
+      curRemaining-=f.size;
+      usedFileSize+=f.size;
+      console.log(curRemaining);
+
+      if(curRemaining<0){
+        PDFExceededFileSize=true;
+        break;
+      }
+    }
+
+      //if file size has been exceeded, reject entire batch
+    if(PDFExceededFileSize){
+      setWarning2(true);
+      
+      setSelectedFiles(prev => prev);
+      setRemainingFiles(prev => prev);
+      setPickPages(false);
+      setSelectedPages([]);
+    }
+    else{
+      changeFileSizeRemaining(prev => prev - usedFileSize);
+      setSelectedFiles((prev) => [...prev, ...newFiles] );
+      setRemainingFiles((prev) => prev - newFiles.length);
+      setPickPages(false);
+      setSelectedPages([]);
+    }
+   
   };
   return (
     <>
@@ -303,7 +354,9 @@ useEffect(() => {
         <p className="warning" style={{ display: isWarning ? "block" : "none" }}>
             Please make sure to upload either photos or PDFs.
           </p> 
-         
+          <p className="warning" style={{ display: isWarning2 ? "block" : "none" }}>
+            Batch file size limit exceeded. You can Upload up to {maxFileSize / (1024 * 1024)} MBs.
+          </p> 
         {/* File List Header */}
         <div className="fileListHeader" style={{ display: selectedFiles.length > 0 ? "flex" : "none" }}>
           <span className="fileNameHeader">Name</span>
@@ -395,6 +448,7 @@ useEffect(() => {
             className="closeUploadModal"
             onClick={() => {
               setWarning(false);
+              setWarning2(false);
               setRemainingFiles(10);
               close();
               clearFiles();
