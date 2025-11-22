@@ -37,8 +37,7 @@ function UploadBar({activeTab,openUpload}) {
       </>
     );
   }
-  export default function DashboardHeader({openUpload}) {
-    const [activeTab,changeActiveTab]=useState("Exams");
+  export default function DashboardHeader({openUpload,changeActiveTab,activeTab}) {
     return (
       <>
         <div className='DashboardHeader'>

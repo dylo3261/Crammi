@@ -4,26 +4,28 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.mjs";
 
 import "./uploadModal.css";
 
-export default function UploadModal({ isOpen, close }) {
+export default function UploadModal({ isOpen, close , activeTab }) {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [dragOver, setDragOver] = useState(false);
   const [pickPages, setPickPages] = useState(false);
   const [isWarning,setWarning]=useState(false);
   const [isWarning2, setWarning2]=useState(false);
+  const [isWarning3, setWarning3]=useState(false);
   const [pdfFiles, setPdfFiles] = useState([]);
   const [pdfPages, setPdfPages] = useState([]);
   const [selectedPages, setSelectedPages] = useState([]);
   const [numSelectedPages,setnNumSelectedPages]=useState(0);
   const [specialInstructions, setSpecialInstructions] = useState(""); 
 
-  const [fileSizeRemaining, changeFileSizeRemaining]= useState(1 * 1024 * 1024);
+  const [fileSizeRemaining, changeFileSizeRemaining]= useState(10 * 1024 * 1024);
   const [isLegalFileSize, changeLegalFileSize] = useState(false);
   const [remainingFiles,setRemainingFiles]=useState(10);
   const fileInputRef = useRef(null);
 
 
+  const maxNumFiles=10;
   //file size cap
-    const maxFileSize= 1 * 1024 * 1024; //20 mb
+    const maxFileSize= 10 * 1024 * 1024; //20 mb
 
   //are we mobile
   const [isMobile, setIsMobile] = useState(false);
@@ -118,27 +120,25 @@ useEffect(() => {
   };
 
   const processFiles = (files) => {
-    let invalidFound = false;
- 
+    const unsupported = files.some(
+      f => !f.type.startsWith("image/") && f.type !== "application/pdf"
+    );
   
-
-    // If any invalid file found , reject entire batch
-    if (invalidFound) {
-      setWarning(true);
-      return; //stop here
+    if (unsupported) {
+      setWarning(true);      // If any invalid file found , reject entire batch
+      return;
     }
-  
-  
+    let curRemainingFiles=remainingFiles;
+
     // If all files are valid, handle images
     const newSelectedFiles = files.filter((f) => f.type.startsWith("image/"));
-    if (newSelectedFiles.length > 0) {
+    if (newSelectedFiles.length > 0 && curRemainingFiles-newSelectedFiles.length>=0) {
       let PDFExceededFileSize=false;
       let curRemaining=fileSizeRemaining;
       let usedFileSize=0;
       for (const f of newSelectedFiles) {
         curRemaining-=f.size;
         usedFileSize+=f.size;
-        console.log(curRemaining);
   
         if(curRemaining<0){
           PDFExceededFileSize=true;
@@ -152,6 +152,7 @@ useEffect(() => {
       setRemainingFiles((prev) => prev);
       setWarning(false);
       setWarning2(true);
+      setWarning3(false);
     }
     else{
       changeFileSizeRemaining(prev => prev - usedFileSize);
@@ -159,8 +160,14 @@ useEffect(() => {
       setRemainingFiles((prev) => prev - newSelectedFiles.length);
       setWarning(false);
       setWarning2(false);
+      setWarning3(false);
     }
      
+    }
+    else{ //if file size exceeds limit # of files
+      setWarning(false);
+      setWarning2(false);
+      setWarning3(true);
     }
   
     // Handle PDFs
@@ -169,6 +176,7 @@ useEffect(() => {
       clearPDF();
       setWarning(false);
       setWarning2(false);
+      setWarning3(false);
       setPdfFiles(newPDFs);
       setPickPages(true);
     }
@@ -198,7 +206,6 @@ useEffect(() => {
   // Remove single file from list
   const removeFile = (index) => {
     setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
-    setPdfFiles((prev) => prev+1);
     setPdfPages((prev) => prev.filter((_, i) => i !== index));
     setSelectedPages([]);
     setRemainingFiles((prev) => prev + 1);
@@ -252,7 +259,7 @@ useEffect(() => {
 
       return new File([u8arr], `${page.name}-page${page.pageNumber}.png`, { type: mime });
     });
-
+    if(remainingFiles-newFiles.length >=0){
     let PDFExceededFileSize=false;
     let curRemaining=fileSizeRemaining;
     let usedFileSize=0;
@@ -283,7 +290,12 @@ useEffect(() => {
       setPickPages(false);
       setSelectedPages([]);
     }
-   
+  }
+   else{
+    setWarning3(true);
+    setPickPages(false);
+    setSelectedPages([]);
+   }
   };
   return (
     <>
@@ -347,7 +359,7 @@ useEffect(() => {
         rows={2}
         maxLength={365}
       />
-      <p className="numChars" style={{display: (specialInstructions.length > 0) && isMobile ? "block" : "none"}}>Characters: {specialInstructions.length} / 365 </p>
+      <p className="numChars" style={{display: (specialInstructions.length > 0) && isMobile ? "block" : "none"}}> <span style={{color: specialInstructions.length===365 ? "red" :"#555"}}>Characters: {specialInstructions.length} / 365</span> </p>
 
         </div>
       
@@ -356,6 +368,9 @@ useEffect(() => {
           </p> 
           <p className="warning" style={{ display: isWarning2 ? "block" : "none" }}>
             Batch file size limit exceeded. You can Upload up to {maxFileSize / (1024 * 1024)} MBs.
+          </p> 
+          <p className="warning" style={{ display: isWarning3 ? "block" : "none" }}>
+            File upload limit reached. You can only upload up to {maxNumFiles} files.
           </p> 
         {/* File List Header */}
         <div className="fileListHeader" style={{ display: selectedFiles.length > 0 ? "flex" : "none" }}>
@@ -433,7 +448,7 @@ useEffect(() => {
         rows={2}
         maxLength={365}
       />
-      <p className="numChars" style={{display: (specialInstructions.length>0)&&!isMobile ? "block" : "none"}}>Characters: {specialInstructions.length} / 365 </p>
+      <p className="numChars" style={{display: (specialInstructions.length > 0) && !isMobile ? "block" : "none"}}> <span style={{color: specialInstructions.length===365 ? "red" :"#555"}}>Characters: {specialInstructions.length} / 365</span> </p>
 
         </div>
       
