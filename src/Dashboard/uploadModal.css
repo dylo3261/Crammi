@@ -30,7 +30,7 @@
   
 }
 
-@media (max-width: 600px) {
+@media (max-width: 1000px) {
 
   /* Keep modal at top */
   .uploadModalOverlay {
@@ -161,7 +161,21 @@
   }
 }
 
-
+@media (max-height: 600px){
+  .uploadDropZone{
+    min-height: 100px !important;
+    max-height: 100px !important;
+    padding: 12px !important;
+    margin-top: 10px;
+    gap: 6px !important;  
+    
+  }
+    .uploadModalIcon {
+      width: 35px !important;
+      height: 35px !important;
+      overflow-y: hidden;
+    }
+}
   
 
 
@@ -649,3 +663,4 @@
   margin-top: 4px;
   height:0px;
 }
+

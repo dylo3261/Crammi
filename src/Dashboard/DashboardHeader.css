@@ -242,7 +242,22 @@ html, body {
   margin-right: 0.5rem; 
   filter: brightness(0) saturate(100%) invert(40%) sepia(0%) saturate(0%) hue-rotate(151deg) brightness(95%) contrast(90%);
 } 
+@media (max-width: 1100px) {
+  .dashboardBodyHeader {
+    flex-wrap: wrap;
+  }
 
+  .searchBarContainer {
+    width: 60%;
+    margin-left: 0;
+    margin-top: 0.7rem;
+  }
+
+  .bodyUploadButton,
+  .bodySecondUploadButton {
+    margin-bottom: 0.7rem;
+  }
+}
 
 @media (max-width: 768px) {
   
@@ -290,11 +305,13 @@ html, body {
   .bodyUploadButton {
     margin-right: 0.7rem; /* Space between buttons */
     margin-bottom: 1rem; /* Move to next line */
+    height: 5vh;
   }
 
   .bodySecondUploadButton {
     margin-left: 0; /* Remove original margin-left: 0.7rem */
     margin-bottom: 1rem;
+    height:5vh;
   }
   
   .searchBarContainer {
@@ -302,4 +319,101 @@ html, body {
     margin-left: 0;
     margin-top: 0.5rem; /* Space from buttons above */
   }
+  .uploadNewIcon{
+    margin-right: -4vw;
+  }
+  .uploadExistingIcon{
+    margin-right: -2vw;
+  }
+}
+@media (max-height: 600px) {
+  
+  /* HIDE THE SIDEBAR AND LOGOUT SECTION */
+  .sideBar, 
+  .logOutSection {
+    display: none;
+  }
+  
+  /* MAKE MAIN CONTENT FULL WIDTH */
+  .dashboardBody {
+    margin-left: 0; /* Remove space reserved for the sidebar */
+    padding-top: 1rem;
+  }
+  
+  /* LOGO BAR / DASHBOARD HEADER */
+  .DashboardHeader {
+    height: 10vh; /* taller for mobile & landscape */
+    display: flex;
+    font-size: 1.5rem; /* logo/text readable */
+    padding: 0 1rem;
+  }
+
+  /* DASHBOARD BODY HEADER LAYOUT */
+  .dashboardBodyHeader { 
+    flex-direction: column; /* Stack items vertically */
+    align-items: stretch;   /* stretch buttons/search full width */
+    height: auto; 
+    margin-top: 1vh;
+    margin-left: 1vw;
+    gap: 0.5rem; /* spacing between stacked items */
+  }
+
+  /* ACTIVE TAB LABEL */
+  .bodyActiveTabLabel {
+    width: 100%; 
+    margin-bottom: 1rem; 
+    font-size: 2rem; /* keeps title readable */
+  }
+
+  /* BUTTONS AND SEARCH BAR */
+  .dashboardBodyHeader > .bodyUploadButton,
+  .dashboardBodyHeader > .bodySecondUploadButton,
+  .dashboardBodyHeader > .searchBarContainer {
+    margin-left: 0; /* remove left margins */
+    width: 100%;   /* full width for mobile */
+  }
+
+  .bodyUploadButton,
+  .bodySecondUploadButton {
+    height: 45px;         /* taller buttons */
+    font-size: 1.5rem;     
+    padding: 0.5rem;     
+    margin-bottom: 1rem;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .bodyUploadButton {
+    margin-right: 0;
+    background-color: #AB9FF2;
+    color: white;
+  }
+
+  .bodySecondUploadButton {
+    background-color: white;
+    color: rgb(101,101,101);
+  }
+
+  /* SEARCH BAR */
+  .searchBarContainer {
+    width: 95%;  
+    margin-left: 0;
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+  }
+
+  /* ICONS INSIDE BUTTONS */
+  .uploadNewIcon{
+    margin-right: -4vw;
+    height: 1.5rem;
+  }
+  .uploadExistingIcon{
+    margin-right: -2vw;
+    height: 1.5rem;
+
+  }
+
+  
 }
