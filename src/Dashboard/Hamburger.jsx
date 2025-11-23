@@ -21,6 +21,7 @@ export default function Hamburger({changeActiveTab,activeTab}) {
       {/* dropdown menu */}
       {isOpen && (
         <div className="dropdownMenu">
+
           <button className="dropdownItem" onClick={()=> changeActiveTab("Exams")}>
             <img className="sidebarIcon" src="https://uxwing.com/wp-content/themes/uxwing/download/editing-user-action/edit-list-icon.png" alt="exam icon"/>
             Exams
@@ -45,6 +46,17 @@ export default function Hamburger({changeActiveTab,activeTab}) {
             <img className="sidebarIcon" src="https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../releases/preview/2018/png/iconmonstr-user-circle-thin.png&r=0&g=0&b=0" alt="account icon"/>
             Account
           </button>
+
+          <div className='dropdownLogOutSection'>
+            <button className='dropdownItem' >
+                <img className='sidebarIcon' src='https://uxwing.com/wp-content/themes/uxwing/download/communication-chat-call/question-inquiry-icon.png' alt='Support icon'/>
+                <span>Support</span>
+            </button>
+            <button className='dropdownItem' >
+                <img className='sidebarIcon' src='https://uxwing.com/wp-content/themes/uxwing/download/web-app-development/logout-line-icon.png' alt='Logout icon'/>
+                <span>Sign Out</span>
+            </button>
+        </div>
         </div>
       )}
     </>
