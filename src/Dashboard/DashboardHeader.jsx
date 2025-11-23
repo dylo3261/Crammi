@@ -46,7 +46,7 @@ function UploadBar({activeTab,openUpload}) {
           <h4 className="logotemp">Logo</h4>
           <div className="mobileHamburger">
 
-          <Hamburger/>
+          <Hamburger changeActiveTab={changeActiveTab} activeTab={activeTab}/>
 
           </div>
         </div>

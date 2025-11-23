@@ -1,43 +1,92 @@
-.hamburgerButton {
-    border: none;           /* removes the border */
-    padding: 0;             /* remove button padding */
-    margin: 0;              /* remove margin */
-    background: none;       /* remove default background */
-    outline: none;          /* removes focus outline */
-    display: flex;          /* optional: center image */
-    cursor: pointer;        /* makes it feel clickable */
-  }
-  
-  .hamburgerIcon {
-    width: 30px;
-    height: 30px;
-    display: block;         /* removes any inline spacing */
-    user-select: none;         /* prevents text selection */
-    -webkit-user-drag: none;   /* prevents drag on iOS/Safari */
-  }
-  
-  @media (min-width:769px){
-    .hamburgerButton{
-        display:none;
-    }
+/* --------------------------- */
+/* HAMBURGER BUTTON + ICON     */
+/* --------------------------- */
 
-  }
+.hamburgerButton {
+  border: none;
+  padding: 0;
+  margin: 0;
+  background: none;
+  outline: none;
+  display: flex;
+  cursor: pointer;
+  
+  z-index: 9999; /* ensures it's always clickable */
+}
+
+.hamburgerIcon {
+  width: 30px;
+  height: 30px;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+
+/* --------------------------- */
+/* HIDE ON DESKTOP             */
+/* --------------------------- */
+
+@media (min-width: 769px) {
   .dropdownMenu {
-    position: fixed;
-    top: 0; 
-    right: 0;
-  
-    width: 60vw;          /* takes up ~half the page width on mobile */
-    height: 100vh;        /* full height */
-    background: white;
-  
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    gap: 20px;
-  
-    box-shadow: -4px 0px 12px rgba(0,0,0,0.15);
-  
-    z-index: 999;         /* sits above everything */
+    display: none !important;
   }
-  
+  .hamburgerButton {
+    display: none !important;
+  }
+}
+
+
+/* --------------------------- */
+/* DROPDOWN MENU               */
+/* --------------------------- */
+
+.dropdownMenu {
+  position: fixed;
+  top: 6vh; /* below your dashboard header */
+  right: 0;
+
+  width: 50vw; /* keep your original */
+  height: calc(100vh - 6vh); /* fills remaining screen */
+
+  background: white;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  gap: 20px;
+
+  box-shadow: -4px 0px 12px rgba(0, 0, 0, 0.15);
+
+  z-index: 9998; /* under button but over everything else */
+}
+
+
+/* --------------------------- */
+/* MENU ITEMS                  */
+/* --------------------------- */
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  border-radius: 6px;
+
+  width: 90%;
+  height: 5%;
+  margin: 5% auto 0 auto;
+
+  border: 2px solid transparent;
+  padding: 1rem;
+
+  cursor: pointer;
+  font-size: 95%;
+  text-align: left;
+  gap: 0.5rem;
+
+  font-family: applemedium, arial, sans-serif;
+  background-color: white;
+  color: rgb(78, 78, 78);
+}
+
+.dropdownItem:hover {
+  background-color: rgb(234, 233, 233);
+}
