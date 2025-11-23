@@ -1,0 +1,43 @@
+.hamburgerButton {
+    border: none;           /* removes the border */
+    padding: 0;             /* remove button padding */
+    margin: 0;              /* remove margin */
+    background: none;       /* remove default background */
+    outline: none;          /* removes focus outline */
+    display: flex;          /* optional: center image */
+    cursor: pointer;        /* makes it feel clickable */
+  }
+  
+  .hamburgerIcon {
+    width: 30px;
+    height: 30px;
+    display: block;         /* removes any inline spacing */
+    user-select: none;         /* prevents text selection */
+    -webkit-user-drag: none;   /* prevents drag on iOS/Safari */
+  }
+  
+  @media (min-width:769px){
+    .hamburgerButton{
+        display:none;
+    }
+
+  }
+  .dropdownMenu {
+    position: fixed;
+    top: 0; 
+    right: 0;
+  
+    width: 60vw;          /* takes up ~half the page width on mobile */
+    height: 100vh;        /* full height */
+    background: white;
+  
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 20px;
+  
+    box-shadow: -4px 0px 12px rgba(0,0,0,0.15);
+  
+    z-index: 999;         /* sits above everything */
+  }
+  

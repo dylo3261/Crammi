@@ -1,0 +1,27 @@
+.horizontalSidebar {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;           /* prevent wrapping if you want horizontal scroll */
+    align-items: center;
+    gap: 12px;
+    background-color: #f9f9f9;
+  
+    width: 100vw;                /* full viewport width */
+    max-width: 100%;             /* prevent overflow from parent */
+    box-sizing: border-box;
+    padding: 8px 12px;
+  
+    overflow-x: auto;            /* scroll if buttons exceed screen */
+    -webkit-overflow-scrolling: touch; /* smooth scrolling on iOS */
+  }
+  
+  
+  .horizontalSidebar button {
+    display: flex;
+    align-items: center;
+    gap: 8px;                 /* space between icon and text */
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  

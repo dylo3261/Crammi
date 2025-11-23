@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import UploadModal from './uploadModal.jsx'
+import Hamburger from "./Hamburger.jsx";
 //perfect
 function UploadBar({activeTab,openUpload}) {
     const showUploadExisting = activeTab !== "Files";
     return (
       <>
+   
         <h1 className="bodyActiveTabLabel">{activeTab}</h1>
         <button onClick={openUpload}className="bodyUploadButton">
           <img
@@ -41,7 +43,12 @@ function UploadBar({activeTab,openUpload}) {
     return (
       <>
         <div className='DashboardHeader'>
-          <h4>Logo</h4>
+          <h4 className="logotemp">Logo</h4>
+          <div className="mobileHamburger">
+
+          <Hamburger/>
+
+          </div>
         </div>
         <div className='sideBar'>                                                               
           <button onClick={()=> changeActiveTab("Exams")} className={activeTab==="Exams" ? 'activeDashboardSideButtons' : 'dashboardSideButtons' }>

@@ -15,6 +15,9 @@ html, body {
   z-index: 1000; 
   background-color: #ffffff; 
   border-top: none;
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
 } 
  
 /* SIDEBAR (Desktop Default) */
@@ -235,7 +238,16 @@ html, body {
   font-size: 1rem; 
   font-family: applethin, arial, sans-serif; 
 } 
-
+.mobileHamburger{
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
+}
+.logotemp{
+width:auto;
+margin: 0;
+  
+}
 .searchIcon { 
   height: 1rem; 
   width: auto; 
