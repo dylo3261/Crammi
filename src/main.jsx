@@ -13,20 +13,33 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import { AuthProvider } from "react-oidc-context";
 
+import {WebStorageStateStore } from "oidc-client-ts";
+
+console.log('Environment variables:', {
+  userPoolId: import.meta.env.VITE_COGNITO_USER_POOL_ID,
+  clientId: import.meta.env.VITE_COGNITO_CLIENT_ID,
+  domain: import.meta.env.VITE_COGNITO_DOMAIN,
+  region: import.meta.env.VITE_COGNITO_REGION,
+});
 const cognitoAuthConfig = {
-  authority: "https://cognito-idp.us-west-2.amazonaws.com/us-west-2_HvrwtG8yS",
-  client_id: "2k09t25870e667u1ge3990bhva",
-  redirect_uri: "http://localhost:5173/Dashboard",
+  authority: `https://cognito-idp.${import.meta.env.VITE_COGNITO_REGION}.amazonaws.com/${import.meta.env.VITE_COGNITO_USER_POOL_ID}`,
+  client_id: import.meta.env.VITE_COGNITO_CLIENT_ID,
+  redirect_uri: import.meta.env.VITE_REDIRECT_URI,
   response_type: "code",
-  scope: "email openid phone",
+  scope: "openid email phone",
+  post_logout_redirect_uri: import.meta.env.VITE_LOGOUT_URI,
+  userStore: new WebStorageStateStore({ store: window.localStorage }),
   metadata: {
-    issuer: "https://cognito-idp.us-west-2.amazonaws.com/us-west-2_HvrwtG8yS",
-    authorization_endpoint: "https://us-west-2hvrwtg8ys.auth.us-west-2.amazoncognito.com/oauth2/authorize",
-    token_endpoint: "https://us-west-2hvrwtg8ys.auth.us-west-2.amazoncognito.com/oauth2/token",
-    userinfo_endpoint: "https://us-west-2hvrwtg8ys.auth.us-west-2.amazoncognito.com/oauth2/userInfo",
-    end_session_endpoint: "https://us-west-2hvrwtg8ys.auth.us-west-2.amazoncognito.com/logout",
+    issuer: `https://cognito-idp.${import.meta.env.VITE_COGNITO_REGION}.amazonaws.com/${import.meta.env.VITE_COGNITO_USER_POOL_ID}`,
+    authorization_endpoint: `https://${import.meta.env.VITE_COGNITO_DOMAIN}.auth.${import.meta.env.VITE_COGNITO_REGION}.amazoncognito.com/oauth2/authorize`,
+    token_endpoint: `https://${import.meta.env.VITE_COGNITO_DOMAIN}.auth.${import.meta.env.VITE_COGNITO_REGION}.amazoncognito.com/oauth2/token`,
+    userinfo_endpoint: `https://${import.meta.env.VITE_COGNITO_DOMAIN}.auth.${import.meta.env.VITE_COGNITO_REGION}.amazoncognito.com/oauth2/userInfo`,
+    end_session_endpoint: `https://${import.meta.env.VITE_COGNITO_DOMAIN}.auth.${import.meta.env.VITE_COGNITO_REGION}.amazoncognito.com/logout`,
   },
 }
+console.log('Authorization URL:', cognitoAuthConfig.metadata.authorization_endpoint);
+console.log('Client ID:', cognitoAuthConfig.client_id);
+console.log('Redirect URI:', cognitoAuthConfig.redirect_uri);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 

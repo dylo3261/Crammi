@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import UploadModal from './uploadModal.jsx'
 import Hamburger from "./Hamburger.jsx";
 import { useAuth } from "react-oidc-context"; 
+import { useNavigate } from "react-router-dom";
+
 
 //perfect
 function UploadBar({activeTab,openUpload}) {
@@ -43,14 +45,26 @@ function UploadBar({activeTab,openUpload}) {
   }
   export default function DashboardHeader({openUpload,changeActiveTab,activeTab}) {
     const auth = useAuth();
+    const navigate = useNavigate();
 
+    useEffect(() => {
+      if (!auth.isLoading && !auth.isAuthenticated) {
+        navigate("/");
+      }
+    }, [auth.isLoading, auth.isAuthenticated, navigate]);
+  
     const signOutRedirect = () => {
-      const clientId = "2k09t25870e667u1ge3990bhva";
-      const logoutUri = "http://localhost:5173/";
-      const cognitoDomain = "https://us-west-2hvrwtg8ys.auth.us-west-2.amazoncognito.com";
+      // Clear localStorage
+      localStorage.clear();
+      
+      // Use environment variables
+      const clientId = import.meta.env.VITE_COGNITO_CLIENT_ID;
+      const logoutUri = import.meta.env.VITE_LOGOUT_URI;
+      const cognitoDomain = `https://${import.meta.env.VITE_COGNITO_DOMAIN}.auth.${import.meta.env.VITE_COGNITO_REGION}.amazoncognito.com`;
+      
       window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
     };
-  
+    
     if (auth.isLoading) {
       return <div>Loading...</div>;
     }
