@@ -19,8 +19,8 @@ export default function Hamburger({changeActiveTab,activeTab}) {
       </button>
 
       {/* dropdown menu */}
-      {isOpen && (
-        <div className="dropdownMenu">
+      <div className={`dropdownMenu ${isOpen ? "open" : ""}`}>
+
 
           <button className="dropdownItem" onClick={()=> changeActiveTab("Exams")}>
             <img className="sidebarIcon" src="https://uxwing.com/wp-content/themes/uxwing/download/editing-user-action/edit-list-icon.png" alt="exam icon"/>
@@ -58,7 +58,7 @@ export default function Hamburger({changeActiveTab,activeTab}) {
             </button>
         </div>
         </div>
-      )}
+      
     </>
   );
 }

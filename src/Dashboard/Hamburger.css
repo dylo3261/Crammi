@@ -42,7 +42,13 @@
 
   box-shadow: -4px 0px 12px rgba(0,0,0,0.15);
   z-index: 9998;
+  transform: translateX(100%);   /* start off-screen */
+  transition: transform 0.35s ease;
 
+}
+.dropdownMenu.open {
+  transform: translateX(0);      /* slide fully in */
+  opacity: 1;
 }
 
 /* Scrollable middle content (the main menu items) */
