@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import UploadModal from './uploadModal.jsx'
 import Hamburger from "./Hamburger.jsx";
+import { useAuth } from "react-oidc-context"; 
+
 //perfect
 function UploadBar({activeTab,openUpload}) {
     const showUploadExisting = activeTab !== "Files";
@@ -40,6 +42,36 @@ function UploadBar({activeTab,openUpload}) {
     );
   }
   export default function DashboardHeader({openUpload,changeActiveTab,activeTab}) {
+    const auth = useAuth();
+
+    const signOutRedirect = () => {
+      const clientId = "2k09t25870e667u1ge3990bhva";
+      const logoutUri = "http://localhost:5173/";
+      const cognitoDomain = "https://us-west-2hvrwtg8ys.auth.us-west-2.amazoncognito.com";
+      window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
+    };
+  
+    if (auth.isLoading) {
+      return <div>Loading...</div>;
+    }
+  
+    if (auth.error) {
+      return <div>Encountering error... {auth.error.message}</div>;
+    }
+  
+    // if (auth.isAuthenticated) {
+    //   return (
+    //     <div>
+    //       <pre> Hello: {auth.user?.profile.email} </pre>
+    //       <pre> ID Token: {auth.user?.id_token} </pre>
+    //       <pre> Access Token: {auth.user?.access_token} </pre>
+    //       <pre> Refresh Token: {auth.user?.refresh_token} </pre>
+  
+    //       <button onClick={() => auth.removeUser()}>Sign out</button>
+    //     </div>
+    //   );
+    // }
+
     return (
       <>
         <div className='DashboardHeader'>
@@ -83,7 +115,7 @@ function UploadBar({activeTab,openUpload}) {
                 <img className='sidebarIcon' src='https://uxwing.com/wp-content/themes/uxwing/download/communication-chat-call/question-inquiry-icon.png' alt='Support icon'/>
                 <span>Support</span>
             </button>
-            <button className='bottomDashboardSideButtons' >
+            <button className='bottomDashboardSideButtons' onClick={signOutRedirect}>
                 <img className='sidebarIcon' src='https://uxwing.com/wp-content/themes/uxwing/download/web-app-development/logout-line-icon.png' alt='Logout icon'/>
                 <span>Sign Out</span>
             </button>

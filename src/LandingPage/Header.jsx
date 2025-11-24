@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./Header.css";
 import { Link } from "react-router-dom";
+import { useAuth } from "react-oidc-context";
 
 
 export default function Header() {
+    const auth = useAuth(); 
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -42,8 +44,8 @@ export default function Header() {
       {/* Right Buttons */}
       <div className="header-box right-box">
         <Link className="header-btn headerButton">Contact Sales</Link>
-        <Link className="header-btn headerButton">Log In</Link>
-        <Link to='/Dashboard' className="header-btn outline"><span className='useCrammi'>Use Crammi, </span> It’s Free</Link>
+        <button className="header-btn headerButton" onClick={() => auth.signinRedirect()}>Log In</button>
+        <button onClick={() => auth.signinRedirect()} className="header-btn outline"><span className='useCrammi'>Use Crammi, </span> It’s Free</button>
       </div>
 
       {/* Hamburger */}
