@@ -359,7 +359,7 @@ useEffect(() => {
         rows={2}
         maxLength={365}
       />
-      <p className="numChars" style={{display: (specialInstructions.length > 0) && isMobile ? "block" : "none"}}> <span style={{color: specialInstructions.length===365 ? "red" :"#555"}}>Characters: {specialInstructions.length} / 365</span> </p>
+      <p className="numChars" style={{display: (specialInstructions.length > 0 && selectedFiles.length>0) && isMobile ? "block" : "none"}}> <span style={{color: specialInstructions.length===365 ? "red" :"#555"}}>Characters: {specialInstructions.length} / 365</span> </p>
 
         </div>
       
@@ -448,7 +448,7 @@ useEffect(() => {
         rows={2}
         maxLength={365}
       />
-      <p className="numChars" style={{display: (specialInstructions.length > 0) && !isMobile ? "block" : "none"}}> <span style={{color: specialInstructions.length===365 ? "red" :"#555"}}>Characters: {specialInstructions.length} / 365</span> </p>
+      <p className="numChars" style={{display: (specialInstructions.length > 0 && selectedFiles.length>0) && !isMobile ? "block" : "none"}}> <span style={{color: specialInstructions.length===365 ? "red" :"#555"}}>Characters: {specialInstructions.length} / 365</span> </p>
 
         </div>
       
