@@ -1,41 +1,29 @@
 import React from "react";
 import "./sectionOne.css";
 import googleLogo from "../../public/GoogleLogo.png";
-import { useAuth } from "react-oidc-context";
+import { signInWithRedirect } from 'aws-amplify/auth';
+import { useNavigate } from 'react-router-dom';
 
 export default function SectionOne() {
-  const auth = useAuth(); 
-  // const handleEmailSignUp = () => {
-  //   auth.signinRedirect({
-  //     extraQueryParams: {
-  //       signup: "true"
-  //     }
-  //   });
-  // };
+  const navigate = useNavigate();
+  
   const handleEmailSignUp = () => {
-    console.log('Sign up clicked');
-    console.log('Auth state:', auth);
-    console.log('Is loading?', auth.isLoading);
-    console.log('Is authenticated?', auth.isAuthenticated);
-    
-    auth.signinRedirect({
-      extraQueryParams: {
-        signup: "true"
-      }
-    }).catch(error => {
-      console.error('Sign in redirect error:', error);
-    });
+    navigate('/signup');
+  };
+  const handleEmailSignIn=()=>{
+    navigate('/signin')
+  }
+
+  const handleGoogleSignUp = async () => {
+    try {
+      await signInWithRedirect({
+        provider: 'Google'
+      });
+    } catch (error) {
+      console.error('Google sign up error:', error);
+    }
   };
 
-  // Sign up with Google directly
-  const handleGoogleSignUp = () => {
-    auth.signinRedirect({
-      extraQueryParams: {
-        identity_provider: "Google",
-        signup: "true"
-      }
-    });
-  };
   return (
     <section className="section-one">
       <div className="box">

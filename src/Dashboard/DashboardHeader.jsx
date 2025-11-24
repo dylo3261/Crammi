@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState,useEffect } from "react";
 import UploadModal from './uploadModal.jsx'
 import Hamburger from "./Hamburger.jsx";
-import { useAuth } from "react-oidc-context"; 
+import { signOut } from 'aws-amplify/auth';
 import { useNavigate } from "react-router-dom";
+import { fetchUserAttributes } from 'aws-amplify/auth';
 
 
-//perfect
+
 function UploadBar({activeTab,openUpload}) {
+  
     const showUploadExisting = activeTab !== "Files";
     return (
       <>
-   
         <h1 className="bodyActiveTabLabel">{activeTab}</h1>
         <button onClick={openUpload}className="bodyUploadButton">
           <img
@@ -42,58 +43,42 @@ function UploadBar({activeTab,openUpload}) {
         </div>
       </>
     );
-  }
-  export default function DashboardHeader({openUpload,changeActiveTab,activeTab}) {
-    const auth = useAuth();
-    const navigate = useNavigate();
+}
 
-    useEffect(() => {
-      if (!auth.isLoading && !auth.isAuthenticated) {
-        navigate("/");
-      }
-    }, [auth.isLoading, auth.isAuthenticated, navigate]);
+export default function DashboardHeader({openUpload,changeActiveTab,activeTab}) {
+  const [userName, setUserName] = useState('');
+
+  useEffect(() => {
+    getUserName();
+  }, []);
+
+  async function getUserName() {
+    try {
+      const attributes = await fetchUserAttributes();
+      setUserName(attributes.name || attributes.email);
+    } catch (error) {
+      console.error('Error fetching user attributes:', error);
+    }
+  }
+    const navigate = useNavigate();
   
-    const signOutRedirect = () => {
-      // Clear localStorage
-      localStorage.clear();
-      
-      // Use environment variables
-      const clientId = import.meta.env.VITE_COGNITO_CLIENT_ID;
-      const logoutUri = import.meta.env.VITE_LOGOUT_URI;
-      const cognitoDomain = `https://${import.meta.env.VITE_COGNITO_DOMAIN}.auth.${import.meta.env.VITE_COGNITO_REGION}.amazoncognito.com`;
-      
-      window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
+    const handleSignOut = async () => {
+      try {
+        await signOut({ global: true });   // always global – fixes federated consistency
+        // delay one microtask so router does NOT redirect before session clears
+        setTimeout(() => navigate('/'), 0); 
+      } catch (error) {
+        console.error("Sign out error:", error);
+      }
     };
     
-    if (auth.isLoading) {
-      return <div>Loading...</div>;
-    }
-  
-    if (auth.error) {
-      return <div>Encountering error... {auth.error.message}</div>;
-    }
-  
-    // if (auth.isAuthenticated) {
-    //   return (
-    //     <div>
-    //       <pre> Hello: {auth.user?.profile.email} </pre>
-    //       <pre> ID Token: {auth.user?.id_token} </pre>
-    //       <pre> Access Token: {auth.user?.access_token} </pre>
-    //       <pre> Refresh Token: {auth.user?.refresh_token} </pre>
-  
-    //       <button onClick={() => auth.removeUser()}>Sign out</button>
-    //     </div>
-    //   );
-    // }
 
     return (
       <>
         <div className='DashboardHeader'>
           <h4 className="logotemp">Logo</h4>
           <div className="mobileHamburger">
-
-          <Hamburger changeActiveTab={changeActiveTab} activeTab={activeTab}/>
-
+            <Hamburger changeActiveTab={changeActiveTab} activeTab={activeTab}/>
           </div>
         </div>
         <div className='sideBar'>                                                               
@@ -120,21 +105,19 @@ function UploadBar({activeTab,openUpload}) {
         </div>
         <div className='dashboardBody'>
             <div className='dashboardBodyHeader'>
-            <UploadBar activeTab={activeTab} openUpload={openUpload} />
+              <UploadBar activeTab={activeTab} openUpload={openUpload} />
             </div>
-          
         </div>
         <div className='logOutSection'>
             <button className='bottomDashboardSideButtons' >
                 <img className='sidebarIcon' src='https://uxwing.com/wp-content/themes/uxwing/download/communication-chat-call/question-inquiry-icon.png' alt='Support icon'/>
                 <span>Support</span>
             </button>
-            <button className='bottomDashboardSideButtons' onClick={signOutRedirect}>
+            <button className='bottomDashboardSideButtons' onClick={handleSignOut}>
                 <img className='sidebarIcon' src='https://uxwing.com/wp-content/themes/uxwing/download/web-app-development/logout-line-icon.png' alt='Logout icon'/>
                 <span>Sign Out</span>
             </button>
         </div>
       </>
     )
-  };
-  
+};

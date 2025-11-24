@@ -1,11 +1,19 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./Header.css";
 import { Link } from "react-router-dom";
-import { useAuth } from "react-oidc-context";
+import { signInWithRedirect } from 'aws-amplify/auth';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function Header() {
-    const auth = useAuth(); 
+  const navigate = useNavigate();
+  
+  const handleEmailSignUp = () => {
+    navigate('/signup');
+  };
+  const handleEmailSignIn=()=>{
+    navigate('/signin')
+  }
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -44,8 +52,8 @@ export default function Header() {
       {/* Right Buttons */}
       <div className="header-box right-box">
         <Link className="header-btn headerButton">Contact Sales</Link>
-        <button className="header-btn headerButton" onClick={() => auth.signinRedirect()}>Log In</button>
-        <button onClick={() => auth.signinRedirect()} className="header-btn outline"><span className='useCrammi'>Use Crammi, </span> It’s Free</button>
+        <button className="header-btn headerButton" onClick={handleEmailSignIn}>Log In</button>
+        <button  onClick={handleEmailSignUp} className="header-btn outline"><span className='useCrammi'>Use Crammi, </span> It’s Free</button>
       </div>
 
       {/* Hamburger */}
