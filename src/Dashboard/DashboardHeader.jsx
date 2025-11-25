@@ -62,15 +62,20 @@ export default function DashboardHeader({openUpload,changeActiveTab,activeTab}) 
   }
     const navigate = useNavigate();
   
-    const handleSignOut = async () => {
-      try {
-        await signOut({ global: true });   // always global – fixes federated consistency
-        // delay one microtask so router does NOT redirect before session clears
-        setTimeout(() => navigate('/'), 0); 
-      } catch (error) {
-        console.error("Sign out error:", error);
-      }
-    };
+
+const handleSignOut = async () => {
+  try {
+    // Clear OAuth flags before signing out
+    sessionStorage.removeItem('oauth_source');
+    sessionStorage.removeItem('oauth_completed');
+    
+    await signOut({ global: true });   // always global – fixes federated consistency
+    // delay one microtask so router does NOT redirect before session clears
+    setTimeout(() => navigate('/'), 0); 
+  } catch (error) {
+    console.error("Sign out error:", error);
+  }
+};
     
 
     return (

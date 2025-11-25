@@ -17,29 +17,52 @@ export default function SignUp() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Check for OAuth errors on component mount
-  useEffect(() => {
-    const checkOAuthReturn = async () => {
-      // Check if user just came back from OAuth
-      const oauthSource = sessionStorage.getItem('oauth_source');
-      
-      if (oauthSource === '/signup') {
-        sessionStorage.removeItem('oauth_source');
-        
-        // Check if user is authenticated
-        try {
-          await getCurrentUser();
-          // User is authenticated - OAuth succeeded, navigate away
-          navigate('/Dashboard');
-        } catch {
-          // User is NOT authenticated - OAuth failed
-          setError('An account with this email already exists. Please sign in with your email and password.');
-        }
-      }
-    };
+  const [curPassword, setPassword] = useState("");
+  const [PWrequirements, setPWRequirements] = useState({
+    length: false,
+    number: false,
+    uppercase: false,
+    lowercase: false,
+    special: false
+  });
+  const validatePassword = (password) => {
+    setPWRequirements({
+      length: password.length >= 8,
+      number: /\d/.test(password),
+      uppercase: /[A-Z]/.test(password),
+      lowercase: /[a-z]/.test(password),
+      special: /[@$!%*?&#]/.test(password)
+    });
+  };
+  
+  
+  // Replace the useEffect that checks for OAuth errors:
+
+useEffect(() => {
+  const checkOAuthReturn = async () => {
+    // Only check if we have the special flag indicating OAuth redirect completed
+    const oauthCompleted = sessionStorage.getItem('oauth_completed');
+    const oauthSource = sessionStorage.getItem('oauth_source');
     
-    checkOAuthReturn();
-  }, [navigate]);
+    if (oauthCompleted === 'true' && oauthSource === '/signup') {
+      // Clear the flags
+      sessionStorage.removeItem('oauth_source');
+      sessionStorage.removeItem('oauth_completed');
+      
+      // Check if user is authenticated
+      try {
+        await getCurrentUser();
+        // User is authenticated - OAuth succeeded, navigate away
+        navigate('/Dashboard');
+      } catch {
+        // User is NOT authenticated - OAuth failed
+        setError('An account with this email already exists. Please sign in with your email and password.');
+      }
+    }
+  };
+  
+  checkOAuthReturn();
+}, [navigate]);
 
   const handleSignUp = async () => {
     setError('');
@@ -190,15 +213,42 @@ export default function SignUp() {
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           onKeyPress={handleSignUpKeyPress}
         />
-        
+          <div className="validPWReq" style={{display: curPassword.length>0 ? "block" : "none"}}>
+          <p style={{ display: "flex", alignItems: "center", justifyContent: "left", gap: "8px", color: curPassword.length >= 8 ? "green" : "#9d9d9d"}}>
+            <img className="pwIcons" src={curPassword.length >= 8 ? "/validPW.png" : "/invalidPW.png"} style={{filter:curPassword.length >= 8 ? "brightness(0) saturate(100%) invert(27%) sepia(95%) saturate(1861%) hue-rotate(87deg) brightness(94%) contrast(102%)" : "brightness(0) saturate(100%) invert(69%) sepia(0%) saturate(0%) hue-rotate(182deg) brightness(92%) contrast(91%)"}} />
+            Password must be at least 8 Characters
+          </p>          
+          <p style={{ display: "flex", alignItems: "center", justifyContent: "left", gap: "8px",color: PWrequirements.number ? "green" : "#9d9d9d" }}>
+            <img className="pwIcons" src={PWrequirements.number ? "/validPW.png" : "/invalidPW.png"} style={{filter:PWrequirements.number ? "brightness(0) saturate(100%) invert(27%) sepia(95%) saturate(1861%) hue-rotate(87deg) brightness(94%) contrast(102%)" : "brightness(0) saturate(100%) invert(69%) sepia(0%) saturate(0%) hue-rotate(182deg) brightness(92%) contrast(91%)"}} />
+            Use a Number
+          </p>     
+          <p style={{ display: "flex", alignItems: "center", justifyContent: "left", gap: "8px",color: PWrequirements.uppercase ? "green" : "#9d9d9d" }}>
+            <img className="pwIcons" src={PWrequirements.uppercase ? "/validPW.png" : "/invalidPW.png"}style={{filter:PWrequirements.uppercase ?"brightness(0) saturate(100%) invert(27%) sepia(95%) saturate(1861%) hue-rotate(87deg) brightness(94%) contrast(102%)" : "brightness(0) saturate(100%) invert(69%) sepia(0%) saturate(0%) hue-rotate(182deg) brightness(92%) contrast(91%)"}} />
+            Use an Uppercase Letter
+          </p>            
+          <p style={{ display: "flex", alignItems: "center", justifyContent: "left", gap: "8px",color: PWrequirements.lowercase ? "green" : "#9d9d9d" }}>
+            <img className="pwIcons" src={PWrequirements.lowercase ? "/validPW.png" : "/invalidPW.png"} style={{filter:PWrequirements.lowercase ?"brightness(0) saturate(100%) invert(27%) sepia(95%) saturate(1861%) hue-rotate(87deg) brightness(94%) contrast(102%)" : "brightness(0) saturate(100%) invert(69%) sepia(0%) saturate(0%) hue-rotate(182deg) brightness(92%) contrast(91%)"}}/>
+            Use a Lowercase Letter
+          </p>            
+          <p style={{ display: "flex", alignItems: "center", justifyContent: "left", gap: "8px",color: PWrequirements.special ? "green" : "#9d9d9d" }}>
+            <img className="pwIcons" src={PWrequirements.special ? "/validPW.png" : "/invalidPW.png"}style={{filter:PWrequirements.special ? "brightness(0) saturate(100%) invert(27%) sepia(95%) saturate(1861%) hue-rotate(87deg) brightness(94%) contrast(102%)" : "brightness(0) saturate(100%) invert(69%) sepia(0%) saturate(0%) hue-rotate(182deg) brightness(92%) contrast(91%)"}} />
+            Use a Symbol
+          </p>  
+        </div>
         <input
           type="password"
           placeholder="Password"
           value={formData.password}
-          onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-          onKeyPress={handleSignUpKeyPress}
+          onChange={(e) => {
+            const value = e.target.value;
+          
+            setPassword(value);
+            validatePassword(e.target.value);
+            setFormData(prev => ({ ...prev, password: value }));
+          }}
+                    onKeyPress={handleSignUpKeyPress}
         />
-        
+      
         <input
           type="password"
           placeholder="Confirm Password"
@@ -210,11 +260,12 @@ export default function SignUp() {
         <button className="primary-button" onClick={handleSignUp} disabled={loading}>
           {loading ? 'Creating Account...' : 'Sign up'}
         </button>
-
+          
         <div className="auth-footer-text">
           Have an account?{' '}
           <button onClick={() => navigate('/signin')}>Sign In</button>
         </div>
+        
       </div>
     </div>
   );

@@ -5,7 +5,7 @@ import { Hub } from 'aws-amplify/utils';
 import LandingPage from "./LandingPage/LandingPage.jsx"
 import Dashboard from "./Dashboard/Dashboard.jsx"
 import SignIn from "./Auth/SignIn.jsx"
-import SignUp from "./Auth/SignUp.jsx"
+import SignUp from "./Auth/Signup.jsx"
 
 function AppContent() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -19,7 +19,7 @@ function AppContent() {
     // Listen for auth events
     const hubListener = Hub.listen('auth', ({ payload }) => {
       if (payload.event === 'signedIn') {
-        checkAuth(); // Re-check auth instead of just setting to true
+        checkAuth();
       } else if (payload.event === 'signedOut') {
         setIsAuthenticated(false);
       }
@@ -32,6 +32,9 @@ function AppContent() {
     try {
       await getCurrentUser();
       setIsAuthenticated(true);
+      // Clear OAuth flags when successfully authenticated
+      sessionStorage.removeItem('oauth_source');
+      sessionStorage.removeItem('oauth_completed');
     } catch (error) {
       setIsAuthenticated(false);
       
@@ -39,6 +42,8 @@ function AppContent() {
       const oauthSource = sessionStorage.getItem('oauth_source');
       
       if (oauthSource && location.pathname !== oauthSource) {
+        // Set flag to indicate OAuth redirect completed
+        sessionStorage.setItem('oauth_completed', 'true');
         // Redirect back to where OAuth was initiated
         navigate(oauthSource, { replace: true });
       }

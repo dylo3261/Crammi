@@ -94,6 +94,9 @@ export default function SignIn() {
           Don't have an account?{' '}
           <button onClick={() => navigate('/signup')}>Sign Up</button>
         </div>
+        <div className="auth-footer-text">
+          <button >Forgot Your Password?</button>
+        </div>
       </div>
     </div>
   );
