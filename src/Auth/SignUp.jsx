@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { signUp, confirmSignUp, signInWithRedirect } from 'aws-amplify/auth';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { signUp, confirmSignUp, signInWithRedirect, getCurrentUser } from 'aws-amplify/auth';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './Auth.css';
 
 export default function SignUp() {
@@ -15,6 +15,31 @@ export default function SignUp() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Check for OAuth errors on component mount
+  useEffect(() => {
+    const checkOAuthReturn = async () => {
+      // Check if user just came back from OAuth
+      const oauthSource = sessionStorage.getItem('oauth_source');
+      
+      if (oauthSource === '/signup') {
+        sessionStorage.removeItem('oauth_source');
+        
+        // Check if user is authenticated
+        try {
+          await getCurrentUser();
+          // User is authenticated - OAuth succeeded, navigate away
+          navigate('/Dashboard');
+        } catch {
+          // User is NOT authenticated - OAuth failed
+          setError('An account with this email already exists. Please sign in with your email and password.');
+        }
+      }
+    };
+    
+    checkOAuthReturn();
+  }, [navigate]);
 
   const handleSignUp = async () => {
     setError('');
@@ -69,8 +94,11 @@ export default function SignUp() {
 
   const handleGoogleSignUp = async () => {
     try {
+      // Store current path before OAuth
+      sessionStorage.setItem('oauth_source', '/signup');
       await signInWithRedirect({ provider: 'Google' });
     } catch (err) {
+      sessionStorage.removeItem('oauth_source');
       setError('Failed to sign in with Google');
     }
   };
