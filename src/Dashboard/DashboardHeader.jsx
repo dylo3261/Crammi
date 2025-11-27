@@ -4,6 +4,7 @@ import Hamburger from "./Hamburger.jsx";
 import { signOut } from 'aws-amplify/auth';
 import { useNavigate } from "react-router-dom";
 import { fetchUserAttributes } from 'aws-amplify/auth';
+import { fetchAuthSession } from 'aws-amplify/auth';
 
 
 
@@ -47,9 +48,13 @@ function UploadBar({activeTab,openUpload}) {
 
 export default function DashboardHeader({openUpload,changeActiveTab,activeTab}) {
   const [userName, setUserName] = useState('');
+  const [userPFP, setUserPFP] = useState('');
 
   useEffect(() => {
     getUserName();
+  }, []);
+  useEffect(() => {
+    getUserPFP();
   }, []);
 
   async function getUserName() {
@@ -60,7 +65,21 @@ export default function DashboardHeader({openUpload,changeActiveTab,activeTab}) 
       console.error('Error fetching user attributes:', error);
     }
   }
-    const navigate = useNavigate();
+
+async function getUserPFP() {
+  try {
+    const session = await fetchAuthSession();
+
+    
+    const attributes = await fetchUserAttributes();
+   
+    
+    setUserPFP(attributes.picture || "https://askthescientists.com/wp-content/uploads/2021/04/AdobeStock_240042551-scaled.jpeg");
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+  
   
 
 const handleSignOut = async () => {
@@ -86,7 +105,10 @@ const handleSignOut = async () => {
             <Hamburger changeActiveTab={changeActiveTab} activeTab={activeTab}/>
           </div>
         </div>
-        <div className='sideBar'>                                                               
+        <div className='sideBar'> 
+          <div className='userInfoTab'>
+          </div>
+          <div className='sideBarButtonDiv'>                                                              
           <button onClick={()=> changeActiveTab("Exams")} className={activeTab==="Exams" ? 'activeDashboardSideButtons' : 'dashboardSideButtons' }>
             <img className='sidebarIcon' src='https://uxwing.com/wp-content/themes/uxwing/download/editing-user-action/edit-list-icon.png' alt='exam icon in dashboard'/>
             <span>Exams</span>
@@ -99,13 +121,23 @@ const handleSignOut = async () => {
             <img className='sidebarIcon' src='../public/FlashcardIcon.png' alt='flashcards icon'/>
             <span>Flashcards</span>
           </button>
+          </div>
           <button onClick={()=> changeActiveTab("Files")} className={activeTab==="Files" ? 'activeDashboardSideButtons' : 'dashboardSideButtons' }>
             <img className='sidebarIcon' src='https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../releases/preview/2012/png/iconmonstr-folder-19.png&r=0&g=0&b=0' alt='flashcards icon'/>
             <span>Files</span>
+            
           </button>
           <button className='dashboardSideButtons'>
-            <img className='sidebarIcon' src='https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../releases/preview/2018/png/iconmonstr-user-circle-thin.png&r=0&g=0&b=0' alt='flashcards icon'/>
-            <span>Account</span>
+            <img 
+              className='userPFP' 
+              src={userPFP} 
+              alt='profile picture'
+              onError={(e) => {
+                console.log('Image failed to load:', userPFP);
+                e.target.src = "https://askthescientists.com/wp-content/uploads/2021/04/AdobeStock_240042551-scaled.jpeg";
+              }}
+            />
+            <span className='userNameText'>{userName}</span>
           </button>
         </div>
         <div className='dashboardBody'>

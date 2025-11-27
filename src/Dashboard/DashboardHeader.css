@@ -7,7 +7,7 @@ html, body {
 /* DASHBOARD HEADER */
 .DashboardHeader{ 
   height: 6vh; 
-  border: 1px solid #ccc; 
+  border: 1px solid #e4e4e4;
   position: fixed; 
   top: 0; 
   left: 0; 
@@ -23,14 +23,14 @@ html, body {
 /* SIDEBAR (Desktop Default) */
 .sideBar {
   height: 100vh;
-  border: 1px solid #ccc;
+  border: 1px solid #e4e4e4;
   position: fixed;
-  top: 6vh;
+  top: 0;
   left: 0;
-  width: 240px; /* fixed sidebar width */
+  width: 220px; /* fixed sidebar width */
   z-index: 999;
   border-top: none;
-  background-color: white;
+  background-color: rgb(246, 246, 246);
 }
  
 /* SIDEBAR BUTTONS */
@@ -39,17 +39,17 @@ html, body {
   align-items: center; 
   border-radius: 6px; 
   width: 90%; 
-  height: 5%; 
-  margin: 5% auto 0 auto; 
+  height: 40px; 
+  margin: 1% auto 0 auto; 
   border: 2px solid transparent; 
-  padding: 1rem; 
+  padding: 0.5rem; 
   cursor: pointer; 
-  font-size: 95%; 
+  font-size: 87%; 
   text-align: left; 
   gap: 0.5rem; 
-  font-family: applemedium,arial,sans-serif; 
-  background-color: white; 
-  color: rgb(78, 78, 78);
+  font-family: applethin,arial,sans-serif; 
+  background-color: transparent; 
+  color: rgb(48, 48, 48);
 } 
 
 .bottomDashboardSideButtons {
@@ -60,22 +60,26 @@ html, body {
   width: 90%; 
   height: 50px; 
   border: 2px solid transparent; 
-  padding: 1rem; 
+  padding: 0.5rem; 
   cursor: pointer; 
-  font-size: 95%; 
+  font-size: 87%; 
   text-align: left; 
   gap: 0.5rem; 
-  font-family: applemedium, arial, sans-serif; 
-  background-color: white; 
-  color: rgb(78, 78, 78);
+  font-family: applethin, arial, sans-serif; 
+  background-color: transparent; 
+  color: rgb(48, 48, 48);
   margin: 0 auto 0 auto; /* centers the button horizontally */
 }
 
 .bottomDashboardSideButtons:hover{
   background-color: rgb(234, 233, 233); 
+  color: rgb(0, 0, 0);
+
 }
 .dashboardSideButtons:hover { 
   background-color: rgb(234, 233, 233); 
+  color: rgb(0, 0, 0);
+
 } 
 
 .activeDashboardSideButtons { 
@@ -83,23 +87,32 @@ html, body {
   align-items: center; 
   border-radius: 6px; 
   width: 90%; 
-  height: 5%; 
-  margin: 5% auto 0 auto; 
-  border: none; 
-  padding: 1rem; 
+  height: 40px; 
+  margin: 1% auto 0 auto; 
+  border: 2px solid transparent; 
+  padding: 0.5rem; 
   cursor: pointer; 
-  font-size: 95%; 
+  font-size: 87%; 
   text-align: left; 
   gap: 0.5rem; 
-  font-family: applemedium,arial,sans-serif; 
+  font-family: applethin,arial,sans-serif; 
+  background-color: transparent; 
   background-color: rgb(234, 233, 233); 
-  color: rgb(78, 78, 78);
+  color: rgb(0, 0, 0);
 } 
-
+.sideBarButtonDiv{
+  margin-top: 6.3vh;
+}
+.userPFP{
+  width: 1.5rem;  /* Adjust this for size */
+  height: 1.5rem; /* Keep same as width for perfect circle */
+  border-radius: 50%; /* Makes it circular */
+  object-fit: cover;
+}
 .sidebarIcon { 
-  height: 1.1rem; 
+  height: 1rem; 
   width: auto; 
-  filter: brightness(0) saturate(100%) invert(40%) sepia(0%) saturate(0%) hue-rotate(151deg) brightness(95%) contrast(90%); 
+  filter: brightness(0) saturate(100%) invert(20%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(40%) contrast(100%);
 } 
 
 .uploadNewIcon { 
@@ -117,11 +130,11 @@ html, body {
   position: fixed;
   bottom: 0;
   left: 0;
-  width: 240px;
+  width: 220px;
   height: 145px;
   z-index: 2000;
-  background-color: white;
-  border: 1px solid #ccc;
+  background-color: rgb(246, 246, 246);
+  border: 1px solid #e4e4e4;
  
   display: flex;
   flex-direction: column;
@@ -140,7 +153,7 @@ html, body {
  
 /* DASHBOARD BODY CONTENT */
 .dashboardBodyHeader { 
-  margin-top: 3vh; 
+  margin-top: -2vh;
   margin-left: 1vw; 
   height: 3rem; 
   display: flex; /* put label + button side by side */ 
@@ -254,6 +267,19 @@ margin: 0;
   margin-right: 0.5rem; 
   filter: brightness(0) saturate(100%) invert(40%) sepia(0%) saturate(0%) hue-rotate(151deg) brightness(95%) contrast(90%);
 } 
+
+.userNameText{
+  white-space: nowrap;        /* keep text on one line */
+  overflow: hidden;           /* hide extra text */
+  text-overflow: ellipsis;    /* add ... */
+  max-width: 130px;           /* required for ellipsis (adjust size) */
+  display: inline-block;      /* needed for max-width to apply correctly */
+}
+@media (min-width:769px){
+  .DashboardHeader{
+    display: none;
+  }
+}
 @media (max-width: 1100px) {
   .dashboardBodyHeader {
     flex-wrap: wrap;
