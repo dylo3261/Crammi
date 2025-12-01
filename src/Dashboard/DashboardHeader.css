@@ -28,7 +28,7 @@ html, body {
   top: 0;
   left: 0;
   width: 220px; /* fixed sidebar width */
-  z-index: 999;
+  z-index: 998;
   border-top: none;
   background-color: rgb(246, 246, 246);
 }
@@ -39,7 +39,7 @@ html, body {
   align-items: center; 
   border-radius: 6px; 
   width: 90%; 
-  height: 40px; 
+  height: 35px; 
   margin: 1% auto 0 auto; 
   border: 2px solid transparent; 
   padding: 0.5rem; 
@@ -55,24 +55,24 @@ html, body {
 .bottomDashboardSideButtons {
   display: flex; 
   align-items: center; 
-  justify-content: flex-start; /* keeps icon + text aligned left inside the button */
   border-radius: 6px; 
   width: 90%; 
-  height: 50px; 
+  height: 35px; 
+  margin: 1% auto 0 auto; 
   border: 2px solid transparent; 
   padding: 0.5rem; 
   cursor: pointer; 
   font-size: 87%; 
   text-align: left; 
   gap: 0.5rem; 
-  font-family: applethin, arial, sans-serif; 
+  font-family: applemedium,arial,sans-serif; 
   background-color: transparent; 
   color: rgb(48, 48, 48);
-  margin: 0 auto 0 auto; /* centers the button horizontally */
+
 }
 
 .bottomDashboardSideButtons:hover{
-  background-color: rgb(234, 233, 233); 
+  background-color: rgb(224, 223, 223); 
   color: rgb(0, 0, 0);
 
 }
@@ -87,7 +87,7 @@ html, body {
   align-items: center; 
   border-radius: 6px; 
   width: 90%; 
-  height: 40px; 
+  height: 35px; 
   margin: 1% auto 0 auto; 
   border: 2px solid transparent; 
   padding: 0.5rem; 
@@ -106,6 +106,12 @@ html, body {
 .userPFP{
   width: 2rem;  /* Adjust this for size */
   height: 2rem; /* Keep same as width for perfect circle */
+  border-radius: 50%; /* Makes it circular */
+  object-fit: cover;
+}
+.userPFPPopup{
+  width: 1.6rem;  /* Adjust this for size */
+  height: 1.6rem; /* Keep same as width for perfect circle */
   border-radius: 50%; /* Makes it circular */
   object-fit: cover;
 }
@@ -145,10 +151,26 @@ html, body {
   flex-direction: row;
   align-items: center;
   border-radius: 6px; 
-  width: 90%; 
-  height: 40px; 
+  width: 95%; 
+  height: 60px; 
   margin: 1% auto 0 auto; 
   border: 2px solid transparent; 
+}
+
+.PFPButtonPopup{
+  display: flex; 
+  align-items: center; 
+  border-radius: 6px; 
+  width: 100%; 
+  height: 40px; 
+  border: 2px solid transparent; 
+   
+  font-size: 87%; 
+  gap: 0.5rem; 
+  font-family: applemedium,arial,sans-serif; 
+  background-color: transparent; 
+  color: rgb(48, 48, 48); 
+  
 }
 .PFPButton{
   display: flex; 
@@ -169,6 +191,62 @@ html, body {
     color: rgb(0, 0, 0);
 
   }
+  .activePFPWrapper{
+    display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-radius: 6px; 
+  width: 95%; 
+  height: 60px; 
+  margin: 1% auto 0 auto; 
+  border: 2px solid transparent; 
+  background-color: rgb(238, 238, 238); 
+  color: rgb(0, 0, 0);
+
+  }
+
+.logoutPopupContainer,.logoutPopup{
+  z-index: 3000;
+}
+.logoutPopupContainer{
+  position: fixed;
+  bottom: 70px; /* place above logout section */
+  left: 5px;
+  width: 210px;
+  height: auto;
+  border-radius: 15px;
+  background-color: rgb(234, 233, 233); 
+}
+
+.logoutPopupContent::before {
+  content: '';
+  position: absolute;
+  left: 10%;             /* start 10% from the left */
+  width: 80%;            /* make it 80% of container width */
+  height: 1.3px;           /* thickness of the line */
+  background-color: rgb(209, 209, 209); /* line color */
+  margin-top: -7px;
+}
+
+.accountEmailDisplayPopup{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 130px; /* or whatever width you want */
+  margin: 0;
+  font-size: 12px;
+  margin-top: 2px;
+
+}
+
+.PFPButtonPopup > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+
 .sidebarIcon { 
   height: 1rem; 
   width: auto; 
@@ -191,7 +269,9 @@ html, body {
   bottom: 0;
   left: 0;
   width: 220px;
-  height: 145px;
+  height: auto;
+  padding-top: 5px;
+  padding-bottom: 5px;
   z-index: 2000;
   background-color: rgb(246, 246, 246);
   border: 1px solid #e4e4e4;

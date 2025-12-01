@@ -49,12 +49,18 @@ function UploadBar({activeTab,openUpload}) {
 export default function DashboardHeader({openUpload,changeActiveTab,activeTab}) {
   const [userName, setUserName] = useState('');
   const [userPFP, setUserPFP] = useState('');
+  const [userEmail, setUserEmail]= useState('')
+  const [isLogoutPopup,setLogoutPopup]=useState(false);
+  
 
   useEffect(() => {
     getUserName();
   }, []);
   useEffect(() => {
     getUserPFP();
+  }, []);
+  useEffect(() => {
+    getUserEmail();
   }, []);
 
   async function getUserName() {
@@ -63,6 +69,14 @@ export default function DashboardHeader({openUpload,changeActiveTab,activeTab}) 
       setUserName(attributes.name || attributes.email);
     } catch (error) {
       console.error('Error fetching user attributes:', error);
+    }
+  }
+  async function getUserEmail() {
+    try {
+      const attributes = await fetchUserAttributes();
+      setUserEmail(attributes.email || attributes.name);
+    } catch (error) {
+      console.error('Error fetching user Email:', error);
     }
   }
 
@@ -127,7 +141,7 @@ const handleSignOut = async () => {
             <span>Files</span>
             
           </button>
-          <div className='PFPWrapper'>
+          {/* <div className='PFPWrapper'>
           <button className='PFPButton'>
             <img 
               className='userPFP' 
@@ -148,23 +162,85 @@ const handleSignOut = async () => {
           <button className='upgradeButton'>
               Upgrade
             </button>
-          </div>
-         
+          </div> */}
         </div>
         <div className='dashboardBody'>
             <div className='dashboardBodyHeader'>
               <UploadBar activeTab={activeTab} openUpload={openUpload} />
             </div>
         </div>
+
+
+        {isLogoutPopup && (
+          <div className="logoutPopupContainer">
+            <div className="logoutPopup">
+
+              
+          <div className='logoutPopupPFP'>
+          <div className='PFPWrapper'>
+          <button className='PFPButtonPopup'>  {/* leaving this a button in case want to do something with it */}
+            <img 
+              className='userPFPPopup' 
+              src={userPFP} 
+              alt='profile picture'
+              onError={(e) => {
+                console.log('Image failed to load:', userPFP);
+                e.target.src = "https://askthescientists.com/wp-content/uploads/2021/04/AdobeStock_240042551-scaled.jpeg";
+              }}
+            />
+            <div>
+            <span className='userNameText'>{userName}</span>
+            <p className='accountEmailDisplayPopup'>{userEmail}</p>
+            </div>
+          </button>
+          </div>
+          </div>
+      
+          <div className='logoutPopupContent'>
+            <div className='popupUpgradePlan'>
+                <button className='bottomDashboardSideButtons' >
+                        <img className='sidebarIcon' src='/starIcon.png' alt='Support icon'/>
+                        <span>Upgrade Plan</span>
+                    </button>
+
+          </div>
+              <button className='bottomDashboardSideButtons' >
+                    <img className='sidebarIcon' src='https://uxwing.com/wp-content/themes/uxwing/download/computers-mobile-hardware/headphone-headset-icon.png' alt='Support icon'/>
+                    <span>Support</span>
+                </button>
+                <button className='bottomDashboardSideButtons' onClick={handleSignOut}>
+                    <img className='sidebarIcon' src='https://uxwing.com/wp-content/themes/uxwing/download/web-app-development/log-in-icon.png' alt='Logout icon'/>
+                    <span>Sign Out</span>
+                </button>
+          </div>
+      
+            </div>
+          </div>
+        )}
         <div className='logOutSection'>
-            <button className='bottomDashboardSideButtons' >
-                <img className='sidebarIcon' src='https://uxwing.com/wp-content/themes/uxwing/download/communication-chat-call/question-inquiry-icon.png' alt='Support icon'/>
-                <span>Support</span>
+          
+             <div className={isLogoutPopup ? 'activePFPWrapper':'PFPWrapper'}>
+          <button className='PFPButton' onClick={()=> setLogoutPopup(!isLogoutPopup)}>
+            <img 
+              className='userPFP' 
+              src={userPFP} 
+              alt='profile picture'
+              onError={(e) => {
+                console.log('Image failed to load:', userPFP);
+                e.target.src = "https://askthescientists.com/wp-content/uploads/2021/04/AdobeStock_240042551-scaled.jpeg";
+              }}
+            />
+            <div>
+            <span className='userNameText'>{userName}</span>
+            <p className='accountTierDisplay'>Free</p>
+            </div>
+           
+           
+          </button>
+          <button className='upgradeButton'>
+              Upgrade
             </button>
-            <button className='bottomDashboardSideButtons' onClick={handleSignOut}>
-                <img className='sidebarIcon' src='https://uxwing.com/wp-content/themes/uxwing/download/web-app-development/logout-line-icon.png' alt='Logout icon'/>
-                <span>Sign Out</span>
-            </button>
+          </div>
         </div>
       </>
     )
