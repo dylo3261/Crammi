@@ -47,7 +47,7 @@ html, body {
   font-size: 87%; 
   text-align: left; 
   gap: 0.5rem; 
-  font-family: applethin,arial,sans-serif; 
+  font-family: applemedium,arial,sans-serif; 
   background-color: transparent; 
   color: rgb(48, 48, 48);
 } 
@@ -95,7 +95,7 @@ html, body {
   font-size: 87%; 
   text-align: left; 
   gap: 0.5rem; 
-  font-family: applethin,arial,sans-serif; 
+  font-family: applemedium,arial,sans-serif; 
   background-color: transparent; 
   background-color: rgb(234, 233, 233); 
   color: rgb(0, 0, 0);
@@ -104,11 +104,71 @@ html, body {
   margin-top: 6.3vh;
 }
 .userPFP{
-  width: 1.5rem;  /* Adjust this for size */
-  height: 1.5rem; /* Keep same as width for perfect circle */
+  width: 2rem;  /* Adjust this for size */
+  height: 2rem; /* Keep same as width for perfect circle */
   border-radius: 50%; /* Makes it circular */
   object-fit: cover;
 }
+
+.userNameText{
+  white-space: nowrap;        /* keep text on one line */
+  overflow: hidden;           /* hide extra text */
+  text-overflow: ellipsis;    /* add ... */
+  max-width: 130px;           /* required for ellipsis (adjust size) */
+  display: inline-block;      /* needed for max-width to apply correctly */
+  margin-bottom: -3px;
+  font-family: applemedium,arial,sans-serif;
+}
+.accountTierDisplay{
+  display:flex;
+  flex-direction: row;
+  font-family:applemedium,arial,sans-serif;
+  font-size: 13px;
+}
+.upgradeButton{
+  padding:4px;
+  padding-right: 8px;
+  padding-left: 8px;
+  border-radius: 20px;
+  border: none;
+  color:white;
+  background-color: black;
+  font-family: applethin,arial,sans-serif;
+  margin-left: -12px;
+}
+.upgradeButton:hover{
+  background-color: rgb(58, 58, 58);
+  cursor: pointer;
+}
+.PFPWrapper{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-radius: 6px; 
+  width: 90%; 
+  height: 40px; 
+  margin: 1% auto 0 auto; 
+  border: 2px solid transparent; 
+}
+.PFPButton{
+  display: flex; 
+  align-items: center; 
+  border-radius: 6px; 
+  width: 70%; 
+  height: 40px; 
+  border: 2px solid transparent; 
+  cursor: pointer; 
+  font-size: 87%; 
+  gap: 0.5rem; 
+  font-family: applemedium,arial,sans-serif; 
+  background-color: transparent; 
+  color: rgb(48, 48, 48);}
+
+  .PFPWrapper:has(.PFPButton:hover) {
+    background-color: rgb(234, 233, 233); 
+    color: rgb(0, 0, 0);
+
+  }
 .sidebarIcon { 
   height: 1rem; 
   width: auto; 
@@ -268,13 +328,6 @@ margin: 0;
   filter: brightness(0) saturate(100%) invert(40%) sepia(0%) saturate(0%) hue-rotate(151deg) brightness(95%) contrast(90%);
 } 
 
-.userNameText{
-  white-space: nowrap;        /* keep text on one line */
-  overflow: hidden;           /* hide extra text */
-  text-overflow: ellipsis;    /* add ... */
-  max-width: 130px;           /* required for ellipsis (adjust size) */
-  display: inline-block;      /* needed for max-width to apply correctly */
-}
 @media (min-width:769px){
   .DashboardHeader{
     display: none;

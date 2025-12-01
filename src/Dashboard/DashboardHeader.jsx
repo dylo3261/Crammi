@@ -127,7 +127,8 @@ const handleSignOut = async () => {
             <span>Files</span>
             
           </button>
-          <button className='dashboardSideButtons'>
+          <div className='PFPWrapper'>
+          <button className='PFPButton'>
             <img 
               className='userPFP' 
               src={userPFP} 
@@ -137,8 +138,18 @@ const handleSignOut = async () => {
                 e.target.src = "https://askthescientists.com/wp-content/uploads/2021/04/AdobeStock_240042551-scaled.jpeg";
               }}
             />
+            <div>
             <span className='userNameText'>{userName}</span>
+            <p className='accountTierDisplay'>Free</p>
+            </div>
+           
+           
           </button>
+          <button className='upgradeButton'>
+              Upgrade
+            </button>
+          </div>
+         
         </div>
         <div className='dashboardBody'>
             <div className='dashboardBodyHeader'>

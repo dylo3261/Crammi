@@ -82,7 +82,7 @@
     margin-top: 1rem;
     background-color: #AB9FF2;
     color: white;
-    border: 0.7px solid black;
+    border: 0.0px solid black;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
   }
   
@@ -107,7 +107,7 @@
     margin-top: 1rem;
     background-color: #ffffff;
     color: black;
-    border: 0.7px solid black;
+    border: 0.1px solid rgb(152, 152, 152);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
     flex-wrap: wrap; /* allow image + text to wrap */
   }
