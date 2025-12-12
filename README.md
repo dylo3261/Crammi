@@ -1,16 +1,85 @@
-# React + Vite
+# Crammi
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Crammi is an open-source study tool that converts PDFs, uploaded notes, and handwritten notes (via mobile camera) into structured flashcards and quizzes. It includes a React Native mobile application and an AWS-based backend using Python microservices for OCR, text extraction, and NLP-driven flashcard generation.
 
-Currently, two official plugins are available:
+## Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Crammi provides an automated workflow for turning written or digital study materials into organized flashcards. It uses:
 
-## React Compiler
+A React Native (Expo) mobile frontend
 
-The React Compiler is not enabled on this template. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+AWS cloud infrastructure for uploads, authentication, and data storage
 
-## Expanding the ESLint configuration
+Python services deployed as AWS Lambda functions for OCR and NLP
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Features
+PDF Processing
+
+Extracts text from uploaded PDFs.
+
+Identifies key concepts, definitions, and summaries.
+
+Generates flashcards automatically.
+
+Camera-Based Note Scanning
+
+OCR extract from handwritten notes.
+
+Text cleaning and normalization.
+
+Automatic flashcard and quiz generation.
+
+Flashcard and Quiz Generation
+
+Automatic term-definition flashcards.
+
+Multiple-choice and fill-in-the-blank quiz construction.
+
+Cloud storage of user decks and study progress.
+
+Cloud Infrastructure
+
+Secure file uploads via S3.
+
+Authentication and session handling via Cognito.
+
+Python Lambda functions for OCR, text extraction, and NLP.
+
+## Tech Stack
+Mobile Application
+
+React Native (Expo)
+
+TypeScript
+
+React Query
+
+Zustand
+
+React Navigation
+
+AWS Cloud
+
+API Gateway
+
+Lambda (Python)
+
+S3
+
+DynamoDB or RDS Postgres
+
+Cognito
+
+CloudWatch
+
+IAM Roles & Policies
+
+Python Services
+
+Tesseract OCR or PaddleOCR
+
+PyMuPDF (PDF parsing)
+
+HuggingFace Transformers
+
+Custom flashcard/quiz generation logic
