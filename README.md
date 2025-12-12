@@ -46,15 +46,10 @@ Authentication and session handling via Cognito.
 Python Lambda functions for OCR, text extraction, and NLP.
 
 ## Tech Stack
-Mobile Application
 
-React Native (Expo)
-
-TypeScript
+React Native
 
 React Query
-
-Zustand
 
 React Navigation
 
@@ -66,7 +61,7 @@ Lambda (Python)
 
 S3
 
-DynamoDB or RDS Postgres
+DynamoDB
 
 Cognito
 
@@ -78,8 +73,6 @@ Python Services
 
 Tesseract OCR or PaddleOCR
 
-PyMuPDF (PDF parsing)
-
-HuggingFace Transformers
+PyMuPDF 
 
 Custom flashcard/quiz generation logic
