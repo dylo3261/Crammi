@@ -6,6 +6,7 @@ import LandingPage from "./LandingPage/LandingPage.jsx"
 import Dashboard from "./Dashboard/Dashboard.jsx"
 import SignIn from "./Auth/SignIn.jsx"
 import SignUp from "./Auth/Signup.jsx"
+import ForgotPassword from "./Auth/forgotPassword.jsx";
 
 function AppContent() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -92,6 +93,12 @@ function AppContent() {
         path="/signup" 
         element={
           isAuthenticated ? <Navigate to="/Dashboard" replace /> : <SignUp />
+        }
+      />
+       <Route 
+        path="/ForgotPassword" 
+        element={
+          isAuthenticated ? <Navigate to="/Dashboard" replace /> : <ForgotPassword/>
         }
       />
       <Route 

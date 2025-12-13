@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { signUp, confirmSignUp, signInWithRedirect, getCurrentUser } from 'aws-amplify/auth';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './Auth.css';
@@ -11,7 +11,7 @@ export default function SignUp() {
     name: ''
   });
   const [verificationStep, setVerificationStep] = useState(false);
-  const [verificationCode, setVerificationCode] = useState('');
+  const [verificationCode, setVerificationCode] = useState(['', '', '', '', '', '']);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -35,34 +35,46 @@ export default function SignUp() {
     });
   };
   
-  
-  // Replace the useEffect that checks for OAuth errors:
+  const inputsRef = useRef([]);
 
-useEffect(() => {
-  const checkOAuthReturn = async () => {
-    // Only check if we have the special flag indicating OAuth redirect completed
-    const oauthCompleted = sessionStorage.getItem('oauth_completed');
-    const oauthSource = sessionStorage.getItem('oauth_source');
-    
-    if (oauthCompleted === 'true' && oauthSource === '/signup') {
-      // Clear the flags
-      sessionStorage.removeItem('oauth_source');
-      sessionStorage.removeItem('oauth_completed');
-      
-      // Check if user is authenticated
-      try {
-        await getCurrentUser();
-        // User is authenticated - OAuth succeeded, navigate away
-        navigate('/Dashboard');
-      } catch {
-        // User is NOT authenticated - OAuth failed
-        setError('An account with this email already exists. Please sign in with your email and password.');
-      }
+  const handleChange = (e, index) => {
+    const value = e.target.value;
+  
+    const newCode = [...verificationCode];
+    newCode[index] = value;
+    setVerificationCode(newCode);
+  
+    if (value && index < 5) {
+      inputsRef.current[index + 1].focus();
+    }
+  };
+
+  const handleKeyDown = (e, index) => {
+    if (e.key === "Backspace" && !e.target.value && index > 0) {
+      inputsRef.current[index - 1].focus();
     }
   };
   
-  checkOAuthReturn();
-}, [navigate]);
+  useEffect(() => {
+    const checkOAuthReturn = async () => {
+      const oauthCompleted = sessionStorage.getItem('oauth_completed');
+      const oauthSource = sessionStorage.getItem('oauth_source');
+      
+      if (oauthCompleted === 'true' && oauthSource === '/signup') {
+        sessionStorage.removeItem('oauth_source');
+        sessionStorage.removeItem('oauth_completed');
+        
+        try {
+          await getCurrentUser();
+          navigate('/Dashboard');
+        } catch {
+          setError('An account with this email already exists. Please sign in with your email and password.');
+        }
+      }
+    };
+    
+    checkOAuthReturn();
+  }, [navigate]);
 
   const handleSignUp = async () => {
     setError('');
@@ -105,7 +117,7 @@ useEffect(() => {
     try {
       await confirmSignUp({
         username: formData.email,
-        confirmationCode: verificationCode
+        confirmationCode: verificationCode.join('')
       });
       navigate('/signin');
     } catch (err) {
@@ -117,7 +129,6 @@ useEffect(() => {
 
   const handleGoogleSignUp = async () => {
     try {
-      // Store current path before OAuth
       sessionStorage.setItem('oauth_source', '/signup');
       await signInWithRedirect({ provider: 'Google' });
     } catch (err) {
@@ -126,14 +137,12 @@ useEffect(() => {
     }
   };
 
-  // Handle Enter key for sign up
   const handleSignUpKeyPress = (e) => {
     if (e.key === 'Enter' && !loading) {
       handleSignUp();
     }
   };
 
-  // Handle Enter key for verification
   const handleVerificationKeyPress = (e) => {
     if (e.key === 'Enter' && !loading) {
       handleVerification();
@@ -154,17 +163,29 @@ useEffect(() => {
           
           {error && <div className="error">{error}</div>}
           
-          <input
-            type="text"
-            placeholder="Verification Code"
-            value={verificationCode}
-            onChange={(e) => setVerificationCode(e.target.value)}
-            onKeyPress={handleVerificationKeyPress}
-          />
+          <div className="codeInputContainer">
+            {[...Array(6)].map((_, i) => (
+              <input
+                key={i}
+                type="text"
+                maxLength={1}
+                className="codeInput"
+                value={verificationCode[i]}
+                ref={(el) => (inputsRef.current[i] = el)}
+                onChange={(e) => handleChange(e, i)}
+                onKeyDown={(e) => handleKeyDown(e, i)}
+              />
+            ))}
+          </div>
+
           
           <button className="primary-button" onClick={handleVerification} disabled={loading}>
             {loading ? 'Verifying...' : 'Verify Account'}
           </button>
+          <div className="auth-footer-text">
+           Go back to{' '}
+           <button onClick={() => navigate('/signin')}>Sign In</button>
+         </div>
         </div>
       </div>
     );
@@ -246,9 +267,21 @@ useEffect(() => {
             validatePassword(e.target.value);
             setFormData(prev => ({ ...prev, password: value }));
           }}
-                    onKeyPress={handleSignUpKeyPress}
+          onKeyPress={handleSignUpKeyPress}
         />
-      
+        <p
+          className="error"
+          style={{
+            display:
+              formData.password &&
+              formData.confirmPassword &&
+              formData.password !== formData.confirmPassword
+                ? "block"
+                : "none"
+          }}
+        >
+          Passwords do not match
+        </p>
         <input
           type="password"
           placeholder="Confirm Password"

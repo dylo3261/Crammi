@@ -95,7 +95,7 @@ export default function SignIn() {
           <button onClick={() => navigate('/signup')}>Sign Up</button>
         </div>
         <div className="auth-footer-text">
-          <button >Forgot Your Password?</button>
+          <button  onClick={() => navigate('/ForgotPassword')} >Forgot Your Password?</button>
         </div>
       </div>
     </div>
