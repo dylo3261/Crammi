@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState,useEffect,useRef } from "react";
 import UploadModal from './uploadModal.jsx'
 import Hamburger from "./Hamburger.jsx";
 import { signOut } from 'aws-amplify/auth';
@@ -51,7 +51,38 @@ export default function DashboardHeader({openUpload,changeActiveTab,activeTab}) 
   const [userPFP, setUserPFP] = useState('');
   const [userEmail, setUserEmail]= useState('')
   const [isLogoutPopup,setLogoutPopup]=useState(false);
-  
+  const logoutPopupRef=useRef(null);
+
+  useEffect(()=>{
+    function handleClick(event){
+      if(logoutPopupRef.current&&!logoutPopupRef.current.contains(event.target)){
+        setLogoutPopup(false);
+      }
+    }
+    if(isLogoutPopup){
+      addEventListener("mousedown",handleClick);
+    }
+    return ()=>{
+      removeEventListener("mousedown",handleClick);
+    }
+
+  },[isLogoutPopup]); //if you click anywhere outside of logout popup it goes away
+
+  useEffect(()=>{
+    
+    function escapeHandler(event){
+      if(event.key=="Escape"){
+        setLogoutPopup(false);
+      }
+    }
+    if(isLogoutPopup){
+      addEventListener("keydown",escapeHandler);
+    }
+    return()=>{
+      removeEventListener("keydown",escapeHandler);
+    }
+  },[isLogoutPopup]);
+
 
   useEffect(() => {
     getUserName();
@@ -141,28 +172,6 @@ const handleSignOut = async () => {
             <span>Files</span>
             
           </button>
-          {/* <div className='PFPWrapper'>
-          <button className='PFPButton'>
-            <img 
-              className='userPFP' 
-              src={userPFP} 
-              alt='profile picture'
-              onError={(e) => {
-                console.log('Image failed to load:', userPFP);
-                e.target.src = "https://askthescientists.com/wp-content/uploads/2021/04/AdobeStock_240042551-scaled.jpeg";
-              }}
-            />
-            <div>
-            <span className='userNameText'>{userName}</span>
-            <p className='accountTierDisplay'>Free</p>
-            </div>
-           
-           
-          </button>
-          <button className='upgradeButton'>
-              Upgrade
-            </button>
-          </div> */}
         </div>
         <div className='dashboardBody'>
             <div className='dashboardBodyHeader'>
@@ -217,7 +226,7 @@ const handleSignOut = async () => {
             </div>
           </div>
         )}
-        <div className='logOutSection'>
+        <div className='logOutSection' ref={logoutPopupRef}>
           
              <div className={isLogoutPopup ? 'activePFPWrapper':'PFPWrapper'}>
           <button className='PFPButton' onClick={()=> setLogoutPopup(!isLogoutPopup)}>

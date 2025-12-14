@@ -18,10 +18,8 @@ export default function UploadModal({ isOpen, close , activeTab }) {
   const [specialInstructions, setSpecialInstructions] = useState(""); 
 
   const [fileSizeRemaining, changeFileSizeRemaining]= useState(10 * 1024 * 1024);
-  const [isLegalFileSize, changeLegalFileSize] = useState(false);
   const [remainingFiles,setRemainingFiles]=useState(10);
   const fileInputRef = useRef(null);
-
 
   const maxNumFiles=10;
   //file size cap
@@ -78,23 +76,33 @@ useEffect(() => {
   const renderPage = async (pageObj, index) => {
     if (pageObj.src) return; // already rendered
   
-    const page = await pageObj.pdf.getPage(pageObj.pageNumber);
-    const viewport = page.getViewport({ scale: 1.5 });
-  
-    const canvas = document.createElement("canvas");
-    canvas.width = viewport.width;
-    canvas.height = viewport.height;
-  
-    await page.render({
-      canvasContext: canvas.getContext("2d"),
-      viewport
-    }).promise;
-  
-    setPdfPages(prev => {
-      const updated = [...prev];
-      updated[index] = { ...updated[index], src: canvas.toDataURL() };
-      return updated;
-    });
+    try{
+      const page = await pageObj.pdf.getPage(pageObj.pageNumber);
+      const viewport = page.getViewport({ scale: 1.5 });
+    
+      const canvas = document.createElement("canvas");
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+    
+      await page.render({
+        canvasContext: canvas.getContext("2d"),
+        viewport
+      }).promise;
+    
+      setPdfPages(prev => {
+        const updated = [...prev];
+        updated[index] = { ...updated[index], src: canvas.toDataURL() };
+        return updated;
+      });
+  }catch(error){
+    console.error(`Failed to render page ${pageObj.pageNumber}:`, error);
+      alert(`Failed to render page ${pageObj.pageNumber} of ${pageObj.name}`);
+      setPdfPages(prev => {
+        const updated = [...prev];
+        updated[index] = { ...updated[index], src: "error" };
+        return updated;
+      });
+  }
   };
   
 
@@ -113,6 +121,22 @@ useEffect(() => {
 
   // Clear only the PDF preview
   const clearPDF = () => {
+    const thumbs = document.querySelectorAll('.lazyThumb');
+    thumbs.forEach(thumb => {
+    if (thumb._observer) {
+      thumb._observer.disconnect();
+      delete thumb._observer;
+    }
+    });
+
+    const uniquePdfs = new Set();
+    pdfPages.forEach(page => {
+      if (page.pdf && !uniquePdfs.has(page.pdf)) {
+        uniquePdfs.add(page.pdf);
+        page.pdf.destroy();
+      }
+    });
+
     setPdfPages([]);
     setPdfFiles([]);
     setPickPages(false);
@@ -199,12 +223,19 @@ useEffect(() => {
 
   // Clear all uploaded files
   const clearFiles = () => {
+
+    const totalSize = selectedFiles.reduce((sum, file) => sum + file.size, 0);
+    changeFileSizeRemaining(prev => prev + totalSize);
+    setRemainingFiles(prev => prev + selectedFiles.length);
+
     setSelectedFiles([]);
     clearPDF();
   };
 
   // Remove single file from list
   const removeFile = (index) => {
+    const removedFile = selectedFiles[index];
+    changeFileSizeRemaining(prev => prev + removedFile.size);
     setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
     setPdfPages((prev) => prev.filter((_, i) => i !== index));
     setSelectedPages([]);
@@ -221,23 +252,30 @@ useEffect(() => {
   }
 
   const loadPDF = async () => {
-    const placeholders = [];
+    try{
+      const placeholders = [];
 
-    for (let pdfFile of pdfFiles) {
-      const arrayBuffer = await pdfFile.arrayBuffer();
-      const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+      for (let pdfFile of pdfFiles) {
+        const arrayBuffer = await pdfFile.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
 
-      for (let i = 1; i <= pdf.numPages; i++) {
-        placeholders.push({
-          name: pdfFile.name,
-          pageNumber: i,
-          pdf,               // store reference for lazy loading
-          src: null          // NOT LOADED YET
-        });
+        for (let i = 1; i <= pdf.numPages; i++) {
+          placeholders.push({
+            name: pdfFile.name,
+            pageNumber: i,
+            pdf,               // store reference for lazy loading
+            src: null          // NOT LOADED YET
+          });
+        }
       }
-    }
 
-    setPdfPages(placeholders);
+      setPdfPages(placeholders);
+  }catch(error){
+      console.error('Failed to load PDF:', error);
+      alert('Failed to load PDF. The file may be corrupted.');
+      setPdfFiles([]);
+      setPickPages(false);
+  }
   };
 
   loadPDF();
@@ -266,7 +304,6 @@ useEffect(() => {
     for (const f of newFiles) {
       curRemaining-=f.size;
       usedFileSize+=f.size;
-      console.log(curRemaining);
 
       if(curRemaining<0){
         PDFExceededFileSize=true;
@@ -280,23 +317,22 @@ useEffect(() => {
       
       setSelectedFiles(prev => prev);
       setRemainingFiles(prev => prev);
-      setPickPages(false);
-      setSelectedPages([]);
     }
     else{
       changeFileSizeRemaining(prev => prev - usedFileSize);
       setSelectedFiles((prev) => [...prev, ...newFiles] );
       setRemainingFiles((prev) => prev - newFiles.length);
-      setPickPages(false);
-      setSelectedPages([]);
+     
     }
   }
    else{
     setWarning3(true);
-    setPickPages(false);
-    setSelectedPages([]);
    }
+   clearPDF();
+   setnNumSelectedPages(0);
   };
+
+
   return (
     <>
       {/* UPLOAD MODAL */}
@@ -464,6 +500,8 @@ useEffect(() => {
             onClick={() => {
               setWarning(false);
               setWarning2(false);
+              setWarning3(false);
+              changeFileSizeRemaining(10 * 1024 * 1024);
               setRemainingFiles(10);
               close();
               clearFiles();
@@ -531,13 +569,19 @@ useEffect(() => {
               );
 
               observer.observe(el);
+              el._observer = observer;
+
             }}
           >
-            {page.src ? (
-              <img src={page.src} alt={`${page.name} - Page ${page.pageNumber}`} />
-            ) : (
-              <div className="pdfPlaceholder">Loading…</div>
-            )}
+            {page.src === "error" ? (
+            <div className="pdfPlaceholder" style={{ color: "red" }}>
+              Failed to load
+            </div>
+          ) : page.src ? (
+            <img src={page.src} alt={`${page.name} - Page ${page.pageNumber}`} />
+          ) : (
+            <div className="pdfPlaceholder">Loading…</div>
+          )}
           </div>
           </div>
         ))}

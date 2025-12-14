@@ -23,7 +23,7 @@ html, body {
 /* SIDEBAR (Desktop Default) */
 .sideBar {
   height: 100vh;
-  border: 1px solid #e4e4e4;
+  border: 1px solid #d9d9d9;
   position: fixed;
   top: 0;
   left: 0;
@@ -274,7 +274,7 @@ html, body {
   padding-bottom: 5px;
   z-index: 2000;
   background-color: rgb(246, 246, 246);
-  border: 1px solid #e4e4e4;
+  border: 1px solid #d9d9d9;
  
   display: flex;
   flex-direction: column;
