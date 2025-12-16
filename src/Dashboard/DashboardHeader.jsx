@@ -52,6 +52,8 @@ export default function DashboardHeader({openUpload,changeActiveTab,activeTab}) 
   const [userEmail, setUserEmail]= useState('')
   const [isLogoutPopup,setLogoutPopup]=useState(false);
   const logoutPopupRef=useRef(null);
+  const navigate = useNavigate(); 
+
 
   useEffect(()=>{
     function handleClick(event){
@@ -140,7 +142,8 @@ const handleSignOut = async () => {
     console.error("Sign out error:", error);
   }
 };
-    
+
+ 
 
     return (
       <>
@@ -182,7 +185,7 @@ const handleSignOut = async () => {
 
         {isLogoutPopup && (
           <div className="logoutPopupContainer">
-            <div className="logoutPopup">
+            <div className="logoutPopup" ref={logoutPopupRef}>
 
               
           <div className='logoutPopupPFP'>
@@ -221,12 +224,14 @@ const handleSignOut = async () => {
                     <img className='sidebarIcon' src='https://uxwing.com/wp-content/themes/uxwing/download/web-app-development/log-in-icon.png' alt='Logout icon'/>
                     <span>Sign Out</span>
                 </button>
+
+
           </div>
       
             </div>
           </div>
         )}
-        <div className='logOutSection' ref={logoutPopupRef}>
+        <div className='logOutSection'>
           
              <div className={isLogoutPopup ? 'activePFPWrapper':'PFPWrapper'}>
           <button className='PFPButton' onClick={()=> setLogoutPopup(!isLogoutPopup)}>

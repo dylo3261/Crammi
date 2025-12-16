@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import * as pdfjsLib from "pdfjs-dist/build/pdf.mjs";
+import { fetchAuthSession } from 'aws-amplify/auth';
 pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.mjs";
 
 import "./uploadModal.css";
 
-export default function UploadModal({ isOpen, close , activeTab }) {
+export default function UploadModal({ isOpen, close , activeTab, userProfile, setUserProfile }) {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [dragOver, setDragOver] = useState(false);
   const [pickPages, setPickPages] = useState(false);
@@ -17,13 +18,29 @@ export default function UploadModal({ isOpen, close , activeTab }) {
   const [numSelectedPages,setnNumSelectedPages]=useState(0);
   const [specialInstructions, setSpecialInstructions] = useState(""); 
 
-  const [fileSizeRemaining, changeFileSizeRemaining]= useState(10 * 1024 * 1024);
-  const [remainingFiles,setRemainingFiles]=useState(10);
-  const fileInputRef = useRef(null);
+   // Calculate limits based on user tier
+ const maxNumFiles = userProfile?.accountTier === 'premium' ? 20 : 10;
+ const maxFileSize = userProfile?.accountTier === 'premium' ? 20 * 1024 * 1024 : 10 * 1024 * 1024;
 
-  const maxNumFiles=10;
-  //file size cap
-    const maxFileSize= 10 * 1024 * 1024; //20 mb
+ const [fileSizeRemaining, changeFileSizeRemaining] = useState(maxFileSize);
+ const [remainingFiles, setRemainingFiles] = useState(maxNumFiles);
+ const fileInputRef = useRef(null);
+
+ useEffect(() => { 
+  if (isOpen && userProfile) {
+    const maxFiles = userProfile.accountTier === 'premium' ? 20 : 10;
+    const maxSize = userProfile.accountTier === 'premium' ? 20 * 1024 * 1024 : 10 * 1024 * 1024;
+    
+    setRemainingFiles(maxFiles);
+    changeFileSizeRemaining(maxSize);
+
+    setSelectedFiles([]);
+    clearPDF();
+  }
+}, [isOpen, userProfile]);
+
+///////////////////////////////
+
 
   //are we mobile
   const [isMobile, setIsMobile] = useState(false);
@@ -487,11 +504,6 @@ useEffect(() => {
       <p className="numChars" style={{display: (specialInstructions.length > 0 && selectedFiles.length>0) && !isMobile ? "block" : "none"}}> <span style={{color: specialInstructions.length===365 ? "red" :"#555"}}>Characters: {specialInstructions.length} / 365</span> </p>
 
         </div>
-      
-
-
-       
-
 
         {/* Buttons */}
         <div className="uploadButton">
@@ -501,8 +513,8 @@ useEffect(() => {
               setWarning(false);
               setWarning2(false);
               setWarning3(false);
-              changeFileSizeRemaining(10 * 1024 * 1024);
-              setRemainingFiles(10);
+              changeFileSizeRemaining(maxFileSize); 
+              setRemainingFiles(maxNumFiles);
               close();
               clearFiles();
               setSpecialInstructions("");
