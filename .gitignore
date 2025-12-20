@@ -98,9 +98,13 @@ Thumbs.db
 #         maxUploadsLeft=20
 #         maxFileBatchSize=20971520 #20mb
 
-#     then = datetime.fromisoformat(lastRefill.replace("Z", "+00:00")) #calculate last refill date
-#     now = datetime.now(timezone.utc)
+#     if lastRefill.endswith('Z'):
+#         then = datetime.fromisoformat(lastRefill.replace("Z", "+00:00"))
+#     else:
+#         then = datetime.fromisoformat(lastRefill)    
     
+#     now = datetime.now(timezone.utc)
+        
 #     if(now - then >= timedelta(hours=24)): #if 24 hours has passed, refill their quota
 #         try:
 #             table.update_item(
@@ -109,8 +113,8 @@ Thumbs.db
 #                 ConditionExpression="lastRefill < :threshold",
 #                 ExpressionAttributeValues={
 #                     ':max': maxUploadsLeft,
-#                     ':now': now.isoformat() + "Z",
-#                     ':threshold': (now - timedelta(hours=24)).isoformat() + "Z"
+#                     ':now': now.replace(tzinfo=None).isoformat() + "Z",
+#                     ':threshold': (now - timedelta(hours=24)).replace(tzinfo=None).isoformat() + "Z"
 #                 }
 #             )
 #             uploadsLeft = maxUploadsLeft
@@ -121,7 +125,10 @@ Thumbs.db
 #                 if 'Item' in response:
 #                     uploadsLeft = int(response['Item']['uploadsLeft'])
 #                     lastRefill = response['Item']['lastRefill']
-#                     then = datetime.fromisoformat(lastRefill.replace("Z", "+00:00"))
+#                     if lastRefill.endswith('Z'):
+#                         then = datetime.fromisoformat(lastRefill.replace("Z", "+00:00"))
+#                     else:
+#                         then = datetime.fromisoformat(lastRefill)           
 #             else:
 #                 raise
 
@@ -189,7 +196,7 @@ Thumbs.db
 #                 ],
 #                 ExpiresIn=600 #10 minutes
 #             )
-#             finalBatchDictionary[file['name']]=pre_signed_post
+#             finalBatchDictionary[f'file{index}']=pre_signed_post
 #     except Exception:
 #         table.update_item(
 #         Key={'PK': userSub, 'SK': 'PROFILE'},

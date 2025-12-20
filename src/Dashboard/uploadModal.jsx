@@ -20,7 +20,66 @@ export default function UploadModal({ isOpen, close , activeTab, userProfile, se
   const [specialInstructions, setSpecialInstructions] = useState(""); 
   
   /////////////
-  const handleUpload = async (selectedFiles) => {
+  const handleUploadS3 = async (selectedFiles, uploads)=>{
+    const uploadResults=[];
+    const fileKeys=Object.keys(uploads);
+    for (let i=0; i<fileKeys.length; i++){
+      const curFileKey=fileKeys[i];
+      const curUploadInfo=uploads[curFileKey];
+      const file= selectedFiles[i];
+      try{
+        const formData= new FormData();
+        
+        Object.keys(curUploadInfo.fields).forEach(key => { //create the URL
+          formData.append(key, curUploadInfo.fields[key]);
+        });
+
+        formData.append('Content-Type', file.type);
+        formData.append('file',file) //finish the URL to upload
+
+        // Upload to S3
+        const response = await fetch(curUploadInfo.url, {
+          method: 'POST',
+          body: formData,
+        });
+        if (response.ok) {
+          // Construct the final URL
+          const uploadedFileUrl = `${curUploadInfo.url}${curUploadInfo.fields.key}`;
+          console.log(`${curFileKey} uploaded successfully: ${uploadedFileUrl}`);
+          
+          uploadResults.push({
+            fileKey: curFileKey,
+            fileName: file.name,
+            success: true,
+            url: uploadedFileUrl,
+          });
+        } else { //if something went wrong in the upload
+            const errorText = await response.text();
+            console.error(`${curFileKey} upload failed:`, errorText);
+            
+            uploadResults.push({
+              fileKey: curFileKey, 
+              fileName: file.name,
+              success: false,
+              error: errorText,
+            });
+        }
+      }catch (error) {
+        console.error(`Error uploading ${curFileKey}:`, error);
+        uploadResults.push({
+        fileKey: curFileKey, 
+        fileName: file.name,
+        success: false,
+        error: error.message,
+        });
+      }
+
+
+    }
+    return uploadResults;
+  }
+
+  const handleUploadSign = async (selectedFiles) => {
     if(selectedFiles.length > 0){
       try {
         // Get fresh token
@@ -65,12 +124,29 @@ export default function UploadModal({ isOpen, close , activeTab, userProfile, se
         const { batchID, uploads } = data;
         console.log('Batch ID:', batchID);
         console.log('Uploads:', uploads);
+
+
+        const results= await handleUploadS3(selectedFiles,uploads);
+        const allSucceeded = results.every(r => r.success);
+
+        if (allSucceeded) {
+          console.log('All files uploaded successfully!');
+          // Close modal, clear files, etc.
+          close();
+          clearFiles();
+          setSpecialInstructions("");
+        } else {
+          console.error('Some uploads failed:', results.filter(r => !r.success));
+          // Handle partial failures
+        }
         
+        return results;
       } catch (error) {
         console.error('Upload error:', error);
       }
     }
   }
+  
 
    // Calculate limits based on user tier
  const maxNumFiles = userProfile?.accountTier === 'premium' ? 20 : 10;
@@ -578,7 +654,7 @@ useEffect(() => {
           </button>
 
           {selectedFiles.length > 0 && (
-            <button className="closeUploadModal" onClick={()=>{handleUpload(selectedFiles)}}>
+            <button className="closeUploadModal" onClick={()=>{handleUploadSign(selectedFiles)}}>
               Upload
             </button>
           )}
