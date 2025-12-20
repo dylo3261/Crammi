@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import * as pdfjsLib from "pdfjs-dist/build/pdf.mjs";
 import { fetchAuthSession } from 'aws-amplify/auth';
+
 pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.mjs";
 
 import "./uploadModal.css";
@@ -17,10 +18,63 @@ export default function UploadModal({ isOpen, close , activeTab, userProfile, se
   const [selectedPages, setSelectedPages] = useState([]);
   const [numSelectedPages,setnNumSelectedPages]=useState(0);
   const [specialInstructions, setSpecialInstructions] = useState(""); 
+  
+  /////////////
+  const handleUpload = async (selectedFiles) => {
+    if(selectedFiles.length > 0){
+      try {
+        // Get fresh token
+        const session = await fetchAuthSession();
+        const token = session.tokens?.idToken?.toString();
+        
+        if (!token) {
+          console.error('No authentication token available');
+          return;
+        }
+        
+        const signPayload = {
+          files: selectedFiles.map(file => ({
+            name: file.name,
+            size: file.size,
+          }))
+        };
+        
+        console.log('Sending payload:', signPayload);
+        console.log('Using token:', token.substring(0, 20) + '...');
+        
+        const response = await fetch('https://ul9ffsljla.execute-api.us-west-2.amazonaws.com/prod/sign', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`  
+          },
+          body: JSON.stringify(signPayload)
+        });
+        
+        console.log('Response status:', response.status);
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error('Upload failed:', errorData);
+          return;
+        }
+        
+        const data = await response.json();
+        console.log('Response data:', data);
+        
+        const { batchID, uploads } = data;
+        console.log('Batch ID:', batchID);
+        console.log('Uploads:', uploads);
+        
+      } catch (error) {
+        console.error('Upload error:', error);
+      }
+    }
+  }
 
    // Calculate limits based on user tier
  const maxNumFiles = userProfile?.accountTier === 'premium' ? 20 : 10;
- const maxFileSize = userProfile?.accountTier === 'premium' ? 20 * 1024 * 1024 : 10 * 1024 * 1024;
+ const maxFileSize = userProfile?.accountTier === 'premium' ? 20 * 1024 * 1024 : 10 * 1024 * 1024; //20 or 10 mb
 
  const [fileSizeRemaining, changeFileSizeRemaining] = useState(maxFileSize);
  const [remainingFiles, setRemainingFiles] = useState(maxNumFiles);
@@ -29,7 +83,7 @@ export default function UploadModal({ isOpen, close , activeTab, userProfile, se
  useEffect(() => { 
   if (isOpen && userProfile) {
     const maxFiles = userProfile.accountTier === 'premium' ? 20 : 10;
-    const maxSize = userProfile.accountTier === 'premium' ? 20 * 1024 * 1024 : 10 * 1024 * 1024;
+    const maxSize = userProfile.accountTier === 'premium' ? 20 * 1024 * 1024 : 10 * 1024 * 1024; //20 or 10 mb
     
     setRemainingFiles(maxFiles);
     changeFileSizeRemaining(maxSize);
@@ -524,7 +578,7 @@ useEffect(() => {
           </button>
 
           {selectedFiles.length > 0 && (
-            <button className="closeUploadModal" onClick={openFileDialog}>
+            <button className="closeUploadModal" onClick={()=>{handleUpload(selectedFiles)}}>
               Upload
             </button>
           )}

@@ -34,3 +34,176 @@ lerna-debug.log*
 # OS
 .DS_Store
 Thumbs.db
+
+
+
+
+#upload function for lambda
+# import boto3
+# import json
+# import uuid
+# import base64
+# from botocore.exceptions import ClientError  
+# from datetime import datetime, timedelta, timezone
+
+# dynamodb=boto3.resource('dynamodb')
+# s3Bucket=boto3.client('s3')
+# table=dynamodb.Table('Crammi-Table')
+
+# def lambda_handler(event, context):
+#     try:
+#         body = json.loads(event['body'])
+#     except (json.JSONDecodeError, KeyError):
+#         return {
+#             'statusCode': 400,
+#             'body': json.dumps({'error': 'Invalid request body'})
+#         }
+#     if 'files' not in body:
+#         return {
+#             'statusCode': 400,
+#             'body': json.dumps({'error': 'Missing files parameter'})
+#         }
+#     files=body['files']
+    
+#     if not isinstance(files, list): #file sanitization
+#         return {'statusCode': 400, 'body': json.dumps({'error': 'Invalid files format'})}
+
+#     for file in files:
+#         if not isinstance(file, dict) or 'name' not in file or 'size' not in file:
+#             return {'statusCode': 400, 'body': json.dumps({'error': 'Invalid file structure'})}
+#         if not isinstance(file['size'], int) or file['size'] <= 0:
+#             return {'statusCode': 400, 'body': json.dumps({'error': 'Invalid file size'})}
+#     #find all the user info
+#     userSub=event['requestContext']['authorizer']['jwt']['claims']['sub']
+#     response=table.get_item(Key={
+#         'PK':userSub,
+#         'SK':'PROFILE'
+#     })
+#     if 'Item' in response:
+#         accountTier = response['Item']['accountTier']
+#         lastRefill = response['Item']['lastRefill']
+#         uploadsLeft= int(response['Item']['uploadsLeft'])
+#     else:
+#         return {
+#             'statusCode': 404,
+#             'body': json.dumps({'error': 'User not found'})  
+#         }
+
+#     if(accountTier=='free'): #initialize user permission values
+#         maxFiles=10
+#         maxUploadsLeft=3
+#         maxFileBatchSize=10485760 #10mb
+#     else:
+#         maxFiles=20
+#         maxUploadsLeft=20
+#         maxFileBatchSize=20971520 #20mb
+
+#     then = datetime.fromisoformat(lastRefill.replace("Z", "+00:00")) #calculate last refill date
+#     now = datetime.now(timezone.utc)
+    
+#     if(now - then >= timedelta(hours=24)): #if 24 hours has passed, refill their quota
+#         try:
+#             table.update_item(
+#                 Key={'PK': userSub, 'SK': 'PROFILE'},
+#                 UpdateExpression="SET uploadsLeft = :max, lastRefill = :now",
+#                 ConditionExpression="lastRefill < :threshold",
+#                 ExpressionAttributeValues={
+#                     ':max': maxUploadsLeft,
+#                     ':now': now.isoformat() + "Z",
+#                     ':threshold': (now - timedelta(hours=24)).isoformat() + "Z"
+#                 }
+#             )
+#             uploadsLeft = maxUploadsLeft
+#         except ClientError as e:
+#             if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
+#                 # Another request already refilled, continue with current uploadsLeft
+#                 response = table.get_item(Key={'PK': userSub, 'SK': 'PROFILE'})
+#                 if 'Item' in response:
+#                     uploadsLeft = int(response['Item']['uploadsLeft'])
+#                     lastRefill = response['Item']['lastRefill']
+#                     then = datetime.fromisoformat(lastRefill.replace("Z", "+00:00"))
+#             else:
+#                 raise
+
+    
+#     if(uploadsLeft<=0):
+#         time_until_refill = timedelta(hours=24) - (now - then)
+#         hours = int(time_until_refill.total_seconds() // 3600)
+#         minutes = int((time_until_refill.total_seconds() % 3600) // 60)
+#         return{
+#             'statusCode': 400,
+#             'body': json.dumps({'error':f'Daily Upload limit reached. Please upgrade your account plan or wait {hours}h {minutes}m until the next refill.'})
+#         }
+    
+#     #-------------------------------------#
+
+   
+#     if(len(files)>maxFiles): #check if too many files
+#         return {
+#             'statusCode': 400,
+#             'body': json.dumps({'error': 'Too many files'})
+#         }
+
+#     currentBatchSize=0
+#     batchID = base64.urlsafe_b64encode(uuid.uuid4().bytes).rstrip(b'=').decode('ascii') #create unique batchID
+#     finalBatchDictionary={}
+
+
+#     for file in files: #check if batch is too big for account tier
+#         if(currentBatchSize+file['size']>maxFileBatchSize):
+#             return{
+#                 'statusCode': 400,
+#                 'body': json.dumps({'error': 'File batch size too large'})
+#             }
+#         currentBatchSize+=file['size']
+
+#       # Atomic quota reservation - prevents race conditions
+#     try:
+#         table.update_item(
+#             Key={
+#                 'PK': userSub,
+#                 'SK': 'PROFILE'
+#             },
+#             UpdateExpression="SET uploadsLeft = uploadsLeft - :decrement",
+#             ConditionExpression="uploadsLeft > :zero",
+#             ExpressionAttributeValues={
+#                 ':decrement': 1,
+#                 ':zero': 0
+#             }
+#         )
+#     except ClientError as e:
+#         if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
+#             return {
+#                 'statusCode': 429,
+#                 'body': json.dumps({'error': 'Upload quota exhausted by another request'})
+#             }
+#         raise
+#     try:
+#         for index, file in enumerate(files):
+#             pre_signed_post=s3Bucket.generate_presigned_post(
+#                 Bucket='crammi-bucket',
+#                 Key=f'{userSub}/uploads/{batchID}/file{index}',
+#                 Conditions=[
+#                     ["starts-with", "$Content-Type", "image/"],
+#                     ['content-length-range',1,file['size']] #will have alleged size
+#                 ],
+#                 ExpiresIn=600 #10 minutes
+#             )
+#             finalBatchDictionary[file['name']]=pre_signed_post
+#     except Exception:
+#         table.update_item(
+#         Key={'PK': userSub, 'SK': 'PROFILE'},
+#         UpdateExpression="SET uploadsLeft = uploadsLeft + :inc",
+#         ExpressionAttributeValues={':inc': 1}
+#         )
+#         raise  # Let Lambda return 500 automatically
+
+#         #upload sign complete-----------------------------
+  
+#     return {
+#         'statusCode': 200,
+#         'body': json.dumps({
+#             'batchID': batchID, 
+#             'uploads': finalBatchDictionary
+#         })
+#     }

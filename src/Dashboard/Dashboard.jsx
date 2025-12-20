@@ -9,24 +9,27 @@ export default function Dashboard(){
     const [activeUpload,changeActiveUpload]=useState(false);
     const [activeTab,changeActiveTab]=useState("Exams");
     const [userProfile, setUserProfile] = useState(null);
+    const [idToken, setIdToken] = useState(null);
+
 
     useEffect(() => {
         const fetchUserProfile = async () => {
           try {
-            console.log('Fetching user profile...');
+            // console.log('Fetching user profile...');
             
             const session = await fetchAuthSession();
-            const idToken = session.tokens?.idToken?.toString();
-            console.log('Got ID token:', idToken ? 'Yes' : 'No');
+            const token = session.tokens?.idToken?.toString();
+            setIdToken(token);
+            // console.log('Got ID token:', idToken ? 'Yes' : 'No');
       
             const response = await fetch('https://gwq0u2sdai.execute-api.us-west-2.amazonaws.com/prod/profile', {
-              headers: { 'Authorization': `Bearer ${idToken}` }
+              headers: { 'Authorization': `Bearer ${token}` }
             });
             
-            console.log('Response status:', response.status);
+            // console.log('Response status:', response.status);
       
             const data = await response.json();
-            console.log('User profile data:', data);
+            // console.log('User profile data:', data);
             
             setUserProfile(data);
           } catch (error) {
