@@ -25,11 +25,36 @@
     border-color: #c5c7ca;
 }
 
+.batch-card.processing {
+    border-color: #f57c00;
+    background-color: #fffbf5;
+    position: relative;
+    overflow: hidden;
+}
+
+.batch-card.processing::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent 25%, rgba(255, 255, 255, 0.5) 50%, transparent 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s ease-in-out infinite;
+    pointer-events: none;
+}
+
 .batch-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+    position: relative;
+}
+
+.batch-menu-container {
+    position: relative;
 }
 
 .batch-type-badge {
@@ -57,6 +82,46 @@
     background-color: #f1f3f4;
 }
 
+.batch-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 4px;
+    background-color: white;
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    min-width: 120px;
+    z-index: 10;
+    overflow: hidden;
+}
+
+.dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 10px 16px;
+    text-align: left;
+    background: none;
+    border: none;
+    font-size: 14px;
+    color: #202124;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-family: applethin, arial, sans-serif;
+}
+
+.dropdown-item:hover {
+    background-color: #f1f3f4;
+}
+
+.dropdown-item.delete {
+    color: #d32f2f;
+}
+
+.dropdown-item.delete:hover {
+    background-color: #fef0f0;
+}
+
 .batch-title {
     font-size: 22px;
     font-weight: 400;
@@ -82,4 +147,67 @@
     font-size: 12px;
     color: #5f6368;
     margin: 0;
+}
+
+/* Skeleton Loader Styles */
+.skeleton-card {
+    cursor: default;
+}
+
+.skeleton-card:hover {
+    box-shadow: none;
+    border-color: #dadce0;
+}
+
+.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s ease-in-out infinite;
+    border-radius: 4px;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.skeleton-badge {
+    display: inline-block;
+    width: 80px;
+    height: 28px;
+    border-radius: 16px;
+    margin-left: -8px;
+}
+
+.skeleton-menu {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+}
+
+.skeleton-title {
+    height: 26px;
+    width: 70%;
+    margin-bottom: 12px;
+}
+
+.skeleton-description {
+    height: 16px;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.skeleton-description.short {
+    width: 60%;
+    margin-bottom: 16px;
+}
+
+.skeleton-timestamp {
+    height: 14px;
+    width: 40%;
 }
