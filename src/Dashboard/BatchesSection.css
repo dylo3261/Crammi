@@ -18,6 +18,10 @@
     padding: 24px;
     cursor: pointer;
     transition: box-shadow 0.2s, border-color 0.2s;
+    overflow: visible;
+}
+.batch-card .batch-title {
+    overflow: hidden;
 }
 
 .batch-card:hover {
@@ -95,6 +99,26 @@
     z-index: 10;
     overflow: hidden;
 }
+
+.batch-title-input {
+    width: 100%;
+    font-size: inherit;
+    font-weight: inherit;
+    font-family: inherit;
+    border: 2px solid #1976d2;
+    border-radius: 4px;
+    padding: 4px 8px;
+    outline: none;
+    background: white;
+    color: inherit;
+    overflow:hidden;
+    white-space: nowrap;
+}
+
+.batch-title-input:focus {
+    border-color: #AB9FF2;
+    box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+}
 /* -------------- Notifications */ 
 
 .notification-toast {
@@ -111,15 +135,23 @@
     animation: slideIn 0.3s ease-out;
     z-index: 1000;
     max-width: 300px;
-}
-.notification-toast {
     animation: slideIn 0.3s ease-out forwards;
-}
 
+   display: flex;
+   align-items: center;
+   gap:4px;
+}
 .notification-toast.exit {
     animation: slideOut 0.3s ease-in forwards;
 }
-
+.notification-name {
+    display: inline-block;
+    max-width: 200px; /* Adjust as needed */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: bottom;
+}
 @keyframes slideOut {
     from {
         transform: translateX(0);
@@ -247,7 +279,11 @@
     color: #202124;
     margin: 0 0 12px 0;
     font-family: apple,Arial, sans-serif;
-
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 .batch-description {

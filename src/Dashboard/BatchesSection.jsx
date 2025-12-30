@@ -8,8 +8,11 @@ export default function BatchesSection({ activeTab }){
     const [isLoading, setIsLoading] = useState(true);
     const [openMenuId, setOpenMenuId] = useState(null);
     const [notification, setNotification] = useState(null);
+    const [editingBatchId, setEditingBatchId] = useState(null);
+    const [editingName, setEditingName] = useState('');
     const menuRef = useRef(null);
     const pollIntervalRef = useRef(null);
+    const inputRef = useRef(null);
     
     const showNotification = (message, type = 'success') => {
         setNotification({ message, type, exiting: false });
@@ -95,7 +98,10 @@ export default function BatchesSection({ activeTab }){
             const result = await response.json();
             
             if (response.ok) {
-                showNotification(`"${batchName}" deleted successfully`, 'success');
+                showNotification(
+                    <><span className="notification-name">"{batchName}"</span> deleted successfully</>,
+                    'success'
+                );
             } else {
                 console.error('Delete failed:', result);
                 showNotification('Failed to delete batch', 'error');
@@ -122,11 +128,113 @@ export default function BatchesSection({ activeTab }){
         await deleteBatch(batchID,batchName);
     };
 
-    const handleRename = (batchID, event) => {
+    const handleRename = (batchID, currentName, event) => {
         event.stopPropagation();
-        console.log('Rename clicked for:', batchID);
+        setEditingBatchId(batchID);
+        setEditingName(currentName);
         setOpenMenuId(null);
     };
+
+    const handleRenameSubmit = async (batchID) => {
+        if (!editingName.trim()) {
+            showNotification('Batch name cannot be empty', 'error');
+            setEditingBatchId(null);
+            return;
+        }
+
+        // Store old name for rollback if needed
+        const oldBatch = batches.find(b => b.batchID === batchID);
+        const oldName = oldBatch?.batchName;
+
+        // Optimistically update the UI immediately
+        setBatches(prevBatches => 
+            prevBatches.map(batch => 
+                batch.batchID === batchID 
+                    ? { ...batch, batchName: editingName }
+                    : batch
+            )
+        );
+
+        // Clear editing state
+        setEditingBatchId(null);
+        setEditingName('');
+
+        // Here's where you'll hook up your API call
+        console.log('Saving new name:', editingName, 'for batch:', batchID);
+        
+        // TODO: Add your API call here
+        // Example:
+        try {
+            const session = await fetchAuthSession();
+            const token = session.tokens?.idToken?.toString();
+            
+            const response = await fetch('https://9e89rfm90l.execute-api.us-west-2.amazonaws.com/rename', {
+                method: 'PATCH',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    batch_ID: batchID,
+                    new_name: editingName
+                })
+            });
+            
+            if (response.ok) {
+                showNotification(
+                    <><span className="notification-name">{activeTab}</span> renamed successfully</>,
+                    'success'
+                );
+            } else {
+                // Rollback on failure
+                showNotification(
+                    <>Failed to rename <span className="notification-name">{activeTab}</span></>,
+                    'error'
+                );
+                setBatches(prevBatches => 
+                    prevBatches.map(batch => 
+                        batch.batchID === batchID 
+                            ? { ...batch, batchName: oldName }
+                            : batch
+                    )
+                );
+            }
+        } catch (err) {
+            console.error('Error renaming batch:', err);
+            showNotification(
+                <>Failed to rename <span className="notification-name">{activeTab}</span></>,
+                'error'
+            );
+            // Rollback on error
+            setBatches(prevBatches => 
+                prevBatches.map(batch => 
+                    batch.batchID === batchID 
+                        ? { ...batch, batchName: oldName }
+                        : batch
+                )
+            );
+        }
+    };
+
+    const handleRenameCancel = () => {
+        setEditingBatchId(null);
+        setEditingName('');
+    };
+
+    const handleRenameKeyDown = (e, batchID) => {
+        if (e.key === 'Enter') {
+            handleRenameSubmit(batchID);
+        } else if (e.key === 'Escape') {
+            handleRenameCancel();
+        }
+    };
+
+    useEffect(() => {
+        if (editingBatchId && inputRef.current) {
+            inputRef.current.focus();
+            inputRef.current.select();
+        }
+    }, [editingBatchId]);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -193,11 +301,7 @@ export default function BatchesSection({ activeTab }){
     });
 
     const sortedBatches = [...filteredBatches].sort((a, b) => {
-        const statusOrder = { 'PENDING': 0, 'COMPLETE': 1, 'FAILED': 2 };
-        
-        const statusDiff = statusOrder[a.status] - statusOrder[b.status];
-        if (statusDiff !== 0) return statusDiff;
-        
+        // Sort by newest first (most recent timeCreated)
         return new Date(b.timeCreated) - new Date(a.timeCreated);
     });
 
@@ -257,7 +361,7 @@ export default function BatchesSection({ activeTab }){
                                         <div className="batch-dropdown-menu" ref={menuRef}>
                                             <button 
                                                 className="dropdown-item"
-                                                onClick={(e) => handleRename(batch.batchID, e)}
+                                                onClick={(e) => handleRename(batch.batchID, batch.batchName, e)}
                                             >
                                                 Rename
                                             </button>
@@ -271,7 +375,22 @@ export default function BatchesSection({ activeTab }){
                                     )}
                                 </div>
                             </div>
-                            <h3 className="batch-title">{batch.batchName}</h3>
+                            <h3 className="batch-title">
+                                {editingBatchId === batch.batchID ? (
+                                    <input
+                                        ref={inputRef}
+                                        type="text"
+                                        className="batch-title-input"
+                                        value={editingName}
+                                        onChange={(e) => setEditingName(e.target.value)}
+                                        onBlur={() => handleRenameSubmit(batch.batchID)}
+                                        onKeyDown={(e) => handleRenameKeyDown(e, batch.batchID)}
+                                        onClick={(e) => e.stopPropagation()}
+                                    />
+                                ) : (
+                                    batch.batchName
+                                )}
+                            </h3>
                             <p className="batch-description">{batch.description}</p>
                             <p className="batch-timestamp" style={{
                                 color: batch.status === 'FAILED' ? '#d32f2f' : 
