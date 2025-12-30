@@ -301,7 +301,11 @@ export default function BatchesSection({ activeTab }){
     });
 
     const sortedBatches = [...filteredBatches].sort((a, b) => {
-        // Sort by newest first (most recent timeCreated)
+        // First, sort by status - PENDING comes first
+        if (a.status === 'PENDING' && b.status !== 'PENDING') return -1;
+        if (a.status !== 'PENDING' && b.status === 'PENDING') return 1;
+        
+        // Then sort by newest first (most recent timeCreated)
         return new Date(b.timeCreated) - new Date(a.timeCreated);
     });
 
