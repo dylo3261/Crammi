@@ -12,9 +12,19 @@ export default function BatchesSection({ activeTab }){
     const pollIntervalRef = useRef(null);
     
     const showNotification = (message, type = 'success') => {
-        setNotification({ message, type });
-        setTimeout(() => setNotification(null), 3000);
+        setNotification({ message, type, exiting: false });
+    
+        // start exit animation
+        setTimeout(() => {
+            setNotification(prev => prev ? { ...prev, exiting: true } : null);
+        }, 2500);
+    
+        // remove after animation finishes
+        setTimeout(() => {
+            setNotification(null);
+        }, 3000);
     };
+    
 
     const fetchBatches = useCallback(async () => {
         console.log('🔄 Polling batches...', new Date().toLocaleTimeString());
@@ -277,10 +287,15 @@ export default function BatchesSection({ activeTab }){
         
         {/* Notification Toast */}
         {notification && (
-            <div className={`notification-toast ${notification.type}`}>
+            <div
+                className={`notification-toast 
+                            ${notification.type} 
+                            ${notification.exiting ? 'exit' : ''}`}
+            >
                 {notification.message}
             </div>
         )}
+
         </>
     )
 }
