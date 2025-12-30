@@ -7,9 +7,15 @@ export default function BatchesSection({ activeTab }){
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [openMenuId, setOpenMenuId] = useState(null);
+    const [notification, setNotification] = useState(null);
     const menuRef = useRef(null);
     const pollIntervalRef = useRef(null);
     
+    const showNotification = (message, type = 'success') => {
+        setNotification({ message, type });
+        setTimeout(() => setNotification(null), 3000);
+    };
+
     const fetchBatches = useCallback(async () => {
         console.log('🔄 Polling batches...', new Date().toLocaleTimeString());
         try {
@@ -42,10 +48,8 @@ export default function BatchesSection({ activeTab }){
 
     const startPolling = useCallback(() => {
         console.log('🚀 Manually starting polling');
-        // Fetch immediately
         fetchBatches();
         
-        // Start polling if not already active
         if (!pollIntervalRef.current) {
             pollIntervalRef.current = setInterval(() => {
                 fetchBatches();
@@ -53,7 +57,12 @@ export default function BatchesSection({ activeTab }){
         }
     }, [fetchBatches]);
 
-    const deleteBatch = async (batchID) => {
+    const deleteBatch = async (batchID,batchName) => {
+        // Optimistically remove from UI immediately
+        const batchToDelete = batches.find(b => b.batchID === batchID);
+        setBatches(prevBatches => prevBatches.filter(batch => batch.batchID !== batchID));
+        setOpenMenuId(null);
+
         try {
             const session = await fetchAuthSession();
             const token = session.tokens?.idToken?.toString();
@@ -76,40 +85,44 @@ export default function BatchesSection({ activeTab }){
             const result = await response.json();
             
             if (response.ok) {
-                // Remove the deleted batch from state
-                setBatches(prevBatches => prevBatches.filter(batch => batch.batchID !== batchID));
-                setOpenMenuId(null); // Close the menu
+                showNotification(`"${batchName}" deleted successfully`, 'success');
             } else {
                 console.error('Delete failed:', result);
+                showNotification('Failed to delete batch', 'error');
+                // Restore the batch if deletion failed
+                setBatches(prevBatches => [...prevBatches, batchToDelete]);
             }
             
             return result;
         } catch (err) {
             console.error('Error deleting batch:', err);
+            showNotification('Failed to delete batch', 'error');
+            // Restore the batch if deletion failed
+            setBatches(prevBatches => [...prevBatches, batchToDelete]);
         }
     };
 
     const handleMenuClick = (batchID, event) => {
         event.stopPropagation();
-        setOpenMenuId(openMenuId === batchID ? null : batchID);
+        setOpenMenuId(prevId => prevId === batchID ? null : batchID);
     };
 
-    const handleDelete = async (batchID, event) => {
+    const handleDelete = async (batchID, event, batchName) => {
         event.stopPropagation();
-        await deleteBatch(batchID);
+        await deleteBatch(batchID,batchName);
     };
 
     const handleRename = (batchID, event) => {
         event.stopPropagation();
-        // TODO: Implement rename functionality
         console.log('Rename clicked for:', batchID);
         setOpenMenuId(null);
     };
 
-    // Close menu when clicking outside
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (menuRef.current && !menuRef.current.contains(event.target)) {
+            if (menuRef.current && 
+                !menuRef.current.contains(event.target) && 
+                !event.target.closest('.batch-menu')) {
                 setOpenMenuId(null);
             }
         };
@@ -123,12 +136,10 @@ export default function BatchesSection({ activeTab }){
         };
     }, [openMenuId]);
 
-    // Initial fetch on mount
     useEffect(() => {
         fetchBatches();
     }, [fetchBatches]);
 
-    // Listen for custom event from upload
     useEffect(() => {
         const handleBatchUploaded = () => {
             console.log('🚀 Upload detected, starting polling');
@@ -142,24 +153,20 @@ export default function BatchesSection({ activeTab }){
         };
     }, [startPolling]);
 
-    // Polling logic - start/stop based on pending batches
     useEffect(() => {
         const hasPending = batches.some(batch => batch.status === 'PENDING');
         
         if (hasPending && !pollIntervalRef.current) {
             console.log('▶️ Starting polling - pending batches detected');
-            // Start polling if there are pending batches and polling isn't active
             pollIntervalRef.current = setInterval(() => {
                 fetchBatches();
-            }, 10000); // 10 seconds
+            }, 10000);
         } else if (!hasPending && pollIntervalRef.current) {
             console.log('⏹️ Stopping polling - no pending batches');
-            // Stop polling if no pending batches
             clearInterval(pollIntervalRef.current);
             pollIntervalRef.current = null;
         }
         
-        // Cleanup on unmount
         return () => {
             if (pollIntervalRef.current) {
                 clearInterval(pollIntervalRef.current);
@@ -168,7 +175,6 @@ export default function BatchesSection({ activeTab }){
         };
     }, [batches, fetchBatches]);
 
-    // Filter batches based on activeTab
     const filteredBatches = batches.filter(batch => {
         if (activeTab === 'Exams') return batch.type === 'Exams';
         if (activeTab === 'Quizzes') return batch.type === 'Quizzes';
@@ -176,15 +182,12 @@ export default function BatchesSection({ activeTab }){
         return false;
     });
 
-    // Sort batches: PENDING first, then by timeCreated (newest to oldest)
     const sortedBatches = [...filteredBatches].sort((a, b) => {
         const statusOrder = { 'PENDING': 0, 'COMPLETE': 1, 'FAILED': 2 };
         
-        // First sort by status
         const statusDiff = statusOrder[a.status] - statusOrder[b.status];
         if (statusDiff !== 0) return statusDiff;
         
-        // Then sort by timeCreated (newest first)
         return new Date(b.timeCreated) - new Date(a.timeCreated);
     });
 
@@ -201,7 +204,6 @@ export default function BatchesSection({ activeTab }){
         }
     };
 
-    // Skeleton loader component
     const SkeletonCard = () => (
         <div className="batch-card skeleton-card">
             <div className="batch-header">
@@ -220,7 +222,6 @@ export default function BatchesSection({ activeTab }){
         <div className="mainSection">
             <div className="batches-grid">
                 {isLoading ? (
-                    // Show 7 skeleton cards while loading
                     <>
                         <SkeletonCard />
                         <SkeletonCard />
@@ -252,7 +253,7 @@ export default function BatchesSection({ activeTab }){
                                             </button>
                                             <button 
                                                 className="dropdown-item delete"
-                                                onClick={(e) => handleDelete(batch.batchID, e)}
+                                                onClick={(e) => handleDelete(batch.batchID, e, batch.batchName)}
                                             >
                                                 Delete
                                             </button>
@@ -273,6 +274,13 @@ export default function BatchesSection({ activeTab }){
                 )}
             </div>
         </div>
+        
+        {/* Notification Toast */}
+        {notification && (
+            <div className={`notification-toast ${notification.type}`}>
+                {notification.message}
+            </div>
+        )}
         </>
     )
 }
