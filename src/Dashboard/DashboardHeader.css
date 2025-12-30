@@ -2,6 +2,7 @@
 /* Prevent horizontal scrolling on all devices */
 html, body {
   overflow-x: hidden; 
+  overflow-y: hidden;
 }
  
 /* DASHBOARD HEADER */
@@ -284,11 +285,16 @@ html, body {
  
 /* DASHBOARD BODY (Desktop Default) */
 .dashboardBody {
-  margin-top: 6vh;
-  margin-left: 240px; /* same as sidebar width */
+  position: fixed;
+  top: 0;
+  left: 240px; /* same as sidebar width */
+  right: 0;
+  bottom: 0;
   padding: 1rem;
+  padding-top: calc(1rem + 6vh); /* Add top padding for header space */
   background-color: #ffffff;
-  min-height: 94vh;
+  overflow-y: auto; /* Allows vertical scrolling */
+  overflow-x: hidden; /* Prevents horizontal scrolling */
 }
  
 /* DASHBOARD BODY CONTENT */
@@ -419,14 +425,15 @@ margin: 0;
   }
 
   .searchBarContainer {
-    width: 60%;
-    margin-left: 0;
-    margin-top: 0.7rem;
+    width: 40%;
+    min-width: 200px;
+    margin-left: 2vw;
+    margin-top: 0;
   }
 
   .bodyUploadButton,
   .bodySecondUploadButton {
-    margin-bottom: 0.7rem;
+    flex-shrink: 0;
   }
 }
 
@@ -440,7 +447,8 @@ margin: 0;
   
   /* MAKE MAIN CONTENT FULL WIDTH */
   .dashboardBody {
-    margin-left: 0; /* Remove space reserved for the sidebar */
+    left: 0; /* Remove space reserved for the sidebar */
+    top: 6vh; /* Account for mobile header */
     padding-top: 1rem; /* Adjust padding if necessary */
   }
   
@@ -507,7 +515,8 @@ margin: 0;
   
   /* MAKE MAIN CONTENT FULL WIDTH */
   .dashboardBody {
-    margin-left: 0; /* Remove space reserved for the sidebar */
+    left: 0; /* Remove space reserved for the sidebar */
+    top: 10vh; /* Account for taller mobile header in landscape */
     padding-top: 1rem;
   }
   

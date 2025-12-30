@@ -136,6 +136,14 @@ export default function UploadModal({ isOpen, close , activeTab, userProfile, se
           // Handle partial failures
         }
         triggerWorkerLambda(batchID,activeTab,token)
+        close();
+        clearFiles();
+        setSpecialInstructions("");
+        setWarning(false);
+        setWarning2(false);
+        setWarning3(false);
+        changeFileSizeRemaining(maxFileSize); 
+        setRemainingFiles(maxNumFiles);
         return results;
       } catch (error) {
         console.error('Upload error:', error);
@@ -677,14 +685,6 @@ useEffect(() => {
           {selectedFiles.length > 0 && (
             <button className="closeUploadModal" onClick={()=>{
               handleUploadSign(selectedFiles);
-              close();
-              clearFiles();
-              setSpecialInstructions("");
-              setWarning(false);
-              setWarning2(false);
-              setWarning3(false);
-              changeFileSizeRemaining(maxFileSize); 
-              setRemainingFiles(maxNumFiles);
               }}>
               Upload
             </button>

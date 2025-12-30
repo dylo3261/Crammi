@@ -182,7 +182,7 @@ const handleSignOut = async () => {
               <UploadBar activeTab={activeTab} openUpload={openUpload} />
             </div>
             <div className='BatchesSection'>
-              <BatchesSection/>
+              <BatchesSection activeTab={activeTab}/>
             </div>
         </div>
 
