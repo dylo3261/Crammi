@@ -1,6 +1,7 @@
 import DashboardHeader from "./DashboardHeader";
 import UploadModal from "./uploadModal";
 import Hamburger from "./Hamburger";
+import BatchesSection from "./BatchesSection";
 import React, { useState,useEffect } from "react";
 import { fetchAuthSession } from 'aws-amplify/auth';
 

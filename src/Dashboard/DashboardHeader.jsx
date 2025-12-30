@@ -5,6 +5,7 @@ import { signOut } from 'aws-amplify/auth';
 import { useNavigate } from "react-router-dom";
 import { fetchUserAttributes } from 'aws-amplify/auth';
 import { fetchAuthSession } from 'aws-amplify/auth';
+import BatchesSection from "./BatchesSection.jsx";
 
 
 
@@ -48,7 +49,7 @@ function UploadBar({activeTab,openUpload}) {
 
 export default function DashboardHeader({openUpload,changeActiveTab,activeTab}) {
   const [userName, setUserName] = useState('');
-  const [userPFP, setUserPFP] = useState('');
+  const [userPFP, setUserPFP] = useState(null);
   const [userEmail, setUserEmail]= useState('')
   const [isLogoutPopup,setLogoutPopup]=useState(false);
   const logoutPopupRef=useRef(null);
@@ -179,6 +180,9 @@ const handleSignOut = async () => {
         <div className='dashboardBody'>
             <div className='dashboardBodyHeader'>
               <UploadBar activeTab={activeTab} openUpload={openUpload} />
+            </div>
+            <div className='BatchesSection'>
+              <BatchesSection/>
             </div>
         </div>
 

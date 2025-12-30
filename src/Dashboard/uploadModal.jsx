@@ -128,25 +128,46 @@ export default function UploadModal({ isOpen, close , activeTab, userProfile, se
 
         const results= await handleUploadS3(selectedFiles,uploads);
         const allSucceeded = results.every(r => r.success);
-
+        
         if (allSucceeded) {
-          console.log('All files uploaded successfully!');
-          // Close modal, clear files, etc.
-          close();
-          clearFiles();
-          setSpecialInstructions("");
+          console.log('All files uploaded successfully!');          
         } else {
           console.error('Some uploads failed:', results.filter(r => !r.success));
           // Handle partial failures
         }
-        
+        triggerWorkerLambda(batchID,activeTab,token)
         return results;
       } catch (error) {
         console.error('Upload error:', error);
       }
     }
   }
-  
+  const triggerWorkerLambda= async (batchID,activeTab,token) => {
+    const batchInfo={
+      requestedCram: activeTab,
+      batch_ID: batchID,
+      special_instructions: specialInstructions
+    }
+    console.log('Triggering worker for batch',batchID);
+    console.log('Requested Cram:',activeTab);
+
+    const response = await fetch('https://ul9ffsljla.execute-api.us-west-2.amazonaws.com/prod/get-json', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`  
+      },
+      body: JSON.stringify(batchInfo)
+    });
+
+    console.log('Response status:', response.status);
+        
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('Worker Lambda Trigger Failed:', errorData);
+      return;
+    }
+  }
 
    // Calculate limits based on user tier
  const maxNumFiles = userProfile?.accountTier === 'premium' ? 20 : 10;
@@ -540,9 +561,9 @@ useEffect(() => {
           // console.log(e.target.value);            // log current input
         }}
         rows={2}
-        maxLength={365}
+        maxLength={200}
       />
-      <p className="numChars" style={{display: (specialInstructions.length > 0 && selectedFiles.length>0) && isMobile ? "block" : "none"}}> <span style={{color: specialInstructions.length===365 ? "red" :"#555"}}>Characters: {specialInstructions.length} / 365</span> </p>
+      <p className="numChars" style={{display: (specialInstructions.length > 0 && selectedFiles.length>0) && isMobile ? "block" : "none"}}> <span style={{color: specialInstructions.length===200 ? "red" :"#555"}}>Characters: {specialInstructions.length} / 200</span> </p>
 
         </div>
       
@@ -629,9 +650,9 @@ useEffect(() => {
           // console.log(e.target.value);            // log current input
         }}
         rows={2}
-        maxLength={365}
+        maxLength={200}
       />
-      <p className="numChars" style={{display: (specialInstructions.length > 0 && selectedFiles.length>0) && !isMobile ? "block" : "none"}}> <span style={{color: specialInstructions.length===365 ? "red" :"#555"}}>Characters: {specialInstructions.length} / 365</span> </p>
+      <p className="numChars" style={{display: (specialInstructions.length > 0 && selectedFiles.length>0) && !isMobile ? "block" : "none"}}> <span style={{color: specialInstructions.length===200 ? "red" :"#555"}}>Characters: {specialInstructions.length} / 200</span> </p>
 
         </div>
 
@@ -654,7 +675,17 @@ useEffect(() => {
           </button>
 
           {selectedFiles.length > 0 && (
-            <button className="closeUploadModal" onClick={()=>{handleUploadSign(selectedFiles)}}>
+            <button className="closeUploadModal" onClick={()=>{
+              handleUploadSign(selectedFiles);
+              close();
+              clearFiles();
+              setSpecialInstructions("");
+              setWarning(false);
+              setWarning2(false);
+              setWarning3(false);
+              changeFileSizeRemaining(maxFileSize); 
+              setRemainingFiles(maxNumFiles);
+              }}>
               Upload
             </button>
           )}
