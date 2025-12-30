@@ -49,7 +49,7 @@ export default function BatchesSection({ activeTab }){
         if (!pollIntervalRef.current) {
             pollIntervalRef.current = setInterval(() => {
                 fetchBatches();
-            }, 5000);
+            }, 10000);
         }
     }, [fetchBatches]);
 
@@ -151,7 +151,7 @@ export default function BatchesSection({ activeTab }){
             // Start polling if there are pending batches and polling isn't active
             pollIntervalRef.current = setInterval(() => {
                 fetchBatches();
-            }, 5000); // 5 seconds
+            }, 10000); // 10 seconds
         } else if (!hasPending && pollIntervalRef.current) {
             console.log('⏹️ Stopping polling - no pending batches');
             // Stop polling if no pending batches

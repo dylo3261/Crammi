@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, act } from "react";
 import * as pdfjsLib from "pdfjs-dist/build/pdf.mjs";
 import { fetchAuthSession } from 'aws-amplify/auth';
 
@@ -79,7 +79,7 @@ export default function UploadModal({ isOpen, close , activeTab, userProfile, se
     return uploadResults;
   }
 
-  const handleUploadSign = async (selectedFiles) => {
+  const handleUploadSign = async (selectedFiles, activeTab) => {
     if(selectedFiles.length > 0){
       try {
         // Get fresh token
@@ -95,7 +95,8 @@ export default function UploadModal({ isOpen, close , activeTab, userProfile, se
           files: selectedFiles.map(file => ({
             name: file.name,
             size: file.size,
-          }))
+          })),
+          batchType: activeTab
         };
         
         console.log('Sending payload:', signPayload);
@@ -678,7 +679,7 @@ useEffect(() => {
 
           {selectedFiles.length > 0 && (
             <button className="closeUploadModal" onClick={()=>{
-              handleUploadSign(selectedFiles);
+              handleUploadSign(selectedFiles,activeTab);
               close();
               clearFiles();
               setSpecialInstructions("");
