@@ -8,6 +8,10 @@ import SignIn from "./Auth/SignIn.jsx"
 import SignUp from "./Auth/Signup.jsx"
 import ForgotPassword from "./Auth/forgotPassword.jsx";
 
+import Exam from "./ViewBatches/Exam.jsx"
+import Quiz from "./ViewBatches/Quiz.jsx"
+import Flashcards from "./ViewBatches/Flashcards.jsx"
+
 function AppContent() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -105,6 +109,24 @@ function AppContent() {
         path='/Dashboard' 
         element={
           isAuthenticated ? <Dashboard /> : <Navigate to="/" replace />
+        }
+      />
+      <Route
+        path="/Exam/:batchID"
+        element={
+          isAuthenticated ? <Exam /> : <Navigate to="/" replace />
+        }
+      />
+      <Route
+        path="/Quiz/:batchID"
+        element={
+          isAuthenticated ? <Quiz /> : <Navigate to="/" replace />
+        }
+      />
+      <Route
+        path="/Flashcards/:batchID"
+        element={
+          isAuthenticated ? <Flashcards /> : <Navigate to="/" replace />
         }
       />
     </Routes>

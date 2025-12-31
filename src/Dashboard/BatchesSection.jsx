@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { fetchAuthSession } from 'aws-amplify/auth';
+import { useNavigate } from 'react-router-dom';
 import "./BatchesSection.css";
 
 export default function BatchesSection({ activeTab }){
@@ -13,6 +14,24 @@ export default function BatchesSection({ activeTab }){
     const menuRef = useRef(null);
     const pollIntervalRef = useRef(null);
     const inputRef = useRef(null);
+    const navigate = useNavigate();
+
+    const handleCardClick = (batchID, status) => {
+        // Only navigate if batch is complete
+        if (status === 'COMPLETE') {
+            if(activeTab==='Exams'){
+                navigate(`/Exam/${batchID}`);
+            }
+            else if(activeTab==='Quizzes'){
+                navigate(`/Quiz/${batchID}`);
+            }
+            else if(activeTab==='Flashcards'){
+                navigate(`/Flashcards/${batchID}`);
+            }
+
+        }
+    };
+
     
     const showNotification = (message, type = 'success') => {
         setNotification({ message, type, exiting: false });
@@ -351,7 +370,7 @@ export default function BatchesSection({ activeTab }){
                     </>
                 ) : (
                     sortedBatches.map((batch) => (
-                        <div key={batch.batchID} className={`batch-card ${batch.status === 'PENDING' ? 'processing' : ''}`}>
+                        <div key={batch.batchID} className={`batch-card ${batch.status === 'PENDING' ? 'processing' : ''}`} onClick={()=>handleCardClick(batch.batchID,batch.status)}>
                             <div className="batch-header">
                                 <span className="batch-type-badge">{activeTab}</span>
                                 <div className="batch-menu-container">
