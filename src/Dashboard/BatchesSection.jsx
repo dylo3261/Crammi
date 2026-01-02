@@ -3,6 +3,8 @@ import { fetchAuthSession } from 'aws-amplify/auth';
 import { useNavigate } from 'react-router-dom';
 import "./BatchesSection.css";
 
+
+
 export default function BatchesSection({ activeTab }){
     const [batches, setBatches] = useState([])
     const [error, setError] = useState(null);
@@ -28,6 +30,7 @@ export default function BatchesSection({ activeTab }){
             else if(activeTab==='Flashcards'){
                 navigate(`/Flashcards/${batchID}`);
             }
+            // navigate(`/Flashcards/${batchID}?name=${encodeURIComponent(batchName)}`);
 
         }
     };

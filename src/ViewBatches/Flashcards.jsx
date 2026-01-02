@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { fetchAuthSession } from 'aws-amplify/auth';
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import "./Flashcards.css";
 
 export default function Flashcards() {
@@ -147,6 +148,15 @@ export default function Flashcards() {
     }, 150);
   };
 
+  const handleShuffle = () => {
+    if (!batchJSON || batchJSON.length === 0) return;
+    
+    const shuffled = [...batchJSON].sort(() => Math.random() - 0.5);
+    setBatchJSON(shuffled);
+    setCurrentIndex(0);
+    setIsFlipped(false);
+  };
+
   const handleCardClick = () => {
     setIsFlipped(prev => !prev);
   };
@@ -178,6 +188,11 @@ export default function Flashcards() {
   const currentCard = batchJSON[currentIndex];
 
   return (
+    <>
+    <div className='batchSidebar'>
+        <p>hi</p>
+        <button>home</button>
+    </div>
     <div className="flashcard-container">
       {/* Header */}
       <div className="flashcard-header">
@@ -199,21 +214,32 @@ export default function Flashcards() {
         </p>
       </div>
 
-      {/* Flashcard */}
-      <div className="card-wrapper">
-        <div 
-          className={`card ${isFlipped ? 'flipped' : ''} ${slideDirection}`}
-          onClick={handleCardClick}
-        >
-          <div className="card-face card-front">
-            <div className="card-label">QUESTION</div>
-            <div className="card-content">{currentCard.front}</div>
-          </div>
-          <div className="card-face card-back">
-            <div className="card-label">ANSWER</div>
-            <div className="card-content">{currentCard.back}</div>
+      {/* Flashcard and Shuffle Button Container */}
+      <div className="card-and-controls-wrapper">
+        <div className="card-wrapper">
+          <div 
+            className={`card ${isFlipped ? 'flipped' : ''} ${slideDirection}`}
+            onClick={handleCardClick}
+          >
+            <div className="card-face card-front">
+              <div className="card-label">QUESTION</div>
+              <div className="card-content">{currentCard.front}</div>
+            </div>
+            <div className="card-face card-back">
+              <div className="card-label">ANSWER</div>
+              <div className="card-content">{currentCard.back}</div>
+            </div>
           </div>
         </div>
+
+        {/* Shuffle Button */}
+        <button
+          onClick={handleShuffle}
+          className="shuffle-button"
+          title="Shuffle cards"
+        >
+          <img className='shuffleIcon' src='https://uxwing.com/wp-content/themes/uxwing/download/controller-and-music/music-player-shuffle-symbol-icon.png'/>
+        </button>
       </div>
 
       {/* Navigation Controls */}
@@ -224,46 +250,18 @@ export default function Flashcards() {
           className="nav-button"
         >
           <span className="arrow">←</span>
-          <span>Previous</span>
         </button>
-
-        <div className="dot-indicators">
-          {batchJSON.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => {
-                if (isNavigating) return;
-                
-                setIsNavigating(true);
-                setIsFlipped(false); // Reset flip immediately
-                const direction = idx > currentIndex ? 'slide-left' : 'slide-right';
-                setSlideDirection(direction);
-                
-                setTimeout(() => {
-                  setCurrentIndex(idx);
-                  setSlideDirection('');
-                }, 200);
-                
-                setTimeout(() => {
-                  setIsNavigating(false);
-                }, 150);
-              }}
-              className={`dot ${idx === currentIndex ? 'active' : ''}`}
-              aria-label={`Go to card ${idx + 1}`}
-            />
-          ))}
-        </div>
 
         <button
           onClick={goToNext}
           disabled={currentIndex === batchJSON.length - 1}
           className="nav-button"
         >
-          <span>Next</span>
           <span className="arrow">→</span>
         </button>
       </div>
 
     </div>
+    </>
   );
 }
