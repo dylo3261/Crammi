@@ -53,12 +53,14 @@ export default function DashboardHeader({openUpload,changeActiveTab,activeTab}) 
   const [userEmail, setUserEmail]= useState('')
   const [isLogoutPopup,setLogoutPopup]=useState(false);
   const logoutPopupRef=useRef(null);
+  const profileButtonRef=useRef(null);
   const navigate = useNavigate(); 
 
 
   useEffect(()=>{
     function handleClick(event){
-      if(logoutPopupRef.current&&!logoutPopupRef.current.contains(event.target)){
+      if(logoutPopupRef.current&&!logoutPopupRef.current.contains(event.target)&&
+         profileButtonRef.current&&!profileButtonRef.current.contains(event.target)){
         setLogoutPopup(false);
       }
     }
@@ -238,7 +240,10 @@ const handleSignOut = async () => {
         <div className='logOutSection'>
           
              <div className={isLogoutPopup ? 'activePFPWrapper':'PFPWrapper'}>
-          <button className='PFPButton' onClick={()=> setLogoutPopup(!isLogoutPopup)}>
+          <button ref={profileButtonRef} className='PFPButton' onClick={(e)=> {
+            e.stopPropagation();
+            setLogoutPopup(!isLogoutPopup);
+          }}>
             <img 
               className='userPFP' 
               src={userPFP} 

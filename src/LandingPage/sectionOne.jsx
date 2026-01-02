@@ -27,7 +27,7 @@ export default function SectionOne() {
   return (
     <section className="section-one">
       <div className="box">
-        <h1 className="title">
+        <h1 className="sectionOneTitle">
           Say Goodbye to Slow Learning. Effortless study starts here.
         </h1>
         <h2 className="description">

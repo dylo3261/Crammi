@@ -18,7 +18,7 @@ export default function BatchesSection({ activeTab }){
     const inputRef = useRef(null);
     const navigate = useNavigate();
 
-    const handleCardClick = (batchID, status) => {
+    const handleCardClick = (batchID, status, batchName) => {
         // Only navigate if batch is complete
         if (status === 'COMPLETE') {
             if(activeTab==='Exams'){
@@ -28,7 +28,7 @@ export default function BatchesSection({ activeTab }){
                 navigate(`/Quiz/${batchID}`);
             }
             else if(activeTab==='Flashcards'){
-                navigate(`/Flashcards/${batchID}`);
+                navigate(`/Flashcards/${batchID}`,{state: {batchName} });
             }
             // navigate(`/Flashcards/${batchID}?name=${encodeURIComponent(batchName)}`);
 
@@ -373,7 +373,7 @@ export default function BatchesSection({ activeTab }){
                     </>
                 ) : (
                     sortedBatches.map((batch) => (
-                        <div key={batch.batchID} className={`batch-card ${batch.status === 'PENDING' ? 'processing' : ''}`} onClick={()=>handleCardClick(batch.batchID,batch.status)}>
+                        <div key={batch.batchID} className={`batch-card ${batch.status === 'PENDING' ? 'processing' : ''}`} onClick={()=>handleCardClick(batch.batchID,batch.status,batch.batchName)}>
                             <div className="batch-header">
                                 <span className="batch-type-badge">{activeTab}</span>
                                 <div className="batch-menu-container">

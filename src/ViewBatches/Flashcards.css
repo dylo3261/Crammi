@@ -28,6 +28,8 @@
 .flashcard-header {
   margin-bottom: 2rem;
   text-align: center;
+  width: 100%;
+  max-width: 60rem;
 }
 
 .title {
@@ -35,6 +37,21 @@
   color: black;
   margin-bottom: 0.5rem;
   font-family: applemedium;
+  cursor: pointer;
+  width: 100%;
+  max-width: 60rem;
+  margin-left: auto;
+  margin-right: auto;
+  
+  /* Text wrapping and truncation */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+  word-wrap: break-word;
+  word-break: break-word;
 }
 
 .card-counter {
@@ -241,6 +258,8 @@
   border-radius: 9999px;
   height: 0.2rem;
   overflow: hidden;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .progress-bar {
@@ -250,14 +269,162 @@
   border-radius: 9999px;
 }
 
-/* side bar */
-.batchSidebar{
+/* Collapsed Sidebar Styles */
+.homeButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 90px;
+    width: 35px;
+    height: 35px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    background-color: #AB9FF2;
+
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.homeButton:hover {
+    transform: scale(1.12);
+}
+
+.homeButtonIcon {
+    height: 1.2rem;
+    width: auto;
+    filter: invert(100%) brightness(100%);
+    pointer-events: none; /* prevents hover flicker */
+}
+
+
+.collapsedSidebar {
     height: 100vh;
-    border: 1px solid #d9d9d9;
+    border-right: 1px solid #d9d9d9;
     position: fixed;
     top: 0;
     left: 0;
-    width: 50px; /* fixed sidebar width */
+    width: 50px;
     z-index: 998;
-    border-top: none;
-    background-color: rgb(246, 246, 246);}
+    background-color: rgb(246, 246, 246);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .collapsedSidebarButtons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 1rem;
+    gap: 0.5rem;
+  }
+  
+  .collapsedSideButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    width: 40px;
+    height: 40px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    background-color: transparent;
+    transition: background-color 0.2s;
+  }
+  
+  .collapsedSideButton:hover {
+    background-color: rgb(234, 233, 233);
+  }
+  
+  
+  .collapsedSidebarIcon {
+    height: 1.2rem;
+    width: auto;
+    filter: brightness(0) saturate(100%) invert(20%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(40%) contrast(100%);
+  }
+  
+  /* Profile Section at Bottom */
+  .collapsedLogOutSection {
+    border-right: 1px solid #d9d9d9;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    padding: 0.5rem 0;
+    background-color: rgb(246, 246, 246);
+    display: flex;
+    justify-content: center;
+  }
+  
+  .collapsedPFPWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px;
+    width: 40px;
+    height: 40px;
+    transition: background-color 0.2s;
+  }
+  
+  .collapsedPFPWrapper:hover {
+    background-color: rgb(234, 233, 233);
+  }
+  
+  .activeCollapsedPFPWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px;
+    width: 40px;
+    height: 40px;
+    background-color: rgb(238, 238, 238);
+  }
+  
+  .collapsedPFPButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    width: 35px;
+    height: 35px;
+  }
+  
+  .collapsedUserPFP {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  /* Logout Popup for Collapsed Sidebar */
+  .collapsedLogoutPopupContainer {
+    position: fixed;
+    bottom: 60px;
+    left: 5px;
+    width: 210px;
+    z-index: 3000;
+  }
+  
+  /* Reuse existing popup styles */
+  .collapsedLogoutPopupContainer .logoutPopup {
+    background-color: rgb(240, 240, 240);
+    border: 1px solid #d9d9d9;
+    border-radius: 15px;
+    padding: 0.5rem;
+  }
+  
+
+  
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    .collapsedSidebar {
+      display: none;
+    }
+    
+    .flashcard-container {
+      margin-left: 0;
+      width: 100vw;
+    }
+  }
