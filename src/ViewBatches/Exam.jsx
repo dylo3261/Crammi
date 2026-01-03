@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef,useMemo } from "react";
 import { fetchAuthSession, fetchUserAttributes, signOut } from 'aws-amplify/auth';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import "./Exam.css";
@@ -375,9 +375,215 @@ function ExamInterface({ examData, timeLimit, onExamEnd }) {
     );
 }
 
-function ExamScorePage({ examResults, setIsScorePage, examData }) {
-    
-  }
+
+
+function ExamScorePage({ examResults, examData, setIsScorePage, timeLimit }) {
+  const stats = useMemo(() => {
+    const totalQuestions = examData.length;
+    let correct = 0;
+    let incorrect = 0;
+    let skipped = 0;
+
+    examData.forEach((question, index) => {
+      const userAnswer = examResults[index.toString()];
+      
+      if (userAnswer === undefined) {
+        skipped++;
+      } else if (userAnswer === question.correct_answer) {
+        correct++;
+      } else {
+        incorrect++;
+      }
+    });
+
+    const scorePercentage = totalQuestions > 0 ? Math.round((correct / totalQuestions) * 100) : 0;
+
+    return { totalQuestions, correct, incorrect, skipped, scorePercentage };
+  }, [examResults, examData]);
+
+  const getScoreClass = (percentage) => {
+    if (percentage >= 90) return 'score-excellent';
+    if (percentage >= 70) return 'score-good';
+    if (percentage >= 50) return 'score-fair';
+    return 'score-poor';
+  };
+
+  const getScoreMessage = (percentage) => {
+    if (percentage >= 90) return 'Outstanding! 🎉';
+    if (percentage >= 70) return 'Great job! 👍';
+    if (percentage >= 50) return 'Good effort! 💪';
+    return 'Keep practicing! 📚';
+  };
+
+  return (
+    <div className="exam-score-page">
+      <div className="score-container">
+        {/* Header */}
+        <div className="score-header">
+          <div className="header-content">
+            <div className={`award-icon ${getScoreClass(stats.scorePercentage)}`}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="8" r="7"/>
+                <path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/>
+              </svg>
+            </div>
+            <h1 className="title">Exam Results</h1>
+            <p className="subtitle">{getScoreMessage(stats.scorePercentage)}</p>
+          </div>
+
+          {/* Score Display */}
+          <div className="score-display">
+            <div className={`score-percentage ${getScoreClass(stats.scorePercentage)}`}>
+              {stats.scorePercentage}%
+            </div>
+            <p className="score-text">
+              {stats.correct} out of {stats.totalQuestions} correct
+            </p>
+          </div>
+
+          {/* Statistics Grid */}
+          <div className="stats-grid">
+            <div className="stat-card stat-total">
+              <div className="stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="12" y1="20" x2="12" y2="10"/>
+                  <line x1="18" y1="20" x2="18" y2="4"/>
+                  <line x1="6" y1="20" x2="6" y2="16"/>
+                </svg>
+              </div>
+              <div className="stat-value">{stats.totalQuestions}</div>
+              <div className="stat-label">Total</div>
+            </div>
+            <div className="stat-card stat-correct">
+              <div className="stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                  <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+              </div>
+              <div className="stat-value">{stats.correct}</div>
+              <div className="stat-label">Correct</div>
+            </div>
+            <div className="stat-card stat-incorrect">
+              <div className="stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="15" y1="9" x2="9" y2="15"/>
+                  <line x1="9" y1="9" x2="15" y2="15"/>
+                </svg>
+              </div>
+              <div className="stat-value">{stats.incorrect}</div>
+              <div className="stat-label">Incorrect</div>
+            </div>
+            <div className="stat-card stat-skipped">
+              <div className="stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10"/>
+                </svg>
+              </div>
+              <div className="stat-value">{stats.skipped}</div>
+              <div className="stat-label">Skipped</div>
+            </div>
+          </div>
+
+          {/* Time Limit Info */}
+          <div className="time-limit">
+            <div className="time-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+            <span>Time Limit: {timeLimit} minutes</span>
+          </div>
+
+          {/* Action Button */}
+          <button
+            onClick={() => setIsScorePage(false)}
+            className="return-button"
+          >
+            Return to Exam
+          </button>
+        </div>
+
+        {/* Detailed Results */}
+        <div className="question-review">
+          <h2 className="review-title">Question Review</h2>
+          <div className="questions-list">
+            {examData.map((question, index) => {
+              const userAnswer = examResults[index.toString()];
+              const isCorrect = userAnswer === question.correct_answer;
+              const isSkipped = userAnswer === undefined;
+
+              return (
+                <div
+                  key={index}
+                  className={`question-item ${
+                    isSkipped
+                      ? 'question-skipped'
+                      : isCorrect
+                      ? 'question-correct'
+                      : 'question-incorrect'
+                  }`}
+                >
+                  <div className="question-content">
+                    <div className="question-icon">
+                      {isSkipped ? (
+                        <svg className="icon-skipped" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <circle cx="12" cy="12" r="10"/>
+                        </svg>
+                      ) : isCorrect ? (
+                        <svg className="icon-correct" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                          <polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                      ) : (
+                        <svg className="icon-incorrect" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <circle cx="12" cy="12" r="10"/>
+                          <line x1="15" y1="9" x2="9" y2="15"/>
+                          <line x1="9" y1="9" x2="15" y2="15"/>
+                        </svg>
+                      )}
+                    </div>
+                    <div className="question-details">
+                      <div className="question-number">
+                        Question {index + 1}
+                      </div>
+                                              <div className="question-text">
+                          <LatexText text={question.question} />
+                        </div>
+                      
+                      {isSkipped ? (
+                        <div className="answer-skipped">Not answered</div>
+                      ) : (
+                        <>
+                          <div className="answer-row">
+                            <span className="answer-label">Your answer: </span>
+                            <span className={`answer-value ${isCorrect ? 'answer-correct' : 'answer-incorrect'}`}>
+                              {<LatexText text={userAnswer}/>}
+                            </span>
+                          </div>
+                          {!isCorrect && (
+                            <div className="answer-row">
+                              <span className="answer-label">Correct answer: </span>
+                              <span className="answer-value answer-correct">
+                                {<LatexText text={question.correct_answer}/>}
+                              </span>
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Exam() {
     const { batchID } = useParams();
