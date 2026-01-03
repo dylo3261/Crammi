@@ -1,0 +1,588 @@
+/* Global styles for scrolling */
+html, body {
+    overflow-y: auto;
+    height: auto;
+    min-height: 100vh;
+}
+
+/* Quiz View Container (Start Screen) */
+.quizViewContainer {
+    margin-left: 50px;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    padding: 20px;
+}
+
+.quizViewContent {
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+}
+
+.quizViewTitle {
+    font-size: 2.5rem;
+    color: black;
+    margin-bottom: 1rem;
+    font-family: applemedium;
+    cursor: pointer;
+}
+
+.quizViewTitleInput {
+    font-size: 2.5rem;
+    color: black;
+    font-family: applemedium;
+    border: 2px solid #AB9FF2;
+    border-radius: 8px;
+    padding: 0.5rem;
+    width: 100%;
+    text-align: center;
+    outline: none;
+}
+
+.quizViewQuestionCount {
+    font-size: 1.125rem;
+    color: #6b7280;
+    margin-bottom: 2rem;
+}
+
+.quizViewStartButton {
+    padding: 1rem 3rem;
+    background-color: #AB9FF2;
+    color: white;
+    border: none;
+    border-radius: 2.5rem;
+    font-size: 1.125rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 10px 15px -3px rgba(171, 159, 242, 0.3);
+}
+
+.quizViewStartButton:hover {
+    background-color: #9688e0;
+    box-shadow: 0 20px 25px -5px rgba(171, 159, 242, 0.2);
+}
+
+/* Quiz Interface Container */
+.quizInterfaceContainer {
+    margin-left: 50px;
+    min-height: 100vh;
+    background: white;
+    display: flex;
+    padding-bottom: 2rem;
+}
+
+.quizMainContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 20px;
+    padding-bottom: 4rem;
+}
+
+/* Top Bar */
+.quizTopBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    margin-bottom: 1rem;
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 10;
+}
+
+.quizQuestionCounter {
+    font-size: 1rem;
+    color: #6b7280;
+    font-family: applemedium;
+}
+
+/* Scrollable Questions Container */
+.quizQuestionsScrollContainer {
+    padding-right: 10px;
+}
+
+.quizQuestionBlock {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border: 1px solid #e5e7eb;
+}
+
+.quizQuestionLabel {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #AB9FF2;
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+    font-family: applemedium;
+}
+
+.quizQuestionIcon {
+    font-size: 1.25rem;
+}
+
+.quizQuestionText {
+    font-size: 1.5rem;
+    color: black;
+    margin-bottom: 2rem;
+    font-family: applethin;
+    line-height: 1.6;
+}
+
+/* Answers List */
+.quizAnswersList {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.quizAnswerOption {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: white;
+}
+
+.quizAnswerOption:hover {
+    border-color: #AB9FF2;
+    background: #f9f8ff;
+}
+
+.quizAnswerOption.selected {
+    border-color: #AB9FF2;
+    background: #f3f0ff;
+}
+
+.quizAnswerOption.correct {
+    border-color: #10b981;
+    background: #ecfdf5;
+}
+
+.quizAnswerOption.incorrect {
+    border-color: #ef4444;
+    background: #fef2f2;
+}
+
+.quizAnswerRadio {
+    min-width: 24px;
+    width: 24px;
+    height: 24px;
+    border: 2px solid #d1d5db;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.quizAnswerOption.selected .quizAnswerRadio {
+    border-color: #AB9FF2;
+}
+
+.quizAnswerOption.correct .quizAnswerRadio {
+    border-color: #10b981;
+}
+
+.quizAnswerOption.incorrect .quizAnswerRadio {
+    border-color: #ef4444;
+}
+
+.quizAnswerRadioInner {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #AB9FF2;
+}
+
+.quizAnswerOption.correct .quizAnswerRadioInner {
+    background: #10b981;
+}
+
+.quizAnswerOption.incorrect .quizAnswerRadioInner {
+    background: #ef4444;
+}
+
+.quizAnswerText {
+    flex: 1;
+    font-size: 1rem;
+    color: #374151;
+    font-family: applethin;
+}
+
+.quizCorrectBadge,
+.quizIncorrectBadge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.875rem;
+    font-family: applemedium;
+}
+
+.quizCorrectBadge {
+    background: #10b981;
+    color: white;
+}
+
+.quizIncorrectBadge {
+    background: #ef4444;
+    color: white;
+}
+
+/* Explanation */
+.quizExplanation {
+    display: flex;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: #f9fafb;
+    border-left: 4px solid #AB9FF2;
+    border-radius: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.quizExplanationIcon {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.quizExplanationText {
+    font-size: 0.875rem;
+    color: #4b5563;
+    line-height: 1.6;
+}
+
+/* Question Button Container */
+.quizQuestionButtonContainer {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: right;
+}
+
+.quizCheckAnswerButton {
+    padding: 0.875rem 2rem;
+    background-color: #AB9FF2;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: applemedium;
+    box-shadow: 0 10px 15px -3px rgba(171, 159, 242, 0.3);
+}
+
+.quizCheckAnswerButton:hover:not(:disabled) {
+    background-color: #9688e0;
+    box-shadow: 0 20px 25px -5px rgba(171, 159, 242, 0.2);
+}
+
+.quizCheckAnswerButton:disabled {
+    background-color: #d1d5db;
+    cursor: not-allowed;
+    box-shadow: none;
+    opacity: 0.6;
+}
+
+/* Finish Quiz Button */
+.quizFinishContainer {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0 3rem 0;
+    padding-top: 1rem;
+}
+
+.quizFinishButton {
+    padding: 1rem 3rem;
+    background-color: #10b981;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1.125rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: applemedium;
+    box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
+}
+
+.quizFinishButton:hover {
+    background-color: #059669;
+    box-shadow: 0 20px 25px -5px rgba(16, 185, 129, 0.2);
+}
+
+/* Collapsed Sidebar Styles */
+.homeButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 90px;
+    width: 35px;
+    height: 35px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    background-color: #AB9FF2;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.homeButton:hover {
+    transform: scale(1.12);
+}
+
+.homeButtonIcon {
+    height: 1.2rem;
+    width: auto;
+    filter: invert(100%) brightness(100%);
+    pointer-events: none;
+}
+
+.ignoredPopupContainer {
+    position: fixed;
+    top: 110px;
+    left: 60px;
+    width: 300px;
+    z-index: 3000;
+}
+
+.ignoredPopup {
+    background-color: white;
+    border: 1px solid #d9d9d9;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.collapsedSidebar {
+    height: 100vh;
+    border-right: 1px solid #d9d9d9;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 50px;
+    z-index: 998;
+    background-color: rgb(246, 246, 246);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.collapsedSidebarButtons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 1rem;
+    gap: 0.5rem;
+}
+
+.collapsedSideButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    width: 40px;
+    height: 40px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    background-color: transparent;
+    transition: background-color 0.2s;
+}
+
+.collapsedSideButton:hover {
+    background-color: rgb(234, 233, 233);
+}
+
+.collapsedSidebarIcon {
+    height: 1.2rem;
+    width: auto;
+    filter: brightness(0) saturate(100%) invert(20%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(40%) contrast(100%);
+}
+
+.collapsedLogOutSection {
+    border-right: 1px solid #d9d9d9;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    padding: 0.5rem 0;
+    background-color: rgb(246, 246, 246);
+    display: flex;
+    justify-content: center;
+}
+
+.collapsedPFPWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px;
+    width: 40px;
+    height: 40px;
+    transition: background-color 0.2s;
+}
+
+.collapsedPFPWrapper:hover {
+    background-color: rgb(234, 233, 233);
+}
+
+.activeCollapsedPFPWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px;
+    width: 40px;
+    height: 40px;
+    background-color: rgb(238, 238, 238);
+}
+
+.collapsedPFPButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    width: 35px;
+    height: 35px;
+}
+
+.collapsedUserPFP {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.collapsedLogoutPopupContainer {
+    position: fixed;
+    bottom: 60px;
+    left: 5px;
+    width: 210px;
+    z-index: 3000;
+}
+
+.collapsedLogoutPopupContainer .logoutPopup {
+    background-color: rgb(240, 240, 240);
+    border: 1px solid #d9d9d9;
+    border-radius: 15px;
+    padding: 0.5rem;
+}
+
+.logoutPopupPFP {
+    padding: 0.5rem;
+}
+
+.PFPWrapper {
+    width: 100%;
+}
+
+.PFPButtonPopup {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.PFPButtonPopup:hover {
+    background-color: rgb(230, 230, 230);
+}
+
+.userPFPPopup {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.userNameText {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #333;
+    display: block;
+}
+
+.accountEmailDisplayPopup {
+    font-size: 0.75rem;
+    color: #666;
+    margin: 0;
+}
+
+.logoutPopupContent {
+    padding: 0.5rem;
+}
+
+.popupUpgradePlan {
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #d9d9d9;
+    margin-bottom: 0.5rem;
+}
+
+.bottomDashboardSideButtons {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.75rem;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-size: 0.875rem;
+    color: #333;
+}
+
+.bottomDashboardSideButtons:hover {
+    background-color: rgb(230, 230, 230);
+}
+
+.sidebarIcon {
+    height: 1rem;
+    width: auto;
+    filter: brightness(0) saturate(100%) invert(20%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(40%) contrast(100%);
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .collapsedSidebar {
+        display: none;
+    }
+    
+    .quizInterfaceContainer,
+    .quizViewContainer {
+        margin-left: 0;
+        width: 100vw;
+    }
+
+    .quizQuestionText {
+        font-size: 1.25rem;
+    }
+
+    .quizViewTitle {
+        font-size: 2rem;
+    }
+
+    .quizQuestionBlock {
+        padding: 1.5rem;
+    }
+
+    .quizQuestionsScrollContainer {
+        padding-right: 0;
+    }
+}
