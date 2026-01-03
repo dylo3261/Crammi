@@ -22,10 +22,10 @@ export default function BatchesSection({ activeTab }){
         // Only navigate if batch is complete
         if (status === 'COMPLETE') {
             if(activeTab==='Exams'){
-                navigate(`/Exam/${batchID}`);
+                navigate(`/Exam/${batchID}`,{state: {batchName} });
             }
             else if(activeTab==='Quizzes'){
-                navigate(`/Quiz/${batchID}`);
+                navigate(`/Quiz/${batchID}`,{state: {batchName} });
             }
             else if(activeTab==='Flashcards'){
                 navigate(`/Flashcards/${batchID}`,{state: {batchName} });

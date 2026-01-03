@@ -1,0 +1,764 @@
+/* Exam Start Page Styles */
+.examViewContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+    margin-left: 60px;
+}
+
+.examViewContent {
+    background: white;
+    border-radius: 16px;
+    padding: 48px;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.examViewTitle {
+    font-size: 32px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 12px;
+    line-height: 1.3;
+}
+
+.examViewTitleInput {
+    width: 100%;
+    font-size: 32px;
+    font-weight: 600;
+    color: #333;
+    border: 2px solid #AB9FF2;
+    border-radius: 8px;
+    padding: 8px 12px;
+    outline: none;
+    font-family: inherit;
+}
+
+.examViewQuestionCount {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 32px;
+}
+
+.examViewTimeLimitSection {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 32px;
+    font-size: 16px;
+    color: #333;
+}
+
+.examViewTimeLimitWrapper {
+    position: relative;
+}
+
+.examViewTimeLimitButton {
+    padding: 10px 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    transition: all 0.2s;
+}
+
+.examViewTimeLimitButton:hover {
+    border-color: #AB9FF2;
+    background: #fafafa;
+}
+
+.examViewTimeMenu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 8px;
+    z-index: 100;
+    min-width: 150px;
+}
+
+.examViewTimeMenuList {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.examViewTimePreset {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    font-size: 14px;
+    text-align: left;
+    transition: all 0.2s;
+    color: #333;
+}
+
+.examViewTimePreset:hover {
+    background: #f5f5f5;
+}
+
+.examViewTimePresetActive {
+    background: #f8f7ff;
+    color: #AB9FF2;
+    font-weight: 500;
+}
+
+.examViewCustomTimeSection {
+    border-top: 1px solid #e0e0e0;
+    margin-top: 8px;
+    padding-top: 8px;
+}
+
+.examViewCustomTimeInput {
+    display: flex;
+    gap: 8px;
+    padding: 4px;
+}
+
+.examViewCustomTimeField {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+}
+
+.examViewCustomTimeField:focus {
+    border-color: #AB9FF2;
+}
+
+.examViewCustomTimeSet {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    background: #AB9FF2;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.examViewCustomTimeSet:hover {
+    background: #9b8fe8;
+}
+
+.examViewStartButton {
+    width: 100%;
+    padding: 16px 32px;
+    border: none;
+    border-radius: 12px;
+    background: #AB9FF2;
+    color: white;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.examViewStartButton:hover {
+    background: #9b8fe8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(171, 159, 242, 0.3);
+}
+
+/* Mobile Styles for Start Page */
+@media screen and (max-width: 768px) {
+    .examViewContainer {
+        margin-left: 0;
+        padding: 16px;
+    }
+
+    .examViewContent {
+        padding: 32px 24px;
+    }
+
+    .examViewTitle {
+        font-size: 24px;
+    }
+
+    .examViewTitleInput {
+        font-size: 24px;
+    }
+
+    .examViewQuestionCount {
+        font-size: 14px;
+        margin-bottom: 24px;
+    }
+
+    .examViewTimeLimitSection {
+        font-size: 14px;
+        margin-bottom: 24px;
+    }
+
+    .examViewTimeLimitButton {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+
+    .examViewStartButton {
+        padding: 14px 28px;
+        font-size: 16px;
+    }
+}
+
+/* Tablet Styles for Start Page */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    .examViewContainer {
+        margin-left: 60px;
+    }
+
+    .examViewContent {
+        padding: 40px 32px;
+    }
+}
+/* Exam Interface Styles */
+
+.examInterfaceContainer {
+    display: flex;
+    height: 100vh;
+    margin-left: 60px;
+}
+
+/* Question Navigation Sidebar */
+.examSidebar {
+    width: 380px;
+    border-right: 1px solid #e0e0e0;
+    padding: 20px;
+    overflow-y: auto;
+    background-color: #fff;
+}
+
+.examSidebarHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.examBackButton {
+    padding: 8px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.examFilterSection {
+    margin-bottom: 20px;
+    padding: 12px;
+    background: #f5f5f5;
+    border-radius: 8px;
+}
+
+.examFilterSelect {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.examQuestionsList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.examQuestionItem {
+    display: flex;
+    align-items: flex-start;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+}
+
+.examQuestionItem:hover {
+    background-color: #f5f5f5;
+}
+
+.examQuestionItem.current {
+    background-color: #1a1a1a;
+    color: white;
+    border: none;
+}
+
+.examQuestionItem.current:hover {
+    background-color: #1a1a1a;
+}
+
+.examQuestionCheckbox {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    border: 2px solid #ddd;
+    margin-right: 12px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+}
+
+.examQuestionItem.answered .examQuestionCheckbox {
+    border-color: #333;
+}
+
+.examQuestionItem.current .examQuestionCheckbox {
+    border-color: white;
+}
+
+.examQuestionCheckbox.answered .examQuestionCheckboxInner {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    background-color: #333;
+}
+
+.examQuestionItem.current .examQuestionCheckbox.answered .examQuestionCheckboxInner {
+    background-color: white;
+}
+
+.examQuestionContent {
+    flex: 1;
+}
+
+.examQuestionTitle {
+    margin-bottom: 4px;
+    font-size: 14px;
+}
+
+.examQuestionItem.current .examQuestionTitle {
+    font-weight: 600;
+}
+
+.examQuestionPreview {
+    font-size: 13px;
+    opacity: 0.8;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-height: 1.4;
+}
+
+/* Main Exam Content Area */
+.examMainContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Top Bar */
+.examTopBar {
+    padding: 16px 24px;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+}
+
+.examQuestionCounter {
+    font-size: 14px;
+    color: #666;
+}
+
+.examTopBarControls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.examTimerDisplay {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.examTimerIcon {
+    font-size: 18px;
+}
+
+.examTimerText {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+}
+
+.examTimerText.warning {
+    color: #d32f2f;
+}
+
+.examPauseButton {
+    padding: 6px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.examFinishButton {
+    padding: 8px 20px;
+    border: 1px solid #AB9FF2;
+    border-radius: 8px;
+    background: white;
+    color: #AB9FF2;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.examFinishButton:hover {
+    background: #f8f7ff;
+}
+
+/* Progress Bar */
+.examProgressBar {
+    height: 4px;
+    background-color: #e0e0e0;
+    width: 100%;
+}
+
+.examProgressBarFill {
+    height: 100%;
+    background-color: #AB9FF2;
+    transition: width 0.3s ease;
+}
+
+/* Question Content */
+.examQuestionSection {
+    flex: 1;
+    overflow-y: auto;
+    padding: 40px 80px;
+    background-color: #fff;
+}
+
+.examQuestionContainer {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.examQuestionLabel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
+    color: #666;
+    font-size: 14px;
+}
+
+.examQuestionIcon {
+    font-size: 14px;
+}
+
+.examQuestionText {
+    font-size: 24px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 40px;
+    line-height: 1.5;
+}
+
+.examAnswersList {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.examAnswerOption {
+    padding: 16px 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    cursor: pointer;
+    background-color: white;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.examAnswerOption:hover {
+    border-color: #AB9FF2;
+    background-color: #fafafa;
+}
+
+.examAnswerOption.selected {
+    border: 2px solid #AB9FF2;
+    background-color: #f8f7ff;
+}
+
+.examAnswerOption.selected:hover {
+    border-color: #AB9FF2;
+    background-color: #f8f7ff;
+}
+
+.examAnswerRadio {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.examAnswerOption.selected .examAnswerRadio {
+    border-color: #AB9FF2;
+}
+
+.examAnswerRadioInner {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #AB9FF2;
+}
+
+.examAnswerText {
+    font-size: 16px;
+    color: #333;
+    font-weight: 400;
+}
+
+.examAnswerOption.selected .examAnswerText {
+    font-weight: 500;
+}
+
+/* Bottom Navigation */
+.examBottomNav {
+    padding: 20px 80px;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: flex-end;
+    background-color: white;
+}
+
+.examNextButton {
+    padding: 12px 32px;
+    border: none;
+    border-radius: 8px;
+    background: #AB9FF2;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.examNextButton:hover {
+    background: #9b8fe8;
+}
+
+.examNextButtonArrow {
+    font-size: 16px;
+}
+
+/* Mobile Toggle Button */
+.examMobileToggle {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    background: #AB9FF2;
+    color: white;
+    border: none;
+    border-radius: 24px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(171, 159, 242, 0.4);
+    z-index: 1000;
+    margin-bottom: 80px;
+}
+
+.examMobileToggle:hover {
+    background: #9b8fe8;
+}
+
+/* Mobile Styles */
+@media screen and (max-width: 768px) {
+    .examInterfaceContainer {
+        flex-direction: column;
+        margin-left: 0;
+    }
+
+    .examSidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: 50vh;
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+        padding: 16px;
+        z-index: 999;
+        transform: translateY(-100%);
+        transition: transform 0.3s ease;
+    }
+
+    .examSidebar.open {
+        transform: translateY(0);
+    }
+
+    .examSidebarHeader {
+        margin-bottom: 16px;
+    }
+
+    .examFilterSection {
+        margin-bottom: 16px;
+        padding: 10px;
+    }
+
+    .examQuestionsList {
+        gap: 6px;
+    }
+
+    .examQuestionItem {
+        padding: 10px;
+    }
+
+    .examQuestionTitle {
+        font-size: 13px;
+    }
+
+    .examQuestionPreview {
+        font-size: 12px;
+        -webkit-line-clamp: 1;
+    }
+
+    .examMainContent {
+        height: 100vh;
+    }
+
+    .examTopBar {
+        padding: 12px 16px;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .examQuestionCounter {
+        font-size: 13px;
+    }
+
+    .examTopBarControls {
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .examTimerIcon {
+        font-size: 16px;
+    }
+
+    .examTimerText {
+        font-size: 14px;
+    }
+
+    .examPauseButton {
+        padding: 6px 10px;
+        font-size: 13px;
+    }
+
+    .examFinishButton {
+        padding: 6px 16px;
+        font-size: 13px;
+    }
+
+    .examQuestionSection {
+        padding: 24px 16px;
+        padding-bottom: 80px;
+    }
+
+    .examQuestionLabel {
+        font-size: 13px;
+        margin-bottom: 16px;
+    }
+
+    .examQuestionText {
+        font-size: 20px;
+        margin-bottom: 24px;
+    }
+
+    .examAnswersList {
+        gap: 10px;
+    }
+
+    .examAnswerOption {
+        padding: 14px 16px;
+        gap: 12px;
+    }
+
+    .examAnswerRadio {
+        width: 18px;
+        height: 18px;
+    }
+
+    .examAnswerRadioInner {
+        width: 9px;
+        height: 9px;
+    }
+
+    .examAnswerText {
+        font-size: 15px;
+    }
+
+    .examBottomNav {
+        padding: 16px;
+        justify-content: center;
+    }
+
+    .examNextButton {
+        padding: 12px 28px;
+        font-size: 15px;
+        width: 100%;
+        max-width: 300px;
+        justify-content: center;
+    }
+
+    .examMobileToggle {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+}
+
+/* Tablet Styles */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    .examInterfaceContainer {
+        margin-left: 60px;
+    }
+
+    .examSidebar {
+        width: 300px;
+        padding: 16px;
+    }
+
+    .examQuestionSection {
+        padding: 32px 40px;
+    }
+
+    .examBottomNav {
+        padding: 16px 40px;
+    }
+}
