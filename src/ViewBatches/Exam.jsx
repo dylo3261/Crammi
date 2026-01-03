@@ -2,105 +2,115 @@ import React, { useState, useEffect, useRef } from "react";
 import { fetchAuthSession, fetchUserAttributes, signOut } from 'aws-amplify/auth';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import "./Exam.css";
+// Load KaTeX once globally
+let katexLoaded = false;
+let katexLoadingPromise = null;
 
-// LaTeX Rendering Component
+function loadKaTeX() {
+    if (katexLoaded) {
+        return Promise.resolve();
+    }
+    
+    if (katexLoadingPromise) {
+        return katexLoadingPromise;
+    }
+    
+    katexLoadingPromise = new Promise((resolve) => {
+        if (window.katex) {
+            katexLoaded = true;
+            resolve();
+            return;
+        }
+
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css';
+        document.head.appendChild(link);
+
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js';
+        script.onload = () => {
+            katexLoaded = true;
+            resolve();
+        };
+        document.head.appendChild(script);
+    });
+    
+    return katexLoadingPromise;
+}
+
+// Optimized LaTeX Rendering Component
 function LatexText({ text }) {
     const containerRef = useRef(null);
+    const [isReady, setIsReady] = useState(katexLoaded);
 
     useEffect(() => {
-        if (!containerRef.current || !text) return;
+        loadKaTeX().then(() => setIsReady(true));
+    }, []);
 
-        // Load KaTeX if not already loaded
-        if (!window.katex) {
-            const link = document.createElement('link');
-            link.rel = 'stylesheet';
-            link.href = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css';
-            document.head.appendChild(link);
+    useEffect(() => {
+        if (!containerRef.current || !text || !isReady) return;
 
-            const script = document.createElement('script');
-            script.src = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js';
-            script.onload = () => renderLatex();
-            document.head.appendChild(script);
-        } else {
-            renderLatex();
+        const container = containerRef.current;
+        container.innerHTML = '';
+        
+        let textContent = text;
+        
+        // Auto-wrap LaTeX commands that aren't already in $ delimiters
+        if (!textContent.includes('$') && (textContent.includes('\\text') || textContent.includes('\\,'))) {
+            textContent = '$' + textContent + '$';
         }
-
-        function renderLatex() {
-            if (!window.katex || !containerRef.current) return;
-
-            const container = containerRef.current;
-            
-            // Clear container
-            container.innerHTML = '';
-            
-            let textContent = text;
-            
-            // Auto-wrap LaTeX commands that aren't already in $ delimiters
-            // Check if text contains LaTeX commands but no $ delimiters
-            if (!textContent.includes('$') && (textContent.includes('\\text') || textContent.includes('\\,'))) {
-                textContent = '$' + textContent + '$';
-            }
-            
-            // If still no $ delimiters, just render as plain text
-            if (!textContent.includes('$')) {
-                container.textContent = textContent;
-                return;
-            }
-            
-            // Parse the text manually
-            let currentPos = 0;
-            
-            while (currentPos < textContent.length) {
-                const dollarPos = textContent.indexOf('$', currentPos);
-                
-                if (dollarPos === -1) {
-                    // No more math, add remaining text
-                    const textNode = document.createTextNode(textContent.substring(currentPos));
-                    container.appendChild(textNode);
-                    break;
-                }
-                
-                // Add text before the $
-                if (dollarPos > currentPos) {
-                    const textNode = document.createTextNode(textContent.substring(currentPos, dollarPos));
-                    container.appendChild(textNode);
-                }
-                
-                // Find the closing $
-                const closingDollarPos = textContent.indexOf('$', dollarPos + 1);
-                
-                if (closingDollarPos === -1) {
-                    // No closing $, just add the rest as text
-                    const textNode = document.createTextNode(textContent.substring(dollarPos));
-                    container.appendChild(textNode);
-                    break;
-                }
-                
-                // Extract the LaTeX content
-                const latexContent = textContent.substring(dollarPos + 1, closingDollarPos);
-                
-                // Create a span and render the LaTeX
-                const span = document.createElement('span');
-                try {
-                    window.katex.render(latexContent, span, {
-                        displayMode: false,
-                        throwOnError: false
-                    });
-                    container.appendChild(span);
-                } catch (e) {
-                    console.error('LaTeX render error:', e);
-                    console.error('Failed content:', latexContent);
-                    // Fall back to showing the original text
-                    const textNode = document.createTextNode('$' + latexContent + '$');
-                    container.appendChild(textNode);
-                }
-                
-                currentPos = closingDollarPos + 1;
-            }
+        
+        // If no $ delimiters, just render as plain text
+        if (!textContent.includes('$')) {
+            container.textContent = textContent;
+            return;
         }
-    }, [text]);
+        
+        // Parse and render LaTeX
+        let currentPos = 0;
+        
+        while (currentPos < textContent.length) {
+            const dollarPos = textContent.indexOf('$', currentPos);
+            
+            if (dollarPos === -1) {
+                const textNode = document.createTextNode(textContent.substring(currentPos));
+                container.appendChild(textNode);
+                break;
+            }
+            
+            if (dollarPos > currentPos) {
+                const textNode = document.createTextNode(textContent.substring(currentPos, dollarPos));
+                container.appendChild(textNode);
+            }
+            
+            const closingDollarPos = textContent.indexOf('$', dollarPos + 1);
+            
+            if (closingDollarPos === -1) {
+                const textNode = document.createTextNode(textContent.substring(dollarPos));
+                container.appendChild(textNode);
+                break;
+            }
+            
+            const latexContent = textContent.substring(dollarPos + 1, closingDollarPos);
+            const span = document.createElement('span');
+            
+            try {
+                window.katex.render(latexContent, span, {
+                    displayMode: false,
+                    throwOnError: false
+                });
+                container.appendChild(span);
+            } catch (e) {
+                const textNode = document.createTextNode('$' + latexContent + '$');
+                container.appendChild(textNode);
+            }
+            
+            currentPos = closingDollarPos + 1;
+        }
+    }, [text, isReady]);
 
-    return <span ref={containerRef}></span>;
+    return <span ref={containerRef}>{!isReady ? text : ''}</span>;
 }
 
 function ExamInterface({ examData, timeLimit, onExamEnd }) {

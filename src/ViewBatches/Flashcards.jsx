@@ -4,6 +4,117 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 
 import "./Flashcards.css";
 
+// Load KaTeX once globally
+let katexLoaded = false;
+let katexLoadingPromise = null;
+
+function loadKaTeX() {
+    if (katexLoaded) {
+        return Promise.resolve();
+    }
+    
+    if (katexLoadingPromise) {
+        return katexLoadingPromise;
+    }
+    
+    katexLoadingPromise = new Promise((resolve) => {
+        if (window.katex) {
+            katexLoaded = true;
+            resolve();
+            return;
+        }
+
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css';
+        document.head.appendChild(link);
+
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js';
+        script.onload = () => {
+            katexLoaded = true;
+            resolve();
+        };
+        document.head.appendChild(script);
+    });
+    
+    return katexLoadingPromise;
+}
+
+// Optimized LaTeX Rendering Component
+function LatexText({ text }) {
+    const containerRef = useRef(null);
+    const [isReady, setIsReady] = useState(katexLoaded);
+
+    useEffect(() => {
+        loadKaTeX().then(() => setIsReady(true));
+    }, []);
+
+    useEffect(() => {
+        if (!containerRef.current || !text || !isReady) return;
+
+        const container = containerRef.current;
+        container.innerHTML = '';
+        
+        let textContent = text;
+        
+        // Auto-wrap LaTeX commands that aren't already in $ delimiters
+        if (!textContent.includes('$') && (textContent.includes('\\text') || textContent.includes('\\,'))) {
+            textContent = '$' + textContent + '$';
+        }
+        
+        // If no $ delimiters, just render as plain text
+        if (!textContent.includes('$')) {
+            container.textContent = textContent;
+            return;
+        }
+        
+        // Parse and render LaTeX
+        let currentPos = 0;
+        
+        while (currentPos < textContent.length) {
+            const dollarPos = textContent.indexOf('$', currentPos);
+            
+            if (dollarPos === -1) {
+                const textNode = document.createTextNode(textContent.substring(currentPos));
+                container.appendChild(textNode);
+                break;
+            }
+            
+            if (dollarPos > currentPos) {
+                const textNode = document.createTextNode(textContent.substring(currentPos, dollarPos));
+                container.appendChild(textNode);
+            }
+            
+            const closingDollarPos = textContent.indexOf('$', dollarPos + 1);
+            
+            if (closingDollarPos === -1) {
+                const textNode = document.createTextNode(textContent.substring(dollarPos));
+                container.appendChild(textNode);
+                break;
+            }
+            
+            const latexContent = textContent.substring(dollarPos + 1, closingDollarPos);
+            const span = document.createElement('span');
+            
+            try {
+                window.katex.render(latexContent, span, {
+                    displayMode: false,
+                    throwOnError: false
+                });
+                container.appendChild(span);
+            } catch (e) {
+                const textNode = document.createTextNode('$' + latexContent + '$');
+                container.appendChild(textNode);
+            }
+            
+            currentPos = closingDollarPos + 1;
+        }
+    }, [text, isReady]);
+
+    return <span ref={containerRef}>{!isReady ? text : ''}</span>;
+}
+
 export default function Flashcards() {
   const { batchID } = useParams();
   const navigate = useNavigate();
@@ -31,9 +142,6 @@ export default function Flashcards() {
   const logoutPopupRef = useRef(null);
   const ignoredPopupRef = useRef(null);
   const ignoredButtonRef = useRef(null);
-
-  // Fetch user data
-
 
   useEffect(() => {
     getUserName();
@@ -79,7 +187,6 @@ export default function Flashcards() {
     }
   };
 
-  // Close popup when clicking outside
   const profileButtonRef = useRef(null);
   
   useEffect(() => {
@@ -99,7 +206,6 @@ export default function Flashcards() {
     };
   }, [isLogoutPopup]);
 
-  // Close popup on escape
   useEffect(() => {
     function escapeHandler(event) {
       if (event.key === "Escape") {
@@ -115,7 +221,6 @@ export default function Flashcards() {
     };
   }, [isLogoutPopup, isIgnoredPopup]);
 
-  // Close ignored popup when clicking outside
   useEffect(() => {
     function handleClick(event) {
       if (ignoredPopupRef.current && 
@@ -160,13 +265,11 @@ export default function Flashcards() {
         }
         
         const data = await response.json();
-        // Extract items array and ignored_requests
-        const items = data.items || data;  // Fallback to data if old format
+        const items = data.items || data;
         const ignoredRequests = data.ignored_requests || '';
         
-        setBatchJSON(items);  // ✅ Store only the items array
+        setBatchJSON(items);
         
-        // Log ignored requests if present
         if (ignoredRequests) {
             setIsIgnoredRequest(ignoredRequests)
         }
@@ -296,7 +399,6 @@ export default function Flashcards() {
       return;
     }
 
-    // If name hasn't changed, just exit editing mode
     if (editingName === batchName) {
       setIsEditingTitle(false);
       setEditingName('');
@@ -305,12 +407,10 @@ export default function Flashcards() {
 
     const oldName = batchName;
     
-    // Optimistically update the UI
     setBatchName(editingName);
     setIsEditingTitle(false);
     setEditingName('');
 
-    // API call in background
     try {
       const session = await fetchAuthSession();
       const token = session.tokens?.idToken?.toString();
@@ -328,12 +428,10 @@ export default function Flashcards() {
       });
       
       if (!response.ok) {
-        // Rollback on failure
         setBatchName(oldName);
       }
     } catch (err) {
       console.error('Error renaming batch:', err);
-      // Rollback on error
       setBatchName(oldName);
     }
   };
@@ -358,7 +456,6 @@ export default function Flashcards() {
     }
   }, [isEditingTitle]);
 
-  // Close title input when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (titleInputRef.current && !titleInputRef.current.contains(event.target)) {
@@ -403,7 +500,6 @@ export default function Flashcards() {
 
   return (
     <>
-      {/* Collapsed Sidebar */}
       <div className='collapsedSidebar'>
         <div className='collapsedSidebarButtons'>
           
@@ -449,7 +545,6 @@ export default function Flashcards() {
           )}
         </div>
 
-        {/* Profile Section at Bottom */}
         <div className='collapsedLogOutSection'>
           <div className={isLogoutPopup ? 'activeCollapsedPFPWrapper' : 'collapsedPFPWrapper'}>
             <button 
@@ -473,7 +568,6 @@ export default function Flashcards() {
           </div>
         </div>
 
-        {/* Logout Popup */}
         {isLogoutPopup && (
           <div className="collapsedLogoutPopupContainer">
             <div className="logoutPopup" ref={logoutPopupRef}>
@@ -516,7 +610,6 @@ export default function Flashcards() {
           </div>
         )}
 
-        {/* Ignored Instructions Popup */}
         {isIgnoredPopup && (
           <div className="ignoredPopupContainer">
             <div className="ignoredPopup" ref={ignoredPopupRef}>
@@ -529,7 +622,6 @@ export default function Flashcards() {
         )}
       </div>
 
-      {/* Flashcard Content */}
       <div className="flashcard-container">
         <div className="flashcard-header">
           <h1 className="title" onClick={handleTitleClick} style={{ cursor: 'pointer' }}>
@@ -581,11 +673,15 @@ export default function Flashcards() {
             >
               <div className="card-face card-front">
                 <div className="card-label">QUESTION</div>
-                <div className="card-content">{currentCard.front}</div>
+                <div className="card-content">
+                  <LatexText text={currentCard.front} />
+                </div>
               </div>
               <div className="card-face card-back">
                 <div className="card-label">ANSWER</div>
-                <div className="card-content">{currentCard.back}</div>
+                <div className="card-content">
+                  <LatexText text={currentCard.back} />
+                </div>
               </div>
             </div>
           </div>
