@@ -120,6 +120,8 @@ function ExamInterface({ examData, timeLimit, onExamEnd }) {
     const [isPaused, setIsPaused] = useState(false);
     const [shuffledAnswers, setShuffledAnswers] = useState({});
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [flaggedQuestions, setFlaggedQuestions] = useState(new Set());
+    const [filterMode, setFilterMode] = useState('all');
 
     // Shuffle answers once for each question on mount
     useEffect(() => {
@@ -158,10 +160,31 @@ function ExamInterface({ examData, timeLimit, onExamEnd }) {
     const allAnswers = shuffledAnswers[currentQuestionIndex] || [];
 
     const handleAnswerSelect = (answer) => {
-        setSelectedAnswers(prev => ({
-            ...prev,
-            [currentQuestionIndex]: answer
-        }));
+        setSelectedAnswers(prev => {
+            // If clicking the same answer, deselect it
+            if (prev[currentQuestionIndex] === answer) {
+                const newAnswers = { ...prev };
+                delete newAnswers[currentQuestionIndex];
+                return newAnswers;
+            }
+            // Otherwise, select the new answer
+            return {
+                ...prev,
+                [currentQuestionIndex]: answer
+            };
+        });
+    };
+
+    const toggleFlag = (index) => {
+        setFlaggedQuestions(prev => {
+            const newFlags = new Set(prev);
+            if (newFlags.has(index)) {
+                newFlags.delete(index);
+            } else {
+                newFlags.add(index);
+            }
+            return newFlags;
+        });
     };
 
     const handleNextQuestion = () => {
@@ -199,10 +222,13 @@ function ExamInterface({ examData, timeLimit, onExamEnd }) {
                 <div className="examFilterSection">
                     <select
                         className="examFilterSelect"
-                        value="all"
-                        onChange={() => {}}
+                        value={filterMode}
+                        onChange={(e) => setFilterMode(e.target.value)}
                     >
                         <option value="all">All questions</option>
+                        <option value="flagged">Flagged</option>
+                        <option value="answered">Answered</option>
+                        <option value="unanswered">Unanswered</option>
                     </select>
                 </div>
 
@@ -210,26 +236,46 @@ function ExamInterface({ examData, timeLimit, onExamEnd }) {
                     {examData.map((q, index) => {
                         const status = getQuestionStatus(index);
                         const isAnswered = selectedAnswers[index] !== undefined;
+                        const isFlagged = flaggedQuestions.has(index);
+                        
+                        // Apply filter
+                        if (filterMode === 'flagged' && !isFlagged) return null;
+                        if (filterMode === 'answered' && !isAnswered) return null;
+                        if (filterMode === 'unanswered' && isAnswered) return null;
                         
                         return (
                             <div
                                 key={index}
-                                onClick={() => handleQuestionNavigation(index)}
                                 className={`examQuestionItem ${status}`}
                             >
-                                <div className={`examQuestionCheckbox ${isAnswered ? 'answered' : ''}`}>
-                                    {isAnswered && (
-                                        <div className="examQuestionCheckboxInner" />
-                                    )}
-                                </div>
-                                <div className="examQuestionContent">
-                                    <div className="examQuestionTitle">
-                                        Question {index + 1}
+                                <div 
+                                    onClick={() => handleQuestionNavigation(index)}
+                                    style={{ display: 'flex', alignItems: 'flex-start', flex: 1, cursor: 'pointer' }}
+                                >
+                                    <div className={`examQuestionCheckbox ${isAnswered ? 'answered' : ''}`}>
+                                        {isAnswered && (
+                                            <div className="examQuestionCheckboxInner" />
+                                        )}
                                     </div>
-                                    <div className="examQuestionPreview">
-                                        {stripLatex(q.question)}
+                                    <div className="examQuestionContent">
+                                        <div className="examQuestionTitle">
+                                            Question {index + 1}
+                                        </div>
+                                        <div className="examQuestionPreview">
+                                            {stripLatex(q.question)}
+                                        </div>
                                     </div>
                                 </div>
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        toggleFlag(index);
+                                    }}
+                                    className={`examQuestionFlag ${isFlagged ? 'flagged' : ''}`}
+                                    title={isFlagged ? "Remove flag" : "Flag question"}
+                                >
+                                    <img className='examBookmarkIcon'src={isFlagged? 'https://uxwing.com/wp-content/themes/uxwing/download/e-commerce-currency-shopping/saved-bookmark-icon.png':'https://uxwing.com/wp-content/themes/uxwing/download/user-interface/saved-icon.png'}/>
+                                </button>
                             </div>
                         );
                     })}
