@@ -375,6 +375,9 @@ function ExamInterface({ examData, timeLimit, onExamEnd }) {
     );
 }
 
+function ExamScorePage({ examResults, setIsScorePage, examData }) {
+    
+  }
 
 export default function Exam() {
     const { batchID } = useParams();
@@ -404,14 +407,19 @@ export default function Exam() {
     const profileButtonRef = useRef(null);
 
     const [isExamStarted, setIsExamStarted] = useState(false);
+    const [isScorePage, setIsScorePage] = useState(false);
+    const [examResults, setExamResults] = useState(null);
+
 
     const handleStartExam = () => {
         setIsExamStarted(true);
     };
 
     const handleExamEnd = (answers) => {
-        console.log('Exam finished with answers:', answers);
+        setExamResults(answers);
+        // console.log('Exam finished with answers:', answers);
         setIsExamStarted(false);
+        setIsScorePage(true);
     };
 
     useEffect(() => {
@@ -683,8 +691,8 @@ export default function Exam() {
     };
 
     return (
-        <>
-            {!isExamStarted ? (
+        <>  
+            {!isExamStarted && !isScorePage ?  (
                 <>
                     <div className='collapsedSidebar'>
                         <div className='collapsedSidebarButtons'>
@@ -889,7 +897,7 @@ export default function Exam() {
                         </div>
                     </div>
                 </>
-            ) : (
+            ) : isExamStarted? (
                 <>
                     <div className='collapsedSidebar'>
                         <div className='collapsedSidebarButtons'>
@@ -1018,7 +1026,138 @@ export default function Exam() {
                         onExamEnd={handleExamEnd}
                     />
                 </>
-            )}
+            ): isScorePage? (
+                <>
+                 <div className='collapsedSidebar'>
+                        <div className='collapsedSidebarButtons'>
+                            <button 
+                                className='homeButton'
+                                title="Dashboard"
+                                onClick={() => navigate('/Dashboard')}
+                            >
+                                <img 
+                                    className='homeButtonIcon' 
+                                    src='https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../releases/preview/2012/png/iconmonstr-home-3.png&r=0&g=0&b=0' 
+                                    alt='quiz icon'
+                                />
+                            </button>
+                            
+                            <button 
+                                className='collapsedSideButton'
+                                title="Upgrade Plan"
+                            >
+                                <img 
+                                    className='collapsedSidebarIcon' 
+                                    src='/starIcon.png' 
+                                    alt='flashcards icon'
+                                />
+                            </button>
+                            
+                            {isIgnoredRequest && (
+                                <button 
+                                    ref={ignoredButtonRef}
+                                    className='collapsedSideButton'
+                                    title="Ignored Special Instructions"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setIsIgnoredPopup(!isIgnoredPopup);
+                                    }}
+                                >
+                                    <img 
+                                        className='collapsedSidebarIcon' 
+                                        src='https://uxwing.com/wp-content/themes/uxwing/download/signs-and-symbols/exclamation-icon.png' 
+                                        alt='ignored instructions icon'
+                                    />
+                                </button>
+                            )}
+                        </div>
+
+                        <div className='collapsedLogOutSection'>
+                            <div className={isLogoutPopup ? 'activeCollapsedPFPWrapper' : 'collapsedPFPWrapper'}>
+                                <button 
+                                    ref={profileButtonRef}
+                                    className='collapsedPFPButton' 
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setLogoutPopup(!isLogoutPopup);
+                                    }}
+                                    title='Account'
+                                >
+                                    <img 
+                                        className='collapsedUserPFP' 
+                                        src={userPFP} 
+                                        alt='profile picture'
+                                        onError={(e) => {
+                                            e.target.src = "https://askthescientists.com/wp-content/uploads/2021/04/AdobeStock_240042551-scaled.jpeg";
+                                        }}
+                                    />
+                                </button>
+                            </div>
+                        </div>
+
+                        {isLogoutPopup && (
+                            <div className="collapsedLogoutPopupContainer">
+                                <div className="logoutPopup" ref={logoutPopupRef}>
+                                    <div className='logoutPopupPFP'>
+                                        <div className='PFPWrapper'>
+                                            <button className='PFPButtonPopup'>
+                                                <img 
+                                                    className='userPFPPopup' 
+                                                    src={userPFP} 
+                                                    alt='profile picture'
+                                                    onError={(e) => {
+                                                        e.target.src = "https://askthescientists.com/wp-content/uploads/2021/04/AdobeStock_240042551-scaled.jpeg";
+                                                    }}
+                                                />
+                                                <div>
+                                                    <span className='userNameText'>{userName}</span>
+                                                    <p className='accountEmailDisplayPopup'>{userEmail}</p>
+                                                </div>
+                                            </button>
+                                        </div>
+                                    </div>
+                                
+                                    <div className='logoutPopupContent'>
+                                        <div className='popupUpgradePlan'>
+                                            <button className='bottomDashboardSideButtons'>
+                                                <img className='sidebarIcon' src='/starIcon.png' alt='Support icon'/>
+                                                <span>Upgrade Plan</span>
+                                            </button>
+                                        </div>
+                                        <button className='bottomDashboardSideButtons'>
+                                            <img className='sidebarIcon' src='https://uxwing.com/wp-content/themes/uxwing/download/computers-mobile-hardware/headphone-headset-icon.png' alt='Support icon'/>
+                                            <span>Support</span>
+                                        </button>
+                                        <button className='bottomDashboardSideButtons' onClick={handleSignOut}>
+                                            <img className='sidebarIcon' src='https://uxwing.com/wp-content/themes/uxwing/download/web-app-development/log-in-icon.png' alt='Logout icon'/>
+                                            <span>Sign Out</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {isIgnoredPopup && (
+                            <div className="ignoredPopupContainer">
+                                <div className="ignoredPopup" ref={ignoredPopupRef}>
+                                    <h3 style={{ marginBottom: '10px', fontSize: '16px', fontWeight: '600', color: '#333' }}>Ignored Special Instructions</h3>
+                                    <p style={{ fontSize: '14px', color: '#666', lineHeight: '1.5', margin: 0 }}>
+                                        {isIgnoredRequest}
+                                    </p>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                    <ExamScorePage 
+                       examData={batchJSON}
+                       examResults={examResults}
+                       setIsScorePage={setIsScorePage}
+                       batchName={batchName}
+                       timeLimit={timeLimit}
+                    />
+
+                </>
+            ):null}
         </>
     );
 }
