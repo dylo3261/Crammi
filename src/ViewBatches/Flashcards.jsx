@@ -20,6 +20,7 @@ export default function Flashcards() {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [editingName, setEditingName] = useState('');
   const titleInputRef = useRef(null);
+  const [isIgnoredRequest,setIsIgnoredRequest]= useState('')
 
   // Sidebar state
   const [userName, setUserName] = useState('');
@@ -137,21 +138,31 @@ export default function Flashcards() {
         }
         
         const data = await response.json();
-        setBatchJSON(data);
+        // Extract items array and ignored_requests
+        const items = data.items || data;  // Fallback to data if old format
+        const ignoredRequests = data.ignored_requests || '';
+        
+        setBatchJSON(items);  // ✅ Store only the items array
+        
+        // Log ignored requests if present
+        if (ignoredRequests) {
+            setIsIgnoredRequest(ignoredRequests)
+        }
+        
         setIsLoading(false);
-      } catch (err) {
+    } catch (err) {
         console.error('Error fetching flashcard data:', err);
         setError(err.message);
         setIsLoading(false);
-      }
+        }
     };
-    
-    if (batchID) {
-      fetchJSON();
-    }
-  }, [batchID]);
 
-  useEffect(() => {
+    if (batchID) {
+        fetchJSON();
+    }
+    }, [batchID]);
+
+    useEffect(() => {
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
@@ -397,7 +408,16 @@ export default function Flashcards() {
             />
           </button>
           
-         
+          <button 
+            className='collapsedSideButton'
+            title="Ignored Special Instructions"
+          >
+            <img 
+              className='collapsedSidebarIcon' 
+              src='https://uxwing.com/wp-content/themes/uxwing/download/signs-and-symbols/exclamation-icon.png' 
+              alt='flashcards icon'
+            />
+          </button>
         </div>
 
         {/* Profile Section at Bottom */}
