@@ -295,7 +295,22 @@
     pointer-events: none; /* prevents hover flicker */
 }
 
-
+/* Ignored Instructions Popup */
+.ignoredPopupContainer {
+    position: fixed;
+    top: 110px;
+    left: 60px;
+    width: 300px;
+    z-index: 3000;
+  }
+  
+  .ignoredPopup {
+    background-color: white;
+    border: 1px solid #d9d9d9;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
 .collapsedSidebar {
     height: 100vh;
     border-right: 1px solid #d9d9d9;
@@ -428,3 +443,4 @@
       width: 100vw;
     }
   }
+

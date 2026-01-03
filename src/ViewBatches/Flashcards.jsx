@@ -27,7 +27,10 @@ export default function Flashcards() {
   const [userPFP, setUserPFP] = useState(null);
   const [userEmail, setUserEmail] = useState('');
   const [isLogoutPopup, setLogoutPopup] = useState(false);
+  const [isIgnoredPopup, setIsIgnoredPopup] = useState(false);
   const logoutPopupRef = useRef(null);
+  const ignoredPopupRef = useRef(null);
+  const ignoredButtonRef = useRef(null);
 
   // Fetch user data
 
@@ -101,15 +104,34 @@ export default function Flashcards() {
     function escapeHandler(event) {
       if (event.key === "Escape") {
         setLogoutPopup(false);
+        setIsIgnoredPopup(false);
       }
     }
-    if (isLogoutPopup) {
+    if (isLogoutPopup || isIgnoredPopup) {
       addEventListener("keydown", escapeHandler);
     }
     return () => {
       removeEventListener("keydown", escapeHandler);
     };
-  }, [isLogoutPopup]);
+  }, [isLogoutPopup, isIgnoredPopup]);
+
+  // Close ignored popup when clicking outside
+  useEffect(() => {
+    function handleClick(event) {
+      if (ignoredPopupRef.current && 
+          !ignoredPopupRef.current.contains(event.target) &&
+          ignoredButtonRef.current &&
+          !ignoredButtonRef.current.contains(event.target)) {
+        setIsIgnoredPopup(false);
+      }
+    }
+    if (isIgnoredPopup) {
+      addEventListener("mousedown", handleClick);
+    }
+    return () => {
+      removeEventListener("mousedown", handleClick);
+    };
+  }, [isIgnoredPopup]);
 
   useEffect(() => {
     const fetchJSON = async () => {
@@ -408,16 +430,23 @@ export default function Flashcards() {
             />
           </button>
           
-          <button 
-            className='collapsedSideButton'
-            title="Ignored Special Instructions"
-          >
-            <img 
-              className='collapsedSidebarIcon' 
-              src='https://uxwing.com/wp-content/themes/uxwing/download/signs-and-symbols/exclamation-icon.png' 
-              alt='flashcards icon'
-            />
-          </button>
+          {isIgnoredRequest && (
+            <button 
+              ref={ignoredButtonRef}
+              className='collapsedSideButton'
+              title="Ignored Special Instructions"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsIgnoredPopup(!isIgnoredPopup);
+              }}
+            >
+              <img 
+                className='collapsedSidebarIcon' 
+                src='https://uxwing.com/wp-content/themes/uxwing/download/signs-and-symbols/exclamation-icon.png' 
+                alt='ignored instructions icon'
+              />
+            </button>
+          )}
         </div>
 
         {/* Profile Section at Bottom */}
@@ -483,6 +512,18 @@ export default function Flashcards() {
                   <span>Sign Out</span>
                 </button>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Ignored Instructions Popup */}
+        {isIgnoredPopup && (
+          <div className="ignoredPopupContainer">
+            <div className="ignoredPopup" ref={ignoredPopupRef}>
+              <h3 style={{ marginBottom: '10px', fontSize: '16px', fontWeight: '600', color: '#333' }}>Ignored Special Instructions</h3>
+              <p style={{ fontSize: '14px', color: '#666', lineHeight: '1.5', margin: 0 }}>
+                {isIgnoredRequest}
+              </p>
             </div>
           </div>
         )}
