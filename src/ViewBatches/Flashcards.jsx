@@ -624,7 +624,7 @@ export default function Flashcards() {
 
       <div className="flashcard-container">
         <div className="flashcard-header">
-          <h1 className="title" onClick={handleTitleClick} style={{ cursor: 'pointer' }}>
+          <h1 className="flashcardTitle" onClick={handleTitleClick} style={{ cursor: 'pointer' }}>
             {isEditingTitle ? (
               <input
                 ref={titleInputRef}

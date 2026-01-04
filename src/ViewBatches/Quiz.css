@@ -577,7 +577,7 @@ html, body {
   }
   
   /* Header Section */
-  .score-header {
+  .quiz-score-header {
     background: white;
     border-radius: 0.5rem;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
@@ -586,7 +586,7 @@ html, body {
   }
   
   @media (min-width: 768px) {
-    .score-header {
+    .quiz-score-header {
       padding: 2rem;
     }
   }
@@ -607,7 +607,7 @@ html, body {
     height: 100%;
   }
   
-  .title {
+  .quizScorePageTitle {
     font-size: 1.875rem;
     font-family: applemedium, arial, sans-serif;
     color: #1f2937;
@@ -615,12 +615,12 @@ html, body {
   }
   
   @media (min-width: 768px) {
-    .title {
+    .quizScorePageTitle {
       font-size: 2.25rem;
     }
   }
   
-  .subtitle {
+  .quizSubtitle {
     color: #4b5563;
     font-size: 1.125rem;
   }
@@ -679,7 +679,7 @@ html, body {
     }
   }
   
-  .stat-card {
+  .quiz-stat-card {
     border-radius: 0.5rem;
     padding: 1rem;
     text-align: center;
@@ -701,61 +701,61 @@ html, body {
     background-color: #eff6ff;
   }
   
-  .stat-icon {
+  .quiz-stat-icon {
     width: 2rem;
     height: 2rem;
     margin: 0 auto 0.5rem;
   }
   
-  .stat-icon svg {
+  .quiz-stat-icon svg {
     width: 100%;
     height: 100%;
   }
   
-  .stat-total .stat-icon {
+  .stat-total .quiz-stat-icon {
     color: #4b5563;
   }
   
-  .stat-correct .stat-icon {
+  .stat-correct .quiz-stat-icon {
     color: #16a34a;
   }
   
-  .stat-first-try .stat-icon {
+  .stat-first-try .quiz-stat-icon {
     color: #d97706;
   }
   
-  .stat-attempts .stat-icon {
+  .stat-attempts .quiz-stat-icon {
     color: #2563eb;
   }
   
-  .stat-value {
+  .quiz-stat-value {
     font-size: 1.5rem;
     font-family: applemedium, arial, sans-serif;
   }
   
-  .stat-total .stat-value {
+  .stat-total .quiz-stat-value {
     color: #1f2937;
   }
   
-  .stat-correct .stat-value {
+  .stat-correct .quiz-stat-value {
     color: #16a34a;
   }
   
-  .stat-first-try .stat-value {
+  .stat-first-try .quiz-stat-value {
     color: #d97706;
   }
   
-  .stat-attempts .stat-value {
+  .stat-attempts .quiz-stat-value {
     color: #2563eb;
   }
   
-  .stat-label {
+  .quiz-stat-label {
     font-size: 0.875rem;
     color: #4b5563;
   }
   
   /* Return Button */
-  .return-button {
+  .quiz-return-button {
     width: 100%;
     background-color: #ab9ff2;
     color: white;
@@ -768,7 +768,7 @@ html, body {
     font-size: 1rem;
   }
   
-  .return-button:hover {
+  .quiz-return-button:hover {
     background-color: #9b8fe8;
   }
   

@@ -417,7 +417,7 @@ function ExamScorePage({ examResults, examData, setIsScorePage, timeLimit }) {
     <div className="exam-score-page">
       <div className="score-container">
         {/* Header */}
-        <div className="score-header">
+        <div className="exam-score-header">
           <div className="header-content">
             <div className={`award-icon ${getScoreClass(stats.scorePercentage)}`}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -425,8 +425,8 @@ function ExamScorePage({ examResults, examData, setIsScorePage, timeLimit }) {
                 <path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/>
               </svg>
             </div>
-            <h1 className="title">Exam Results</h1>
-            <p className="subtitle">{getScoreMessage(stats.scorePercentage)}</p>
+            <h1 className="examScorePageTitle">Exam Results</h1>
+            <p className="examSubtitle">{getScoreMessage(stats.scorePercentage)}</p>
           </div>
 
           {/* Score Display */}

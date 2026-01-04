@@ -147,16 +147,6 @@ html, body {
   background-color: rgb(58, 58, 58);
   cursor: pointer;
 }
-.PFPWrapper{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  border-radius: 6px; 
-  width: 95%; 
-  height: 60px; 
-  margin: 1% auto 0 auto; 
-  border: 2px solid transparent; 
-}
 
 .PFPButtonPopup{
   display: flex; 
@@ -173,6 +163,7 @@ html, body {
   color: rgb(48, 48, 48); 
   
 }
+
 .PFPButton{
   display: flex; 
   align-items: center; 
@@ -183,29 +174,36 @@ html, body {
   cursor: pointer; 
   font-size: 87%; 
   gap: 0.5rem; 
+  flex-shrink: 0;
   font-family: applemedium,arial,sans-serif; 
   background-color: transparent; 
   color: rgb(48, 48, 48);}
+  
 
-  .PFPWrapper:has(.PFPButton:hover) {
-    background-color: rgb(234, 233, 233); 
-    color: rgb(0, 0, 0);
-
+  .PFPWrapper:has(.PFPButton:hover),
+  .activePFPWrapper:has(.PFPButton:hover) {
+      background-color: rgb(234, 233, 233); 
+      color: rgb(0, 0, 0);
   }
-  .activePFPWrapper{
+  .PFPWrapper,
+  .activePFPWrapper {
     display: flex;
-  flex-direction: row;
-  align-items: center;
-  border-radius: 6px; 
-  width: 95%; 
-  height: 60px; 
-  margin: 1% auto 0 auto; 
-  border: 2px solid transparent; 
-  background-color: rgb(238, 238, 238); 
-  color: rgb(0, 0, 0);
-
+    flex-direction: row;
+    align-items: center;
+    border-radius: 6px; 
+    width: 100%; 
+    height: 60px; 
+    margin: 1% auto 0 auto; 
+    border: 2px solid transparent;
   }
 
+  .PFPWrapper {
+    background-color: transparent;
+  }
+  
+  .activePFPWrapper {
+    background-color: rgb(238, 238, 238); 
+  }
 .logoutPopupContainer,.logoutPopup{
   z-index: 3000;
 }
@@ -216,7 +214,8 @@ html, body {
   width: 210px;
   height: auto;
   border-radius: 15px;
-  background-color: rgb(234, 233, 233); 
+  background-color: rgb(240, 240, 240);
+  border: 1px solid #d9d9d9;
 }
 
 .logoutPopupContent::before {
@@ -271,8 +270,8 @@ html, body {
   left: 0;
   width: 220px;
   height: auto;
-  padding-top: 5px;
-  padding-bottom: 5px;
+  padding-top: 0px;
+  padding-bottom: 0px;
   z-index: 2000;
   background-color: rgb(246, 246, 246);
   border: 1px solid #d9d9d9;

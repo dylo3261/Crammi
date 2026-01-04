@@ -688,7 +688,7 @@
   }
   
   /* Header Section */
-  .score-header {
+  .exam-score-header {
     background: white;
     border-radius: 0.5rem;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
@@ -697,7 +697,7 @@
   }
   
   @media (min-width: 768px) {
-    .score-header {
+    .exam-score-header {
       padding: 2rem;
     }
   }
@@ -718,7 +718,7 @@
     height: 100%;
   }
   
-  .title {
+  .examScorePageTitle {
     font-size: 1.875rem;
     font-family: applemdium,arial,sans-serif;
     color: #1f2937;
@@ -726,12 +726,12 @@
   }
   
   @media (min-width: 768px) {
-    .title {
+    .examScorePageTitle {
       font-size: 2.25rem;
     }
   }
   
-  .subtitle {
+  .examSubtitle {
     color: #4b5563;
   }
   

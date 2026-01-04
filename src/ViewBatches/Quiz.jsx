@@ -358,7 +358,7 @@ function QuizScorePage({ results, onReturnToStart, batchName }) {
       <div className="quiz-score-page">
         <div className="score-container">
           {/* Header */}
-          <div className="score-header">
+          <div className="quiz-score-header">
             <div className="header-content">
               <div className={`award-icon ${getScoreClass(stats.scorePercentage)}`}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -366,8 +366,8 @@ function QuizScorePage({ results, onReturnToStart, batchName }) {
                   <path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/>
                 </svg>
               </div>
-              <h1 className="title">{batchName}</h1>
-              <p className="subtitle">{getScoreMessage(stats.scorePercentage)}</p>
+              <h1 className="quizScorePageTitle">{batchName}</h1>
+              <p className="quizSubtitle">{getScoreMessage(stats.scorePercentage)}</p>
             </div>
   
             {/* Score Display */}
@@ -382,51 +382,51 @@ function QuizScorePage({ results, onReturnToStart, batchName }) {
   
             {/* Statistics Grid */}
             <div className="stats-grid">
-              <div className="stat-card stat-total">
-                <div className="stat-icon">
+              <div className="quiz-stat-card stat-total">
+                <div className="quiz-stat-icon">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <line x1="12" y1="20" x2="12" y2="10"/>
                     <line x1="18" y1="20" x2="18" y2="4"/>
                     <line x1="6" y1="20" x2="6" y2="16"/>
                   </svg>
                 </div>
-                <div className="stat-value">{stats.totalQuestions}</div>
-                <div className="stat-label">Total</div>
+                <div className="quiz-stat-value">{stats.totalQuestions}</div>
+                <div className="quiz-stat-label">Total</div>
               </div>
-              <div className="stat-card stat-correct">
-                <div className="stat-icon">
+              <div className="quiz-stat-card stat-correct">
+                <div className="quiz-stat-icon">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
                     <polyline points="22 4 12 14.01 9 11.01"/>
                   </svg>
                 </div>
-                <div className="stat-value">{stats.correct}</div>
-                <div className="stat-label">Correct</div>
+                <div className="quiz-stat-value">{stats.correct}</div>
+                <div className="quiz-stat-label">Correct</div>
               </div>
-              <div className="stat-card stat-first-try">
-                <div className="stat-icon">
+              <div className="quiz-stat-card stat-first-try">
+                <div className="quiz-stat-icon">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                   </svg>
                 </div>
-                <div className="stat-value">{stats.firstTryCorrect}</div>
-                <div className="stat-label">First Try</div>
+                <div className="quiz-stat-value">{stats.firstTryCorrect}</div>
+                <div className="quiz-stat-label">First Try</div>
               </div>
-              <div className="stat-card stat-attempts">
-                <div className="stat-icon">
+              <div className="quiz-stat-card stat-attempts">
+                <div className="quiz-stat-icon">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
                   </svg>
                 </div>
-                <div className="stat-value">{stats.attempted}</div>
-                <div className="stat-label">Attempted</div>
+                <div className="quiz-stat-value">{stats.attempted}</div>
+                <div className="quiz-stat-label">Attempted</div>
               </div>
             </div>
   
             {/* Action Button */}
             <button
               onClick={onReturnToStart}
-              className="return-button"
+              className="quiz-return-button"
             >
               Return to Start
             </button>
