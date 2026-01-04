@@ -216,9 +216,7 @@ function ExamInterface({ examData, timeLimit, onExamEnd }) {
     return (
         <div className="examInterfaceContainer">
             <div className={`examSidebar ${isSidebarOpen ? 'open' : ''}`}>
-                <div className="examSidebarHeader">
-                </div>
-
+                
                 <div className="examFilterSection">
                     <select
                         className="examFilterSelect"

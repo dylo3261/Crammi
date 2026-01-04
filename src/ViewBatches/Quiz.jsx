@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { fetchAuthSession, fetchUserAttributes, signOut } from 'aws-amplify/auth';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import "./Quiz.css";
@@ -113,7 +113,8 @@ function LatexText({ text }) {
 
 function QuizInterface({ quizData, onQuizComplete }) {
     const [selectedAnswers, setSelectedAnswers] = useState({});
-    const [checkedQuestions, setCheckedQuestions] = useState({});
+    const [correctQuestions, setCorrectQuestions] = useState({});
+    const [attemptHistory, setAttemptHistory] = useState({});
     const [shuffledAnswers, setShuffledAnswers] = useState({});
 
     useEffect(() => {
@@ -128,7 +129,7 @@ function QuizInterface({ quizData, onQuizComplete }) {
     }, [quizData]);
 
     const handleAnswerSelect = (questionIndex, answer) => {
-        if (!checkedQuestions[questionIndex]) {
+        if (!correctQuestions[questionIndex]) {
             setSelectedAnswers(prev => ({
                 ...prev,
                 [questionIndex]: answer
@@ -138,8 +139,26 @@ function QuizInterface({ quizData, onQuizComplete }) {
 
     const handleCheckAnswer = (questionIndex) => {
         const selectedAnswer = selectedAnswers[questionIndex];
-        if (selectedAnswer) {
-            setCheckedQuestions(prev => ({
+        if (!selectedAnswer) return;
+
+        const answerText = selectedAnswer.text;
+        
+        // Track this attempt
+        setAttemptHistory(prev => ({
+            ...prev,
+            [questionIndex]: [
+                ...(prev[questionIndex] || []),
+                {
+                    answer: answerText,
+                    isCorrect: selectedAnswer.isCorrect,
+                    explanation: selectedAnswer.explanation
+                }
+            ]
+        }));
+
+        // If correct, mark as complete
+        if (selectedAnswer.isCorrect) {
+            setCorrectQuestions(prev => ({
                 ...prev,
                 [questionIndex]: true
             }));
@@ -149,21 +168,58 @@ function QuizInterface({ quizData, onQuizComplete }) {
     const getAnswerClassName = (questionIndex, answer) => {
         let className = 'quizAnswerOption';
         const selectedAnswer = selectedAnswers[questionIndex];
-        const hasChecked = checkedQuestions[questionIndex];
+        const isCorrect = correctQuestions[questionIndex];
+        const attempts = attemptHistory[questionIndex] || [];
         
         if (selectedAnswer === answer) {
             className += ' selected';
         }
         
-        if (hasChecked) {
-            if (answer.isCorrect) {
-                className += ' correct';
-            } else if (selectedAnswer === answer && !answer.isCorrect) {
-                className += ' incorrect';
-            }
+        // Check if this answer was attempted before
+        const wasAttempted = attempts.some(att => att.answer === answer.text);
+        
+        if (isCorrect && answer.isCorrect) {
+            className += ' correct';
+        } else if (wasAttempted && !answer.isCorrect) {
+            className += ' incorrect';
         }
         
         return className;
+    };
+
+    const calculateResults = () => {
+        const detailedResults = quizData.map((question, index) => {
+            const attempts = attemptHistory[index] || [];
+            const isCorrect = correctQuestions[index] || false;
+            const firstTry = isCorrect && attempts.length === 1;
+            
+            return {
+                question: question.question,
+                correctAnswer: question.correct_answer.text,
+                isCorrect: isCorrect,
+                firstTry: firstTry,
+                attempts: attempts,
+                attemptCount: attempts.length
+            };
+        });
+
+        const correctCount = Object.keys(correctQuestions).length;
+        const attemptedCount = Object.keys(attemptHistory).length;
+        const firstTryCount = detailedResults.filter(r => r.firstTry).length;
+
+        return {
+            correct: correctCount,
+            total: quizData.length,
+            attempted: attemptedCount,
+            firstTryCorrect: firstTryCount,
+            percentage: attemptedCount > 0 ? Math.round((correctCount / attemptedCount) * 100) : 0,
+            detailedResults: detailedResults
+        };
+    };
+
+    const handleFinishQuiz = () => {
+        const results = calculateResults();
+        onQuizComplete(results);
     };
 
     return (
@@ -179,7 +235,8 @@ function QuizInterface({ quizData, onQuizComplete }) {
                     {quizData.map((question, questionIndex) => {
                         const allAnswers = shuffledAnswers[questionIndex] || [];
                         const selectedAnswer = selectedAnswers[questionIndex];
-                        const hasChecked = checkedQuestions[questionIndex];
+                        const isCorrect = correctQuestions[questionIndex];
+                        const attempts = attemptHistory[questionIndex] || [];
 
                         return (
                             <div key={questionIndex} className="quizQuestionBlock">
@@ -195,10 +252,9 @@ function QuizInterface({ quizData, onQuizComplete }) {
                                 <div className="quizAnswersList">
                                     {allAnswers.map((answer, answerIndex) => {
                                         const className = getAnswerClassName(questionIndex, answer);
-                                        const showExplanation = hasChecked && (
-                                            answer.isCorrect || 
-                                            (selectedAnswer === answer && !answer.isCorrect)
-                                        );
+                                        const wasAttempted = attempts.some(att => att.answer === answer.text);
+                                        const attemptData = attempts.find(att => att.answer === answer.text);
+                                        const showExplanation = wasAttempted && attemptData;
                                         
                                         return (
                                             <div key={answerIndex}>
@@ -214,10 +270,10 @@ function QuizInterface({ quizData, onQuizComplete }) {
                                                     <span className="quizAnswerText">
                                                         <LatexText text={answer.text} />
                                                     </span>
-                                                    {hasChecked && answer.isCorrect && (
+                                                    {isCorrect && answer.isCorrect && (
                                                         <span className="quizCorrectBadge">✓ Correct</span>
                                                     )}
-                                                    {hasChecked && selectedAnswer === answer && !answer.isCorrect && (
+                                                    {wasAttempted && !answer.isCorrect && (
                                                         <span className="quizIncorrectBadge">✗ Try again</span>
                                                     )}
                                                 </div>
@@ -225,7 +281,7 @@ function QuizInterface({ quizData, onQuizComplete }) {
                                                     <div className="quizExplanation">
                                                         <div className="quizExplanationIcon">💡</div>
                                                         <div className="quizExplanationText">
-                                                            <LatexText text={answer.explanation} />
+                                                            <LatexText text={attemptData.explanation} />
                                                         </div>
                                                     </div>
                                                 )}
@@ -237,10 +293,10 @@ function QuizInterface({ quizData, onQuizComplete }) {
                                 <div className="quizQuestionButtonContainer">
                                     <button
                                         onClick={() => handleCheckAnswer(questionIndex)}
-                                        disabled={!selectedAnswer || hasChecked}
+                                        disabled={!selectedAnswer || isCorrect}
                                         className="quizCheckAnswerButton"
                                     >
-                                        {hasChecked ? 'Checked ✓' : 'Check answer'}
+                                        {isCorrect ? 'Correct ✓' : 'Check answer'}
                                     </button>
                                 </div>
                             </div>
@@ -250,7 +306,7 @@ function QuizInterface({ quizData, onQuizComplete }) {
 
                 <div className="quizFinishContainer">
                     <button
-                        onClick={onQuizComplete}
+                        onClick={handleFinishQuiz}
                         className="quizFinishButton"
                     >
                         Finish Quiz
@@ -260,6 +316,223 @@ function QuizInterface({ quizData, onQuizComplete }) {
         </div>
     );
 }
+
+function QuizScorePage({ results, onReturnToStart, batchName }) {
+    const stats = useMemo(() => {
+      const totalQuestions = results.total;
+      const correct = results.correct;
+      const firstTryCorrect = results.firstTryCorrect;
+      const attempted = results.attempted;
+      const scorePercentage = results.percentage;
+  
+      // Separate questions into categories
+      const whatYouKnow = results.detailedResults.filter(q => q.firstTry);
+      const whatToReview = results.detailedResults.filter(q => !q.firstTry);
+  
+      return { 
+        totalQuestions, 
+        correct, 
+        firstTryCorrect, 
+        attempted,
+        scorePercentage,
+        whatYouKnow,
+        whatToReview
+      };
+    }, [results]);
+  
+    const getScoreClass = (percentage) => {
+      if (percentage >= 90) return 'score-excellent';
+      if (percentage >= 70) return 'score-good';
+      if (percentage >= 50) return 'score-fair';
+      return 'score-poor';
+    };
+  
+    const getScoreMessage = (percentage) => {
+      if (percentage >= 90) return 'Outstanding! 🎉';
+      if (percentage >= 70) return 'Great job! 👍';
+      if (percentage >= 50) return 'Good effort! 💪';
+      return 'Keep practicing! 📚';
+    };
+  
+    return (
+      <div className="quiz-score-page">
+        <div className="score-container">
+          {/* Header */}
+          <div className="score-header">
+            <div className="header-content">
+              <div className={`award-icon ${getScoreClass(stats.scorePercentage)}`}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="8" r="7"/>
+                  <path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/>
+                </svg>
+              </div>
+              <h1 className="title">{batchName}</h1>
+              <p className="subtitle">{getScoreMessage(stats.scorePercentage)}</p>
+            </div>
+  
+            {/* Score Display */}
+            <div className="score-display">
+              <div className={`score-percentage ${getScoreClass(stats.scorePercentage)}`}>
+                {stats.scorePercentage}%
+              </div>
+              <p className="score-text">
+                {stats.correct} out of {stats.totalQuestions} correct
+              </p>
+            </div>
+  
+            {/* Statistics Grid */}
+            <div className="stats-grid">
+              <div className="stat-card stat-total">
+                <div className="stat-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <line x1="12" y1="20" x2="12" y2="10"/>
+                    <line x1="18" y1="20" x2="18" y2="4"/>
+                    <line x1="6" y1="20" x2="6" y2="16"/>
+                  </svg>
+                </div>
+                <div className="stat-value">{stats.totalQuestions}</div>
+                <div className="stat-label">Total</div>
+              </div>
+              <div className="stat-card stat-correct">
+                <div className="stat-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                  </svg>
+                </div>
+                <div className="stat-value">{stats.correct}</div>
+                <div className="stat-label">Correct</div>
+              </div>
+              <div className="stat-card stat-first-try">
+                <div className="stat-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                  </svg>
+                </div>
+                <div className="stat-value">{stats.firstTryCorrect}</div>
+                <div className="stat-label">First Try</div>
+              </div>
+              <div className="stat-card stat-attempts">
+                <div className="stat-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+                  </svg>
+                </div>
+                <div className="stat-value">{stats.attempted}</div>
+                <div className="stat-label">Attempted</div>
+              </div>
+            </div>
+  
+            {/* Action Button */}
+            <button
+              onClick={onReturnToStart}
+              className="return-button"
+            >
+              Return to Start
+            </button>
+          </div>
+  
+          {/* What You Know Section */}
+          {stats.whatYouKnow.length > 0 && (
+            <div className="question-review">
+              <h2 className="review-title">
+                <span className="review-icon">✓</span>
+                What You Know ({stats.whatYouKnow.length})
+              </h2>
+              <div className="questions-list">
+                {stats.whatYouKnow.map((questionData, idx) => (
+                  <div key={idx} className="question-item question-first-try">
+                    <div className="question-content">
+                      <div className="question-icon">
+                        <svg className="icon-first-try" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                      </div>
+                      <div className="question-details">
+                        <div className="question-number">
+                          Question {results.detailedResults.indexOf(questionData) + 1}
+                        </div>
+                        <div className="question-text">
+                          <LatexText text={questionData.question} />
+                        </div>
+                        <div className="first-try-badge">
+                          ⭐ Correct on first try
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+  
+          {/* What to Review Section */}
+          {stats.whatToReview.length > 0 && (
+            <div className="question-review">
+              <h2 className="review-title">
+                <span className="review-icon">📚</span>
+                What You Should Review ({stats.whatToReview.length})
+              </h2>
+              <div className="questions-list">
+                {stats.whatToReview.map((questionData, idx) => {
+                  const isCorrect = questionData.isCorrect;
+                  const wasAttempted = questionData.attemptCount > 0;
+                  
+                  return (
+                    <div 
+                      key={idx} 
+                      className={`question-item ${
+                        !wasAttempted ? 'question-skipped' : 
+                        isCorrect ? 'question-correct' : 
+                        'question-incorrect'
+                      }`}
+                    >
+                      <div className="question-content">
+                        <div className="question-icon">
+                          {!wasAttempted ? (
+                            <svg className="icon-skipped" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <circle cx="12" cy="12" r="10"/>
+                            </svg>
+                          ) : isCorrect ? (
+                            <svg className="icon-correct" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                              <polyline points="22 4 12 14.01 9 11.01"/>
+                            </svg>
+                          ) : (
+                            <svg className="icon-incorrect" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <circle cx="12" cy="12" r="10"/>
+                              <line x1="15" y1="9" x2="9" y2="15"/>
+                              <line x1="9" y1="9" x2="15" y2="15"/>
+                            </svg>
+                          )}
+                        </div>
+                        <div className="question-details">
+                          <div className="question-number">
+                            Question {results.detailedResults.indexOf(questionData) + 1}
+                          </div>
+                          <div className="question-text">
+                            <LatexText text={questionData.question} />
+                          </div>
+                          
+                          {!wasAttempted ? (
+                            <div className="answer-skipped">Not answered</div>
+                          ) : (
+                            <div className="attempt-count-badge">
+                                {questionData.attemptCount} {questionData.attemptCount === 1 ? 'attempt' : 'attempts'}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
 
 export default function Quiz() {
     const { batchID } = useParams();
@@ -285,6 +558,8 @@ export default function Quiz() {
     const profileButtonRef = useRef(null);
 
     const [isQuizStarted, setIsQuizStarted] = useState(false);
+    const [isQuizScorePage, setIsQuizScorePage] = useState(false);
+    const [quizResults, setQuizResults] = useState(null);
 
     useEffect(() => {
         getUserName();
@@ -518,11 +793,21 @@ export default function Quiz() {
 
     const handleStartQuiz = () => {
         setIsQuizStarted(true);
+        setIsQuizScorePage(false);
+        setQuizResults(null);
     };
 
     const handleQuizComplete = (results) => {
         console.log('Quiz completed with results:', results);
+        setQuizResults(results);
         setIsQuizStarted(false);
+        setIsQuizScorePage(true);
+    };
+
+    const handleReturnToStart = () => {
+        setIsQuizScorePage(false);
+        setIsQuizStarted(false);
+        setQuizResults(null);
     };
 
     if (isLoading) {
@@ -660,7 +945,7 @@ export default function Quiz() {
                 )}
             </div>
 
-            {!isQuizStarted ? (
+            {!isQuizStarted && !isQuizScorePage ? (
                 <div className="quizViewContainer">
                     <div className="quizViewContent">
                         <h1 className="quizViewTitle" onClick={handleTitleClick} style={{ cursor: 'pointer' }}>
@@ -689,10 +974,16 @@ export default function Quiz() {
                         </button>
                     </div>
                 </div>
-            ) : (
+            ) : isQuizStarted && !isQuizScorePage ? (
                 <QuizInterface 
                     quizData={batchJSON}
                     onQuizComplete={handleQuizComplete}
+                />
+            ) : (
+                <QuizScorePage 
+                    results={quizResults}
+                    onReturnToStart={handleReturnToStart}
+                    batchName={batchName}
                 />
             )}
         </>

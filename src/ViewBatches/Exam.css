@@ -241,12 +241,7 @@
     background-color: #fff;
 }
 
-.examSidebarHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
+
 
 .examBackButton {
     padding: 8px 16px;
@@ -1055,10 +1050,6 @@
 
     .examSidebar.open {
         transform: translateY(0);
-    }
-
-    .examSidebarHeader {
-        margin-bottom: 16px;
     }
 
     .examFilterSection {
