@@ -15,7 +15,9 @@ export default function Dashboard(){
     const [activeUpload, changeActiveUpload] = useState(false);
     const [userProfile, setUserProfile] = useState(null);
     const [idToken, setIdToken] = useState(null);
-
+    //to pass down to uploadexisting and batchessection
+    const [batches, setBatches] = useState([])
+    
     // Save activeTab to localStorage whenever it changes
     useEffect(() => {
         localStorage.setItem('activeTab', activeTab);
@@ -46,11 +48,11 @@ export default function Dashboard(){
     
     return(
        <>
-        <DashboardHeader openUpload={()=>changeActiveUpload(true)} changeActiveTab={changeActiveTab} activeTab={activeTab} openUploadExisting={()=>{changeActiveUploadExisting(true);  console.log('openUploadExisting called from Dashboard')}}>
+        <DashboardHeader openUpload={()=>changeActiveUpload(true)} changeActiveTab={changeActiveTab} activeTab={activeTab} openUploadExisting={()=>changeActiveUploadExisting(true)} batches={batches} setBatches={setBatches}>
             <Hamburger changeActiveTab={changeActiveTab} activeTab={activeTab}/>
         </DashboardHeader>
         <UploadModal isOpen={activeUpload} close={() => changeActiveUpload(false)} activeTab={activeTab} userProfile={userProfile} setUserProfile={setUserProfile} />
-        <UploadExistingModal isOpen={activeUploadExisting} close={()=>changeActiveUploadExisting(false)} activeTab={activeTab}/>
+        <UploadExistingModal isOpen={activeUploadExisting} close={()=>changeActiveUploadExisting(false)} activeTab={activeTab} batches={batches}/>
         </>
     )
 }

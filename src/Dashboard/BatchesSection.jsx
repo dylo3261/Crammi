@@ -5,8 +5,7 @@ import "./BatchesSection.css";
 
 
 
-export default function BatchesSection({ activeTab }){
-    const [batches, setBatches] = useState([])
+export default function BatchesSection({ activeTab,batches, setBatches }){
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [openMenuId, setOpenMenuId] = useState(null);

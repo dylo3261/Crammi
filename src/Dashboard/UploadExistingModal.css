@@ -1,0 +1,157 @@
+/* Search Container */
+.existingSearchContainer {
+    position: relative;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.existingSearchIcon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    opacity: 0.5;
+    pointer-events: none; /* Prevent icon from blocking clicks */
+}
+
+.existingSearchInput {
+    width: 100%;
+    padding: 0.6rem 0.9rem 0.6rem 2.5rem;
+    border: 1px solid #d1d1d1;
+    border-radius: 8px;
+    font-family: 'applethin', Arial, sans-serif;
+    font-size: 0.95rem;
+    background-color: #f9f7f7;
+    outline: none;
+    box-sizing: border-box;
+    transition: box-shadow 0.25s ease, border-color 0.25s ease; /* ADD THIS */
+}
+
+
+/* Batch Info Container */
+.batchInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    flex: 1;
+    min-width: 0; /* Important for text truncation */
+}
+
+.fileName {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.batchDescription {
+    font-family: applethin, Arial, sans-serif;
+    font-size: 0.8rem;
+    color: #888;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 350px;
+}
+
+/* Update batch item to align properly */
+.batchItem {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.existingSearchInput:focus {
+    border-color: #AB9FF2;
+    box-shadow:
+      0 0 0 3px #fff,
+      0 0 0 6px rgba(171, 159, 242, 0.5);
+}
+
+.existingSearchInput::placeholder {
+    color: #888;
+    opacity: 1;
+}
+.existingSpecialInstructions{
+    width: 100%;
+    font-family: applethin, Arial, sans-serif;
+    font-size: 1rem;
+    color: #555;
+    padding: 0.6rem 0.9rem;
+    border: 1px solid #d1d1d1;
+    border-radius: 8px;
+    background-color: #f9f7f7;
+    outline: none;
+    box-sizing: border-box;
+    transition: box-shadow 0.25s ease, border-color 0.25s ease;
+    resize: none;
+}
+
+
+/* Focus ring */
+.existingSpecialInstructions:focus {
+    border-color: #AB9FF2;
+    box-shadow:
+      0 0 0 3px #fff,
+      0 0 0 6px rgba(171, 159, 242, 0.5);
+  }
+  
+  /* Placeholder styling */
+  .existingSpecialInstructions::placeholder {
+    color: #888;
+    opacity: 1;
+  }
+  @media (max-width: 768px) {
+
+  .specialInstructions{
+    margin-top: -10px;
+    margin-bottom: 10px;
+    font-size: 16px!important;
+    height: 45px;
+  }
+  .existingFileSizeHeader{
+    margin-top: -10px;
+  }
+  }
+/* Sort indicator */
+.sortable {
+    cursor: pointer;
+    user-select: none;
+}
+.existingFileSizeHeader {
+    margin-left: auto;
+    margin-right: -2rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+/* File Selection List - Fix scrolling */
+.fileSelection {
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Batch Item Styling */
+.batchItem {
+    cursor: pointer;
+}
+
+.batchItem.selected {
+    background-color: #f0edff;
+    border-color: #AB9FF2;
+}
+
+.batchRadio {
+    margin-right: 0.5rem;
+    cursor: pointer;
+}
+
+/* Empty State */
+.emptyState {
+    text-align: center;
+    padding: 1rem;
+    color: #888;
+    font-family: 'applethin', Arial, sans-serif;
+}

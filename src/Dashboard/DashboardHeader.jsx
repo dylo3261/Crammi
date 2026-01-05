@@ -46,7 +46,7 @@ function UploadBar({activeTab,openUpload,openUploadExisting}) {
     );
 }
 
-export default function DashboardHeader({openUpload,changeActiveTab,activeTab,openUploadExisting}) {
+export default function DashboardHeader({openUpload,changeActiveTab,activeTab,openUploadExisting,batches,setBatches}) {
   const [userName, setUserName] = useState('');
   const [userPFP, setUserPFP] = useState(null);
   const [userEmail, setUserEmail]= useState('')
@@ -183,7 +183,7 @@ const handleSignOut = async () => {
               <UploadBar activeTab={activeTab} openUpload={openUpload} openUploadExisting={openUploadExisting} />
             </div>
             <div className='BatchesSection'>
-              <BatchesSection activeTab={activeTab}/>
+              <BatchesSection activeTab={activeTab} batches={batches} setBatches={setBatches}/>
             </div>
         </div>
 
