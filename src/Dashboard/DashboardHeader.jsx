@@ -10,10 +10,11 @@ import BatchesSection from "./BatchesSection.jsx";
 
 function UploadBar({activeTab,openUpload,openUploadExisting}) {
   
-    const showUploadExisting = activeTab !== "Files";
+    const showUploadButtons = activeTab !== "Files";
     return (
       <>
         <h1 className="bodyActiveTabLabel">{activeTab}</h1>
+        {showUploadButtons &&(
         <button onClick={openUpload}className="bodyUploadButton">
           <img
             className="uploadNewIcon"
@@ -22,8 +23,9 @@ function UploadBar({activeTab,openUpload,openUploadExisting}) {
           />
           <span className="dashboardHeaderText">Upload New</span>
         </button>
+        )}
   
-        {showUploadExisting && (
+        {showUploadButtons && (
           <button onClick={openUploadExisting} className="bodySecondUploadButton">
             <img
               className="uploadExistingIcon"

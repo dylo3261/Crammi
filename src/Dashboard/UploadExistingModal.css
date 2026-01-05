@@ -132,7 +132,80 @@
     overflow-y: auto;
     overflow-x: hidden;
 }
-
+/* Existing Modal Content - scrolling fix */
+.existingModalContent {
+    position: fixed;
+    background-color: #ffffff;
+    width: 600px;
+    max-width: 90%;
+    height: auto;
+    max-height: 550px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    font-family: applethin, Arial, sans-serif;
+    text-align: center;
+    border-radius: 8px;
+    overflow: hidden; /* Key fix */
+  }
+  
+  /* Existing File Selection - the scrollable container */
+  .existingFileSelection {
+    flex: 1;
+    min-height: 0;
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin-bottom: 1rem;
+    scroll-behavior: smooth;
+  }
+  
+  /* Existing File List */
+  .existingFileList {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    text-align: left;
+  }
+  
+  /* Mobile */
+  @media (max-width: 768px) {
+    .existingModalContent {
+      width: 90% !important;
+      max-width: 90% !important;
+      max-height: 70vh !important;
+      padding: 12px;
+      border-radius: 10px;
+      gap: 10px;
+      overflow: hidden !important;
+    }
+    
+    .existingFileSelection {
+      max-height: 180px !important;
+    }
+    
+    .existingFileList {
+      max-height: none !important;
+    }
+  }
+  .existingFileList li {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    margin: 0.3rem 0;
+    padding: 0.2rem 1rem;
+    font-size: 0.9rem;
+    color: #555;
+    display: flex;
+    align-items: center;
+    font-family: applemedium, arial, sans-serif;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .existingFileList li:hover {
+    background-color: #f0f0f0;
+  }
 /* Batch Item Styling */
 .batchItem {
     cursor: pointer;

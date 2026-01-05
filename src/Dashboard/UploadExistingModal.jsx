@@ -22,8 +22,9 @@ export default function UploadExistingModal({isOpen, close, activeTab, batches})
 
     // Apply sorting
     if (sortByType) {
+        const typeOrder = { 'Exams': 1, 'Quizzes': 2, 'Flashcards': 3 };
         availableBatches = [...availableBatches].sort((a, b) => 
-            a.type.localeCompare(b.type)
+            (typeOrder[a.type] || 999) - (typeOrder[b.type] || 999)
         );
     }
    
@@ -114,9 +115,9 @@ export default function UploadExistingModal({isOpen, close, activeTab, batches})
                 <div className="bottomHeader"></div>
 
                {/* Batch Selection List */}
-                <div className="fileSelection">
+                <div className="existingFileSelection">
                     {availableBatches.length > 0 ? (
-                        <ul className="fileList">
+                        <ul className="existingFileList">
                             {availableBatches.map((batch) => (
                                 <li 
                                     key={batch.batchID}

@@ -318,6 +318,7 @@ export default function BatchesSection({ activeTab,batches, setBatches }){
         if (activeTab === 'Exams') return batch.type === 'Exams';
         if (activeTab === 'Quizzes') return batch.type === 'Quizzes';
         if (activeTab === 'Flashcards') return batch.type === 'Flashcards';
+        if (activeTab === 'Files') return batch;
         return false;
     });
 
@@ -374,7 +375,7 @@ export default function BatchesSection({ activeTab,batches, setBatches }){
                     sortedBatches.map((batch) => (
                         <div key={batch.batchID} className={`batch-card ${batch.status === 'PENDING' ? 'processing' : ''}`} onClick={()=>handleCardClick(batch.batchID,batch.status,batch.batchName)}>
                             <div className="batch-header">
-                                <span className="batch-type-badge">{activeTab}</span>
+                                <span className="batch-type-badge">{batch.type}</span>
                                 <div className="batch-menu-container">
                                     <button 
                                         className="batch-menu" 

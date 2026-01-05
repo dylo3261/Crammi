@@ -22,9 +22,7 @@ export default function Dashboard(){
     useEffect(() => {
         localStorage.setItem('activeTab', activeTab);
     }, [activeTab]);
-    useEffect(() => {
-      console.log('activeUploadExisting state:', activeUploadExisting);
-  }, [activeUploadExisting]);
+  
     useEffect(() => {
         const fetchUserProfile = async () => {
           try {
