@@ -1,5 +1,4 @@
 import React, { useState,useEffect,useRef } from "react";
-import UploadModal from './uploadModal.jsx'
 import Hamburger from "./Hamburger.jsx";
 import { signOut } from 'aws-amplify/auth';
 import { useNavigate } from "react-router-dom";
@@ -9,7 +8,7 @@ import BatchesSection from "./BatchesSection.jsx";
 
 
 
-function UploadBar({activeTab,openUpload}) {
+function UploadBar({activeTab,openUpload,openUploadExisting}) {
   
     const showUploadExisting = activeTab !== "Files";
     return (
@@ -25,7 +24,7 @@ function UploadBar({activeTab,openUpload}) {
         </button>
   
         {showUploadExisting && (
-          <button className="bodySecondUploadButton">
+          <button onClick={openUploadExisting} className="bodySecondUploadButton">
             <img
               className="uploadExistingIcon"
               src="https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../releases/preview/2018/png/iconmonstr-cloud-upload-thin.png&r=0&g=0&b=0"
@@ -47,7 +46,7 @@ function UploadBar({activeTab,openUpload}) {
     );
 }
 
-export default function DashboardHeader({openUpload,changeActiveTab,activeTab}) {
+export default function DashboardHeader({openUpload,changeActiveTab,activeTab,openUploadExisting}) {
   const [userName, setUserName] = useState('');
   const [userPFP, setUserPFP] = useState(null);
   const [userEmail, setUserEmail]= useState('')
@@ -181,7 +180,7 @@ const handleSignOut = async () => {
         </div>
         <div className='dashboardBody'>
             <div className='dashboardBodyHeader'>
-              <UploadBar activeTab={activeTab} openUpload={openUpload} />
+              <UploadBar activeTab={activeTab} openUpload={openUpload} openUploadExisting={openUploadExisting} />
             </div>
             <div className='BatchesSection'>
               <BatchesSection activeTab={activeTab}/>

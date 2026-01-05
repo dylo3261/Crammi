@@ -18,7 +18,21 @@ export default function UploadModal({ isOpen, close , activeTab, userProfile, se
   const [selectedPages, setSelectedPages] = useState([]);
   const [numSelectedPages,setnNumSelectedPages]=useState(0);
   const [specialInstructions, setSpecialInstructions] = useState(""); 
+   useEffect(() => {
+          function handleEscape(event) {
+              if (event.key === "Escape") {
+                  close();
+              }
+          }
   
+          if (isOpen) {
+              document.addEventListener("keydown", handleEscape);
+          }
+  
+          return () => {
+              document.removeEventListener("keydown", handleEscape);
+          };
+      }, [isOpen, close]);
   /////////////
   const handleUploadS3 = async (selectedFiles, uploads)=>{
     const uploadResults=[];

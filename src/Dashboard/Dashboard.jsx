@@ -1,7 +1,7 @@
 import DashboardHeader from "./DashboardHeader";
 import UploadModal from "./uploadModal";
+import UploadExistingModal from "./UploadExistingModal";
 import Hamburger from "./Hamburger";
-import BatchesSection from "./BatchesSection";
 import React, { useState, useEffect } from "react";
 import { fetchAuthSession } from 'aws-amplify/auth';
 
@@ -11,7 +11,7 @@ export default function Dashboard(){
     const [activeTab, changeActiveTab] = useState(() => {
         return localStorage.getItem('activeTab') || "Exams";
     });
-    
+    const [activeUploadExisting, changeActiveUploadExisting]= useState(false);
     const [activeUpload, changeActiveUpload] = useState(false);
     const [userProfile, setUserProfile] = useState(null);
     const [idToken, setIdToken] = useState(null);
@@ -20,7 +20,9 @@ export default function Dashboard(){
     useEffect(() => {
         localStorage.setItem('activeTab', activeTab);
     }, [activeTab]);
-
+    useEffect(() => {
+      console.log('activeUploadExisting state:', activeUploadExisting);
+  }, [activeUploadExisting]);
     useEffect(() => {
         const fetchUserProfile = async () => {
           try {
@@ -44,10 +46,11 @@ export default function Dashboard(){
     
     return(
        <>
-        <DashboardHeader openUpload={()=>changeActiveUpload(true)} changeActiveTab={changeActiveTab} activeTab={activeTab}>
+        <DashboardHeader openUpload={()=>changeActiveUpload(true)} changeActiveTab={changeActiveTab} activeTab={activeTab} openUploadExisting={()=>{changeActiveUploadExisting(true);  console.log('openUploadExisting called from Dashboard')}}>
             <Hamburger changeActiveTab={changeActiveTab} activeTab={activeTab}/>
         </DashboardHeader>
         <UploadModal isOpen={activeUpload} close={() => changeActiveUpload(false)} activeTab={activeTab} userProfile={userProfile} setUserProfile={setUserProfile} />
+        <UploadExistingModal isOpen={activeUploadExisting} close={()=>changeActiveUploadExisting(false)} activeTab={activeTab}/>
         </>
     )
 }

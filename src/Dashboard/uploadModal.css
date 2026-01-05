@@ -27,7 +27,7 @@
   justify-content: space-between;
   font-family: applethin,Arial, sans-serif;
   text-align: center;
-  
+  border-radius: 8px;
 }
 
 @media (max-width: 1000px) {

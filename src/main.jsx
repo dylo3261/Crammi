@@ -6,6 +6,7 @@ import './LandingPage/sectionTwo.css'
 //Dashboard
 import './Dashboard/DashboardHeader.css'
 import './Dashboard/uploadModal.css'
+import './Dashboard/UploadExistingModal.css'
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
