@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
+import { fetchAuthSession } from 'aws-amplify/auth';
 import "./uploadModal.css";
 
 export default function UploadExistingModal({isOpen, close, activeTab, batches}){
     const modalRef = useRef(null);
     const [uploadInstructions, setUploadInstructions] = useState("");
     const [selectedBatch, setSelectedBatch] = useState(null);
+    const [selectedBatchType,setSelectedBatchType]= useState(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [sortByType, setSortByType] = useState(false);
 
@@ -38,21 +40,56 @@ export default function UploadExistingModal({isOpen, close, activeTab, batches})
         }
     }, [isOpen]);
 
-    const toggleBatchSelection = (batchID) => {
+    const toggleBatchSelection = (batchID,batchType) => {
         setSelectedBatch(prev => prev === batchID ? null : batchID);
+        setSelectedBatchType(prev => prev === batchID ? null : batchType);
     };
 
     const handleUpload = async () => {
         if (!selectedBatch) return;
+        try {
+                // Get fresh token
+                const session = await fetchAuthSession();
+                const token = session.tokens?.idToken?.toString();
+                
+                if (!token) {
+                  console.error('No authentication token available');
+                  return;
+                }
+                
 
-        console.log('Selected batch:', selectedBatch);
-        console.log('Upload instructions:', uploadInstructions);
+            console.log('Selected batch:', selectedBatch);
+            console.log('Upload instructions:', uploadInstructions);
+            
+            const existingPayload = {
+                batch_ID: selectedBatch,
+                requestedCram: activeTab,
+                special_instructions: uploadInstructions,
+                originalRequestedCram: selectedBatchType
+            };
+            const response = await fetch('https://ul9ffsljla.execute-api.us-west-2.amazonaws.com/prod/existing', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`  
+                },
+                body: JSON.stringify(existingPayload)
+              });
+            window.dispatchEvent(new Event('batchUploaded')); //start polling
+
+              
+            console.log('Response status:', response.status);
+            
+            if (!response.ok) {
+            const errorData = await response.json();
+            console.error('Upload failed:', errorData);
+            return;
+            }
+    
         
-        // TODO: Add your API call here to link/copy this batch
-
-        setUploadInstructions("");
-        setSelectedBatch(null);
-        close();
+        }catch (error) {
+            console.error('Upload error:', error);
+          }
     };
 
     // Close on Escape key
@@ -121,7 +158,7 @@ export default function UploadExistingModal({isOpen, close, activeTab, batches})
                             {availableBatches.map((batch) => (
                                 <li 
                                     key={batch.batchID}
-                                    onClick={() => toggleBatchSelection(batch.batchID)}
+                                    onClick={() => toggleBatchSelection(batch.batchID, batch.type)}
                                     className={`batchItem ${selectedBatch === batch.batchID ? 'selected' : ''}`}
                                 >
                                     <input
@@ -186,7 +223,12 @@ export default function UploadExistingModal({isOpen, close, activeTab, batches})
                     {selectedBatch && (
                         <button 
                             className="closeUploadModal"
-                            onClick={handleUpload}
+                            onClick={()=>{
+                                handleUpload();
+                                setUploadInstructions("");
+                                setSelectedBatch(null);
+                                close();
+                            }}
                         >
                             Upload
                         </button>

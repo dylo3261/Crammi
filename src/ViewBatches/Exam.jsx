@@ -500,7 +500,7 @@ function ExamScorePage({ examResults, examData, setIsScorePage, timeLimit }) {
             onClick={() => setIsScorePage(false)}
             className="return-button"
           >
-            Return to Exam
+            Finish
           </button>
         </div>
 
