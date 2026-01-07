@@ -24,25 +24,43 @@ export default function Dashboard(){
     }, [activeTab]);
   
     useEffect(() => {
-        const fetchUserProfile = async () => {
-          try {
-            const session = await fetchAuthSession();
-            const token = session.tokens?.idToken?.toString();
-            setIdToken(token);
-      
-            const response = await fetch('https://gwq0u2sdai.execute-api.us-west-2.amazonaws.com/prod/profile', {
-              headers: { 'Authorization': `Bearer ${token}` }
-            });
-      
-            const data = await response.json();
-            setUserProfile(data);
-          } catch (error) {
-            console.error('Error fetching profile:', error);
+      const fetchUserProfile = async () => {
+        try {
+          // Check cache first
+          const cached = localStorage.getItem('userProfile');
+          const cacheTime = localStorage.getItem('userProfileTime');
+          
+          // Use cache if less than 5 minutes old
+          if (cached && cacheTime) {
+            const age = Date.now() - parseInt(cacheTime);
+            if (age < 5 * 60 * 1000) { // 5 minutes
+              setUserProfile(JSON.parse(cached));
+              return;
+            }
           }
-        };
-      
-        fetchUserProfile();
-    }, []);
+  
+          // Fetch fresh data
+          const session = await fetchAuthSession();
+          const token = session.tokens?.idToken?.toString();
+          setIdToken(token);
+    
+          const response = await fetch('https://gwq0u2sdai.execute-api.us-west-2.amazonaws.com/prod/profile', {
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+    
+          const data = await response.json();
+          setUserProfile(data);
+          
+          // Cache the result
+          localStorage.setItem('userProfile', JSON.stringify(data));
+          localStorage.setItem('userProfileTime', Date.now().toString());
+        } catch (error) {
+          console.error('Error fetching profile:', error);
+        }
+      };
+    
+      fetchUserProfile();
+  }, []);
     
     return(
        <>

@@ -17,6 +17,9 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
 
     const handleCardClick = (batchID, status, batchName) => {
         if (status === 'COMPLETE') {
+            // Track when batch was opened in localStorage
+            localStorage.setItem(`batch_${batchID}_lastOpened`, new Date().toISOString());
+            
             if(activeTab === 'Exams'){
                 navigate(`/Exam/${batchID}`, {state: {batchName}});
             }
@@ -38,13 +41,14 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
         const diffDays = Math.floor(diffMs / 86400000);
 
         if (diffMins < 1) return 'Just now';
-        if (diffMins < 60) return `${diffMins} ${diffMins === 1 ? 'minute' : 'minutes'} ago`;
+        if (diffMins < 60) return `Recently`;
         if (diffHours < 24) return `${diffHours} ${diffHours === 1 ? 'hour' : 'hours'} ago`;
         if (diffDays < 7) return `${diffDays} ${diffDays === 1 ? 'day' : 'days'} ago`;
         
         // For older items, show the actual date
         return created.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     };
+    
     const showNotification = (message, type = 'success') => {
         setNotification({ message, type, exiting: false });
         setTimeout(() => {
@@ -100,6 +104,9 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
         const batchToDelete = batches.find(b => b.batchID === batchID);
         setBatches(prevBatches => prevBatches.filter(batch => batch.batchID !== batchID));
         setOpenMenuId(null);
+
+        // Clean up localStorage entry for this batch
+        localStorage.removeItem(`batch_${batchID}_lastOpened`);
 
         try {
             const session = await fetchAuthSession();
@@ -336,6 +343,36 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
         return new Date(b.timeCreated) - new Date(a.timeCreated);
     });
 
+    // Group batches by Today/Earlier
+    const groupBatchesByDate = (batches) => {
+        const now = new Date();
+        const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        
+        const today = [];
+        const earlier = [];
+        
+        batches.forEach(batch => {
+            // Check localStorage for last opened time
+            const lastOpenedStr = localStorage.getItem(`batch_${batch.batchID}_lastOpened`);
+            const lastOpenedDate = lastOpenedStr ? new Date(lastOpenedStr) : null;
+            const createdDate = new Date(batch.timeCreated);
+            
+            // Batch goes in "Today" if it was opened today OR created today
+            const isToday = (lastOpenedDate && lastOpenedDate >= todayStart) || 
+                            createdDate >= todayStart;
+            
+            if (isToday) {
+                today.push(batch);
+            } else {
+                earlier.push(batch);
+            }
+        });
+        
+        return { today, earlier };
+    };
+
+    const { today, earlier } = groupBatchesByDate(sortedBatches);
+
     const getStatusDisplay = (batch) => {
         switch(batch.status) {
             case 'PENDING':
@@ -362,6 +399,61 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
         </div>
     );
 
+    const renderBatchCard = (batch) => (
+        <div key={batch.batchID} className={`batch-card ${batch.status === 'PENDING' ? 'processing' : ''}`} onClick={() => handleCardClick(batch.batchID, batch.status, batch.batchName)}>
+            <div className="batch-header">
+                <span className="batch-type-badge">{batch.type}</span>
+                <div className="batch-menu-container">
+                    <button 
+                        className="batch-menu" 
+                        onClick={(e) => handleMenuClick(batch.batchID, e)}
+                    >
+                        ⋯
+                    </button>
+                    {openMenuId === batch.batchID && (
+                        <div className="batch-dropdown-menu" ref={menuRef}>
+                            <button 
+                                className="dropdown-item"
+                                onClick={(e) => handleRename(batch.batchID, batch.batchName, e)}
+                            >
+                                Rename
+                            </button>
+                            <button 
+                                className="dropdown-item delete"
+                                onClick={(e) => handleDelete(batch.batchID, e, batch.batchName)}
+                            >
+                                Delete
+                            </button>
+                        </div>
+                    )}
+                </div>
+            </div>
+            <h3 className="batch-title">
+                {editingBatchId === batch.batchID ? (
+                    <input
+                        ref={inputRef}
+                        type="text"
+                        className="batch-title-input"
+                        value={editingName}
+                        onChange={(e) => setEditingName(e.target.value)}
+                        onBlur={() => handleRenameSubmit(batch.batchID)}
+                        onKeyDown={(e) => handleRenameKeyDown(e, batch.batchID)}
+                        onClick={(e) => e.stopPropagation()}
+                    />
+                ) : (
+                    batch.batchName
+                )}
+            </h3>
+            <p className="batch-description">{batch.description}</p>
+            <p className="batch-timestamp" style={{
+                color: batch.status === 'FAILED' ? '#d32f2f' : 
+                       batch.status === 'PENDING' ? '#f57c00' : '#5f6368'
+            }}>
+                {getStatusDisplay(batch)}
+            </p>
+        </div>
+    );
+
     return(
         <>
         <div className="mainSection">
@@ -381,60 +473,21 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
                         Wow, Such Emptiness... 💤
                     </div>
                 ) : (
-                    sortedBatches.map((batch) => (
-                        <div key={batch.batchID} className={`batch-card ${batch.status === 'PENDING' ? 'processing' : ''}`} onClick={() => handleCardClick(batch.batchID, batch.status, batch.batchName)}>
-                            <div className="batch-header">
-                                <span className="batch-type-badge">{batch.type}</span>
-                                <div className="batch-menu-container">
-                                    <button 
-                                        className="batch-menu" 
-                                        onClick={(e) => handleMenuClick(batch.batchID, e)}
-                                    >
-                                        ⋯
-                                    </button>
-                                    {openMenuId === batch.batchID && (
-                                        <div className="batch-dropdown-menu" ref={menuRef}>
-                                            <button 
-                                                className="dropdown-item"
-                                                onClick={(e) => handleRename(batch.batchID, batch.batchName, e)}
-                                            >
-                                                Rename
-                                            </button>
-                                            <button 
-                                                className="dropdown-item delete"
-                                                onClick={(e) => handleDelete(batch.batchID, e, batch.batchName)}
-                                            >
-                                                Delete
-                                            </button>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                            <h3 className="batch-title">
-                                {editingBatchId === batch.batchID ? (
-                                    <input
-                                        ref={inputRef}
-                                        type="text"
-                                        className="batch-title-input"
-                                        value={editingName}
-                                        onChange={(e) => setEditingName(e.target.value)}
-                                        onBlur={() => handleRenameSubmit(batch.batchID)}
-                                        onKeyDown={(e) => handleRenameKeyDown(e, batch.batchID)}
-                                        onClick={(e) => e.stopPropagation()}
-                                    />
-                                ) : (
-                                    batch.batchName
-                                )}
-                            </h3>
-                            <p className="batch-description">{batch.description}</p>
-                            <p className="batch-timestamp" style={{
-                                color: batch.status === 'FAILED' ? '#d32f2f' : 
-                                       batch.status === 'PENDING' ? '#f57c00' : '#5f6368'
-                            }}>
-                                {getStatusDisplay(batch)}
-                            </p>
-                        </div>
-                    ))
+                    <>
+                        {today.length > 0 && (
+                            <>
+                                <div className="section-header">Today</div>
+                                {today.map(renderBatchCard)}
+                            </>
+                        )}
+                        
+                        {earlier.length > 0 && (
+                            <>
+                                <div className="section-header">Earlier</div>
+                                {earlier.map(renderBatchCard)}
+                            </>
+                        )}
+                    </>
                 )}
             </div>
         </div>
