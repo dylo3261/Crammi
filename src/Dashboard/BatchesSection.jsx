@@ -348,8 +348,30 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
 
     // Sort batches
     const sortedBatches = [...searchFilteredBatches].sort((a, b) => {
+        // Priority 1: PENDING batches always come first
         if (a.status === 'PENDING' && b.status !== 'PENDING') return -1;
         if (a.status !== 'PENDING' && b.status === 'PENDING') return 1;
+        
+        // Priority 2: Recently opened batches (within last 24 hours)
+        const now = new Date();
+        const oneDayAgo = new Date(now - 24 * 60 * 60 * 1000);
+        
+        const aLastOpened = localStorage.getItem(`batch_${a.batchID}_lastOpened`);
+        const bLastOpened = localStorage.getItem(`batch_${b.batchID}_lastOpened`);
+        
+        const aOpenedRecently = aLastOpened && new Date(aLastOpened) > oneDayAgo;
+        const bOpenedRecently = bLastOpened && new Date(bLastOpened) > oneDayAgo;
+        
+        // If one was opened recently and the other wasn't, prioritize the recent one
+        if (aOpenedRecently && !bOpenedRecently) return -1;
+        if (!aOpenedRecently && bOpenedRecently) return 1;
+        
+        // Priority 3: If both were opened recently, sort by most recently opened
+        if (aOpenedRecently && bOpenedRecently) {
+            return new Date(bLastOpened) - new Date(aLastOpened);
+        }
+        
+        // Priority 4: Otherwise, sort by creation date (newest first)
         return new Date(b.timeCreated) - new Date(a.timeCreated);
     });
 
