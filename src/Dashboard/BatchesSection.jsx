@@ -17,19 +17,22 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
     const pollCountRef = useRef(0);
     const MAX_POLLS = 18;
 
-    const handleCardClick = (batchID, status, batchName) => {
+    const handleCardClick = (batchID, status, batchName, batchType) => {
         if (status === 'COMPLETE') {
             // Track when batch was opened in localStorage
             localStorage.setItem(`batch_${batchID}_lastOpened`, new Date().toISOString());
             
-            if(activeTab === 'Exams'){
+            if(batchType === 'Exams'){
                 navigate(`/Exam/${batchID}`, {state: {batchName}});
             }
-            else if(activeTab === 'Quizzes'){
+            else if(batchType === 'Quizzes'){
                 navigate(`/Quiz/${batchID}`, {state: {batchName}});
             }
-            else if(activeTab === 'Flashcards'){
+            else if(batchType === 'Flashcards'){
                 navigate(`/Flashcards/${batchID}`, {state: {batchName}});
+            }
+            else if(batchType === 'Files'){
+                navigate(`/File/${batchID}`, {state: {batchName}});
             }
         }
     };
@@ -97,7 +100,7 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
         fetchBatches();
     }, [fetchBatches]);
 
-    const deleteBatch = async (batchID, batchName) => {
+    const deleteBatch = async (batchID, batchName, batchType) => {
         const batchToDelete = batches.find(b => b.batchID === batchID);
         setBatches(prevBatches => prevBatches.filter(batch => batch.batchID !== batchID));
         setOpenMenuId(null);
@@ -119,7 +122,7 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
                     },
                     body: JSON.stringify({
                         batch_ID: batchID,
-                        batch_cram: activeTab
+                        batch_cram: batchType
                     })
                 }
             );
@@ -150,9 +153,9 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
         setOpenMenuId(prevId => prevId === batchID ? null : batchID);
     };
 
-    const handleDelete = async (batchID, event, batchName) => {
+    const handleDelete = async (batchID, event, batchName, batchType) => {
         event.stopPropagation();
-        await deleteBatch(batchID, batchName);
+        await deleteBatch(batchID, batchName, batchType);
     };
 
     const handleRename = (batchID, currentName, event) => {
@@ -162,7 +165,7 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
         setOpenMenuId(null);
     };
 
-    const handleRenameSubmit = async (batchID) => {
+    const handleRenameSubmit = async (batchID, batchType) => {
         if (!editingName.trim()) {
             showNotification('Batch name cannot be empty', 'error');
             setEditingBatchId(null);
@@ -201,12 +204,12 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
             
             if (response.ok) {
                 showNotification(
-                    <><span className="notification-name">{activeTab}</span> renamed successfully</>,
+                    <><span className="notification-name">{batchType}</span> renamed successfully</>,
                     'success'
                 );
             } else {
                 showNotification(
-                    <>Failed to rename <span className="notification-name">{activeTab}</span></>,
+                    <>Failed to rename <span className="notification-name">{batchType}</span></>,
                     'error'
                 );
                 setBatches(prevBatches => 
@@ -220,7 +223,7 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
         } catch (err) {
             console.error('Error renaming batch:', err);
             showNotification(
-                <>Failed to rename <span className="notification-name">{activeTab}</span></>,
+                <>Failed to rename <span className="notification-name">{batchType}</span></>,
                 'error'
             );
             setBatches(prevBatches => 
@@ -238,9 +241,9 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
         setEditingName('');
     };
 
-    const handleRenameKeyDown = (e, batchID) => {
+    const handleRenameKeyDown = (e, batchID,batchType) => {
         if (e.key === 'Enter') {
-            handleRenameSubmit(batchID);
+            handleRenameSubmit(batchID,batchType);
         } else if (e.key === 'Escape') {
             handleRenameCancel();
         }
@@ -346,32 +349,12 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
                type.includes(query);
     });
 
-    // Sort batches
     const sortedBatches = [...searchFilteredBatches].sort((a, b) => {
-        // Priority 1: PENDING batches always come first
+        // PENDING batches first
         if (a.status === 'PENDING' && b.status !== 'PENDING') return -1;
         if (a.status !== 'PENDING' && b.status === 'PENDING') return 1;
         
-        // Priority 2: Recently opened batches (within last 24 hours)
-        const now = new Date();
-        const oneDayAgo = new Date(now - 24 * 60 * 60 * 1000);
-        
-        const aLastOpened = localStorage.getItem(`batch_${a.batchID}_lastOpened`);
-        const bLastOpened = localStorage.getItem(`batch_${b.batchID}_lastOpened`);
-        
-        const aOpenedRecently = aLastOpened && new Date(aLastOpened) > oneDayAgo;
-        const bOpenedRecently = bLastOpened && new Date(bLastOpened) > oneDayAgo;
-        
-        // If one was opened recently and the other wasn't, prioritize the recent one
-        if (aOpenedRecently && !bOpenedRecently) return -1;
-        if (!aOpenedRecently && bOpenedRecently) return 1;
-        
-        // Priority 3: If both were opened recently, sort by most recently opened
-        if (aOpenedRecently && bOpenedRecently) {
-            return new Date(bLastOpened) - new Date(aLastOpened);
-        }
-        
-        // Priority 4: Otherwise, sort by creation date (newest first)
+        // Then newest first
         return new Date(b.timeCreated) - new Date(a.timeCreated);
     });
 
@@ -432,7 +415,7 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
     );
 
     const renderBatchCard = (batch) => (
-        <div key={batch.batchID} className={`batch-card ${batch.status === 'PENDING' ? 'processing' : ''}`} onClick={() => handleCardClick(batch.batchID, batch.status, batch.batchName)}>
+        <div key={batch.batchID} className={`batch-card ${batch.status === 'PENDING' ? 'processing' : ''} ${batch.status === 'FAILED' ? 'failed' : ''}`} onClick={() => handleCardClick(batch.batchID, batch.status, batch.batchName,batch.type)}>
             <div className="batch-header">
                 <span className="batch-type-badge">{batch.type}</span>
                 <div className="batch-menu-container">
@@ -453,7 +436,7 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
                             </button>
                             <button 
                                 className="dropdown-item delete"
-                                onClick={(e) => handleDelete(batch.batchID, e, batch.batchName)}
+                                onClick={(e) => handleDelete(batch.batchID, e, batch.batchName, batch.type)}
                             >
                                 Delete
                             </button>
@@ -469,8 +452,8 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
                         className="batch-title-input"
                         value={editingName}
                         onChange={(e) => setEditingName(e.target.value)}
-                        onBlur={() => handleRenameSubmit(batch.batchID)}
-                        onKeyDown={(e) => handleRenameKeyDown(e, batch.batchID)}
+                        onBlur={() => handleRenameSubmit(batch.batchID, batch.type)}
+                        onKeyDown={(e) => handleRenameKeyDown(e, batch.batchID, batch.type)}
                         onClick={(e) => e.stopPropagation()}
                     />
                 ) : (

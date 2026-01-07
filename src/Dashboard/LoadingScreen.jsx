@@ -44,7 +44,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     minHeight: '100vh',
-    backgroundColor: 'white',
+    backgroundColor: 'transparent',
     position: 'relative',
     flexDirection: 'column'
   },

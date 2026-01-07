@@ -5,7 +5,7 @@ import { fetchAuthSession } from 'aws-amplify/auth';
 pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.mjs";
 
 import "./uploadModal.css";
-
+import StudyLoader from "./StudyLoader";
 export default function UploadModal({ isOpen, close , activeTab, userProfile, setUserProfile }) {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [dragOver, setDragOver] = useState(false);
@@ -18,6 +18,7 @@ export default function UploadModal({ isOpen, close , activeTab, userProfile, se
   const [selectedPages, setSelectedPages] = useState([]);
   const [numSelectedPages,setnNumSelectedPages]=useState(0);
   const [specialInstructions, setSpecialInstructions] = useState(""); 
+  const [isUploadingPhotos, setIsUploadingPhotos]= useState(false);
    useEffect(() => {
           function handleEscape(event) {
               if (event.key === "Escape") {
@@ -90,6 +91,7 @@ export default function UploadModal({ isOpen, close , activeTab, userProfile, se
 
 
     }
+    setIsUploadingPhotos(false);
     return uploadResults;
   }
 
@@ -521,7 +523,6 @@ useEffect(() => {
   return (
     <>
       {/* UPLOAD MODAL */}
-      {/* UPLOAD MODAL */}
     <div
       className="uploadModalOverlay"
       style={{ display: isOpen ? "flex" : "none" }}
@@ -696,18 +697,23 @@ useEffect(() => {
               handleUploadSign(selectedFiles,activeTab);
               close();
               clearFiles();
+              setIsUploadingPhotos(true);
               setSpecialInstructions("");
               setWarning(false);
               setWarning2(false);
               setWarning3(false);
               changeFileSizeRemaining(maxFileSize); 
               setRemainingFiles(maxNumFiles);
+
               }}>
               Upload
             </button>
           )}
         </div>
       </div>
+    </div>
+    <div className='uploadModalOverlay' style={{display: isUploadingPhotos? 'flex' : 'none'}}>
+          <StudyLoader/>
     </div>
 
     {/* PDF PAGE GRID MODAL */}

@@ -30,7 +30,13 @@
 
 .batch-card.processing {
     border-color: #f57c00;
-    background-color: #fffbf5;
+    background-color: #fdf6eb;
+    position: relative;
+    overflow: hidden;
+}
+.batch-card.failed{
+    border-color: #f50000;
+    background-color: #ffecec;
     position: relative;
     overflow: hidden;
 }
@@ -95,7 +101,7 @@
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     min-width: 120px;
-    z-index: 10;
+    z-index: 1000;
     overflow: hidden;
 }
 

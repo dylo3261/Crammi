@@ -60,7 +60,7 @@ export default function UploadExistingModal({isOpen, close, activeTab, batches})
 
             console.log('Selected batch:', selectedBatch);
             console.log('Upload instructions:', uploadInstructions);
-            
+
             const existingPayload = {
                 batch_ID: selectedBatch,
                 requestedCram: activeTab,
@@ -79,7 +79,6 @@ export default function UploadExistingModal({isOpen, close, activeTab, batches})
 
               
             console.log('Response status:', response.status);
-            
             if (!response.ok) {
             const errorData = await response.json();
             console.error('Upload failed:', errorData);
@@ -112,6 +111,7 @@ export default function UploadExistingModal({isOpen, close, activeTab, batches})
     if (!isOpen) return null;
 
     return (
+        <>
         <div className="uploadModalOverlay">
             <div className="uploadModalContent" ref={modalRef}>
                 {/* Header */}
@@ -236,5 +236,6 @@ export default function UploadExistingModal({isOpen, close, activeTab, batches})
                 </div>
             </div>
         </div>
+        </>
     );
 }

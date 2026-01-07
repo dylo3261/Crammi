@@ -23,10 +23,11 @@ html, body {
 } 
 
 .dashboardLogoSidebar{
-  height: 30px;
+  height: 28px;
   width: auto;
   margin-top: 2vh;
   margin-left: 0.8vw;
+  position: fixed;
  
 }
 
@@ -117,7 +118,7 @@ html, body {
   color: rgb(0, 0, 0);
 } 
 .sideBarButtonDiv{
-  margin-top: 1vh;
+  margin-top: 6.5vh;
 }
 .userPFP{
   width: 2rem;  /* Adjust this for size */
