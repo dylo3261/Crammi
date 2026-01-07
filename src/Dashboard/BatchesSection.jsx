@@ -95,21 +95,6 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
         console.log('🚀 Manually starting polling');
         pollCountRef.current = 0; // Reset counter
         fetchBatches();
-        
-        if (!pollIntervalRef.current) {
-            pollIntervalRef.current = setInterval(() => {
-                pollCountRef.current++;
-                
-                if (pollCountRef.current >= MAX_POLLS) {
-                    clearInterval(pollIntervalRef.current);
-                    pollIntervalRef.current = null;
-                    console.log('⏹️ Stopping polling - max polls reached');
-                    return;
-                }
-                
-                fetchBatches();
-            }, 10000);
-        }
     }, [fetchBatches]);
 
     const deleteBatch = async (batchID, batchName) => {
@@ -305,8 +290,16 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
 
     useEffect(() => {
         const hasPending = batches.some(batch => batch.status === 'PENDING');
+        const isPolling = pollIntervalRef.current !== null;
         
-        if (hasPending && !pollIntervalRef.current) {
+        console.log('🔍 Polling check:', { 
+            hasPending, 
+            isPolling, 
+            pollCount: pollCountRef.current,
+            batchCount: batches.length 
+        });
+        
+        if (hasPending && !isPolling) {
             console.log('▶️ Starting polling - pending batches detected');
             pollCountRef.current = 0;
             pollIntervalRef.current = setInterval(() => {
@@ -316,19 +309,19 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
                 if (pollCountRef.current >= MAX_POLLS) {
                     clearInterval(pollIntervalRef.current);
                     pollIntervalRef.current = null;
+                    pollCountRef.current = 0;
                     console.log('⏹️ Stopping polling - max polls reached');
                     return;
                 }
                 
                 fetchBatches();
             }, 10000);
-        } else if (!hasPending && pollIntervalRef.current) {
+        } else if (!hasPending && isPolling) {
             console.log('⏹️ Stopping polling - no pending batches');
             clearInterval(pollIntervalRef.current);
             pollIntervalRef.current = null;
             pollCountRef.current = 0;
         }
-        // DO NOT clear interval in cleanup - let it run until conditions change
     }, [batches, fetchBatches]);
     // Filter batches by type
     const filteredBatches = batches.filter(batch => {
@@ -424,6 +417,7 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
                     <button 
                         className="batch-menu" 
                         onClick={(e) => handleMenuClick(batch.batchID, e)}
+                        style={{display: batch.status ==="PENDING" ? 'none' : 'flex'}}
                     >
                         ⋯
                     </button>
