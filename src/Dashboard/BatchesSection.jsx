@@ -14,6 +14,8 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
     const pollIntervalRef = useRef(null);
     const inputRef = useRef(null);
     const navigate = useNavigate();
+    const pollCountRef = useRef(0);
+    const MAX_POLLS = 18;
 
     const handleCardClick = (batchID, status, batchName) => {
         if (status === 'COMPLETE') {
@@ -87,14 +89,24 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
           setError(err.message);
           setIsLoading(false);
         }
-    }, []);
+    }, [setBatches]); // Add setBatches dependency
 
     const startPolling = useCallback(() => {
         console.log('🚀 Manually starting polling');
+        pollCountRef.current = 0; // Reset counter
         fetchBatches();
         
         if (!pollIntervalRef.current) {
             pollIntervalRef.current = setInterval(() => {
+                pollCountRef.current++;
+                
+                if (pollCountRef.current >= MAX_POLLS) {
+                    clearInterval(pollIntervalRef.current);
+                    pollIntervalRef.current = null;
+                    console.log('⏹️ Stopping polling - max polls reached');
+                    return;
+                }
+                
                 fetchBatches();
             }, 10000);
         }
@@ -296,23 +308,28 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
         
         if (hasPending && !pollIntervalRef.current) {
             console.log('▶️ Starting polling - pending batches detected');
+            pollCountRef.current = 0;
             pollIntervalRef.current = setInterval(() => {
+                pollCountRef.current++;
+                console.log(`📊 Poll count: ${pollCountRef.current}/${MAX_POLLS}`);
+                
+                if (pollCountRef.current >= MAX_POLLS) {
+                    clearInterval(pollIntervalRef.current);
+                    pollIntervalRef.current = null;
+                    console.log('⏹️ Stopping polling - max polls reached');
+                    return;
+                }
+                
                 fetchBatches();
             }, 10000);
         } else if (!hasPending && pollIntervalRef.current) {
             console.log('⏹️ Stopping polling - no pending batches');
             clearInterval(pollIntervalRef.current);
             pollIntervalRef.current = null;
+            pollCountRef.current = 0;
         }
-        
-        return () => {
-            if (pollIntervalRef.current) {
-                clearInterval(pollIntervalRef.current);
-                pollIntervalRef.current = null;
-            }
-        };
+        // DO NOT clear interval in cleanup - let it run until conditions change
     }, [batches, fetchBatches]);
-
     // Filter batches by type
     const filteredBatches = batches.filter(batch => {
         if (activeTab === 'Exams') return batch.type === 'Exams';
