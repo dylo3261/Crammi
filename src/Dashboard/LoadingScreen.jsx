@@ -52,22 +52,22 @@ const styles = {
     position: 'relative'
   },
   logo: {
-    width: '100px',
-    height: '100px',
+    width: '60px',
+    height: '60px',
     animation: 'spin 1s linear infinite',
     background: 'transparent'
   },
   text: {
     position: 'absolute',
     marginTop: '192px',
-    color: '#1f2937',
+    color: '#ab9ff2',
     fontSize: '18px',
     fontWeight: '500',
     letterSpacing: '0.025em'
   },
   brandName: {
     fontWeight: 'bold',
-    color: '#9333ea'
+    color: '#ab9ff2'
   },
   dots: {
     animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'

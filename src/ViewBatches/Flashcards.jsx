@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { fetchAuthSession, fetchUserAttributes, signOut } from 'aws-amplify/auth';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import ViewHamburger from "./ViewHamburger";
 import "./Flashcards.css";
+import LoadingAnimation from "../Dashboard/LoadingScreen";
 
 // Load KaTeX once globally
 let katexLoaded = false;
@@ -41,29 +42,33 @@ function loadKaTeX() {
     return katexLoadingPromise;
 }
 
-// Optimized LaTeX Rendering Component
-function LatexText({ text }) {
+// Memoized LaTeX Rendering Component
+const LatexText = React.memo(({ text }) => {
     const containerRef = useRef(null);
     const [isReady, setIsReady] = useState(katexLoaded);
+    const lastTextRef = useRef(null);
 
     useEffect(() => {
         loadKaTeX().then(() => setIsReady(true));
     }, []);
 
     useEffect(() => {
-        if (!containerRef.current || !text || !isReady) return;
+        // Skip if text hasn't changed
+        if (!containerRef.current || !text || !isReady || lastTextRef.current === text) {
+            return;
+        }
 
+        lastTextRef.current = text;
         const container = containerRef.current;
         container.innerHTML = '';
         
         let textContent = text;
         
-        // Auto-wrap LaTeX commands that aren't already in $ delimiters
+        // Auto-wrap LaTeX commands
         if (!textContent.includes('$') && (textContent.includes('\\text') || textContent.includes('\\,'))) {
             textContent = '$' + textContent + '$';
         }
         
-        // If no $ delimiters, just render as plain text
         if (!textContent.includes('$')) {
             container.textContent = textContent;
             return;
@@ -113,7 +118,7 @@ function LatexText({ text }) {
     }, [text, isReady]);
 
     return <span ref={containerRef}>{!isReady ? text : ''}</span>;
-}
+});
 
 export default function Flashcards() {
   const { batchID } = useParams();
@@ -125,13 +130,12 @@ export default function Flashcards() {
   const [isFlipped, setIsFlipped] = useState(false);
   const [slideDirection, setSlideDirection] = useState('');
   const [isNavigating, setIsNavigating] = useState(false);
-  const timeoutRef = useRef(null);
   const location = useLocation();
   const [batchName, setBatchName] = useState(location.state?.batchName || 'Unknown Batch');
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [editingName, setEditingName] = useState('');
   const titleInputRef = useRef(null);
-  const [isIgnoredRequest,setIsIgnoredRequest]= useState('')
+  const [isIgnoredRequest, setIsIgnoredRequest] = useState('');
 
   // Sidebar state
   const [userName, setUserName] = useState('');
@@ -142,41 +146,29 @@ export default function Flashcards() {
   const logoutPopupRef = useRef(null);
   const ignoredPopupRef = useRef(null);
   const ignoredButtonRef = useRef(null);
+  const profileButtonRef = useRef(null);
 
+  // Memoize current card to prevent unnecessary re-renders
+  const currentCard = useMemo(() => {
+    return batchJSON?.[currentIndex];
+  }, [batchJSON, currentIndex]);
+
+  // Fetch user data once on mount
   useEffect(() => {
-    getUserName();
-    getUserEmail();
-    getUserPFP();
+    const fetchUserData = async () => {
+      try {
+        const attributes = await fetchUserAttributes();
+        setUserName(attributes.name || attributes.email);
+        setUserEmail(attributes.email || attributes.name);
+        setUserPFP(attributes.picture || "https://askthescientists.com/wp-content/uploads/2021/04/AdobeStock_240042551-scaled.jpeg");
+      } catch (error) {
+        console.error('Error fetching user attributes:', error);
+      }
+    };
+    fetchUserData();
   }, []);
 
-  async function getUserName() {
-    try {
-      const attributes = await fetchUserAttributes();
-      setUserName(attributes.name || attributes.email);
-    } catch (error) {
-      console.error('Error fetching user attributes:', error);
-    }
-  }
-
-  async function getUserEmail() {
-    try {
-      const attributes = await fetchUserAttributes();
-      setUserEmail(attributes.email || attributes.name);
-    } catch (error) {
-      console.error('Error fetching user Email:', error);
-    }
-  }
-
-  async function getUserPFP() {
-    try {
-      const attributes = await fetchUserAttributes();
-      setUserPFP(attributes.picture || "https://askthescientists.com/wp-content/uploads/2021/04/AdobeStock_240042551-scaled.jpeg");
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  }
-
-  const handleSignOut = async () => {
+  const handleSignOut = useCallback(async () => {
     try {
       sessionStorage.removeItem('oauth_source');
       sessionStorage.removeItem('oauth_completed');
@@ -185,10 +177,9 @@ export default function Flashcards() {
     } catch (error) {
       console.error("Sign out error:", error);
     }
-  };
+  }, [navigate]);
 
-  const profileButtonRef = useRef(null);
-  
+  // Combine popup click handlers into one effect
   useEffect(() => {
     function handleClick(event) {
       if (logoutPopupRef.current && 
@@ -197,32 +188,7 @@ export default function Flashcards() {
           !profileButtonRef.current.contains(event.target)) {
         setLogoutPopup(false);
       }
-    }
-    if (isLogoutPopup) {
-      addEventListener("mousedown", handleClick);
-    }
-    return () => {
-      removeEventListener("mousedown", handleClick);
-    };
-  }, [isLogoutPopup]);
-
-  useEffect(() => {
-    function escapeHandler(event) {
-      if (event.key === "Escape") {
-        setLogoutPopup(false);
-        setIsIgnoredPopup(false);
-      }
-    }
-    if (isLogoutPopup || isIgnoredPopup) {
-      addEventListener("keydown", escapeHandler);
-    }
-    return () => {
-      removeEventListener("keydown", escapeHandler);
-    };
-  }, [isLogoutPopup, isIgnoredPopup]);
-
-  useEffect(() => {
-    function handleClick(event) {
+      
       if (ignoredPopupRef.current && 
           !ignoredPopupRef.current.contains(event.target) &&
           ignoredButtonRef.current &&
@@ -230,13 +196,27 @@ export default function Flashcards() {
         setIsIgnoredPopup(false);
       }
     }
-    if (isIgnoredPopup) {
-      addEventListener("mousedown", handleClick);
+
+    if (isLogoutPopup || isIgnoredPopup) {
+      document.addEventListener("mousedown", handleClick);
+      return () => document.removeEventListener("mousedown", handleClick);
     }
-    return () => {
-      removeEventListener("mousedown", handleClick);
-    };
-  }, [isIgnoredPopup]);
+  }, [isLogoutPopup, isIgnoredPopup]);
+
+  // Combine escape handlers
+  useEffect(() => {
+    function escapeHandler(event) {
+      if (event.key === "Escape") {
+        setLogoutPopup(false);
+        setIsIgnoredPopup(false);
+      }
+    }
+    
+    if (isLogoutPopup || isIgnoredPopup) {
+      document.addEventListener("keydown", escapeHandler);
+      return () => document.removeEventListener("keydown", escapeHandler);
+    }
+  }, [isLogoutPopup, isIgnoredPopup]);
 
   useEffect(() => {
     const fetchJSON = async () => {
@@ -269,80 +249,26 @@ export default function Flashcards() {
         const ignoredRequests = data.ignored_requests || '';
         
         setBatchJSON(items);
-        
         if (ignoredRequests) {
-            setIsIgnoredRequest(ignoredRequests)
+          setIsIgnoredRequest(ignoredRequests);
         }
         
         setIsLoading(false);
-    } catch (err) {
+      } catch (err) {
         console.error('Error fetching flashcard data:', err);
         setError(err.message);
         setIsLoading(false);
-        }
+      }
     };
 
     if (batchID) {
-        fetchJSON();
+      fetchJSON();
     }
-    }, [batchID]);
+  }, [batchID]);
 
-    useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (!batchJSON || batchJSON.length === 0 || isEditingTitle) return;
-      
-      if (e.key === 'ArrowLeft') {
-        e.preventDefault();
-        if (currentIndex > 0 && !isNavigating) {
-          setIsNavigating(true);
-          setIsFlipped(false);
-          setSlideDirection('slide-right');
-          
-          setTimeout(() => {
-            setCurrentIndex(prev => Math.max(prev - 1, 0));
-            setSlideDirection('');
-          }, 200);
-          
-          setTimeout(() => {
-            setIsNavigating(false);
-          }, 150);
-        }
-      } else if (e.key === 'ArrowRight') {
-        e.preventDefault();
-        if (currentIndex < batchJSON.length - 1 && !isNavigating) {
-          setIsNavigating(true);
-          setIsFlipped(false);
-          setSlideDirection('slide-left');
-          
-          setTimeout(() => {
-            setCurrentIndex(prev => Math.min(prev + 1, batchJSON.length - 1));
-            setSlideDirection('');
-          }, 200);
-          
-          setTimeout(() => {
-            setIsNavigating(false);
-          }, 150);
-        }
-      } else if (e.key === ' ' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-        e.preventDefault();
-        setIsFlipped(prev => !prev);
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [batchJSON, currentIndex, isNavigating, isEditingTitle]);
-
-  const goToNext = () => {
-    if (currentIndex >= batchJSON.length - 1 || isNavigating) return;
+  // Memoized navigation functions
+  const goToNext = useCallback(() => {
+    if (!batchJSON || currentIndex >= batchJSON.length - 1 || isNavigating) return;
     
     setIsNavigating(true);
     setIsFlipped(false);
@@ -351,15 +277,12 @@ export default function Flashcards() {
     setTimeout(() => {
       setCurrentIndex(prev => Math.min(prev + 1, batchJSON.length - 1));
       setSlideDirection('');
-    }, 200);
-    
-    setTimeout(() => {
       setIsNavigating(false);
     }, 150);
-  };
+  }, [batchJSON, currentIndex, isNavigating]);
 
-  const goToPrevious = () => {
-    if (currentIndex <= 0 || isNavigating) return;
+  const goToPrevious = useCallback(() => {
+    if (!batchJSON || currentIndex <= 0 || isNavigating) return;
     
     setIsNavigating(true);
     setIsFlipped(false);
@@ -368,45 +291,57 @@ export default function Flashcards() {
     setTimeout(() => {
       setCurrentIndex(prev => Math.max(prev - 1, 0));
       setSlideDirection('');
-    }, 200);
-    
-    setTimeout(() => {
       setIsNavigating(false);
     }, 150);
-  };
+  }, [batchJSON, currentIndex, isNavigating]);
 
-  const handleShuffle = () => {
+  const handleCardClick = useCallback(() => {
+    setIsFlipped(prev => !prev);
+  }, []);
+
+  const handleShuffle = useCallback(() => {
     if (!batchJSON || batchJSON.length === 0) return;
     
     const shuffled = [...batchJSON].sort(() => Math.random() - 0.5);
     setBatchJSON(shuffled);
     setCurrentIndex(0);
     setIsFlipped(false);
-  };
+  }, [batchJSON]);
 
-  const handleCardClick = () => {
-    setIsFlipped(prev => !prev);
-  };
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (!batchJSON || batchJSON.length === 0 || isEditingTitle) return;
+      
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        goToPrevious();
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        goToNext();
+      } else if (e.key === ' ' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        setIsFlipped(prev => !prev);
+      }
+    };
 
-  const handleTitleClick = () => {
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [batchJSON, isEditingTitle, goToNext, goToPrevious]);
+
+  const handleTitleClick = useCallback(() => {
     setIsEditingTitle(true);
     setEditingName(batchName);
-  };
+  }, [batchName]);
 
-  const handleTitleSubmit = async () => {
-    if (!editingName.trim()) {
-      setIsEditingTitle(false);
-      return;
-    }
-
-    if (editingName === batchName) {
+  const handleTitleSubmit = useCallback(async () => {
+    if (!editingName.trim() || editingName === batchName) {
       setIsEditingTitle(false);
       setEditingName('');
       return;
     }
 
     const oldName = batchName;
-    
     setBatchName(editingName);
     setIsEditingTitle(false);
     setEditingName('');
@@ -434,20 +369,16 @@ export default function Flashcards() {
       console.error('Error renaming batch:', err);
       setBatchName(oldName);
     }
-  };
+  }, [editingName, batchName, batchID]);
 
-  const handleTitleCancel = () => {
-    setIsEditingTitle(false);
-    setEditingName('');
-  };
-
-  const handleTitleKeyDown = (e) => {
+  const handleTitleKeyDown = useCallback((e) => {
     if (e.key === 'Enter') {
       handleTitleSubmit();
     } else if (e.key === 'Escape') {
-      handleTitleCancel();
+      setIsEditingTitle(false);
+      setEditingName('');
     }
-  };
+  }, [handleTitleSubmit]);
 
   useEffect(() => {
     if (isEditingTitle && titleInputRef.current) {
@@ -465,19 +396,12 @@ export default function Flashcards() {
 
     if (isEditingTitle) {
       document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
     }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isEditingTitle, editingName, batchName, batchID]);
+  }, [isEditingTitle, handleTitleSubmit]);
 
   if (isLoading) {
-    return (
-      <div className="flashcard-container loading">
-        <div className="message">Loading flashcards...</div>
-      </div>
-    );
+    return <LoadingAnimation/>;
   }
 
   if (error) {
@@ -496,51 +420,41 @@ export default function Flashcards() {
     );
   }
 
-  const currentCard = batchJSON[currentIndex];
-
   return (
     <>
-         <div className='flashcardDashboardHeader'>
-            <div className="flashcardMobileHamburger">
-              <ViewHamburger 
-                  userName={userName}
-                  userEmail={userEmail}
-                  userPFP={userPFP}
-                  handleSignOut={handleSignOut}
-                  onNavigateDashboard={() => navigate('/Dashboard')}
-                  onUpgradePlan={() => {/* Add upgrade logic */}}
-                  onSupport={() => {/* Add support logic */}}
-                  showIgnoredButton={!!isIgnoredRequest}
-                  isIgnoredRequest={isIgnoredRequest}
-              />
-            </div>
-            <img className='dashboardLogoMobile'src='/crammiLogo.png'/>
-  
-          </div>
+      <div className='flashcardDashboardHeader'>
+        <div className="flashcardMobileHamburger">
+          <ViewHamburger 
+            userName={userName}
+            userEmail={userEmail}
+            userPFP={userPFP}
+            handleSignOut={handleSignOut}
+            onNavigateDashboard={() => navigate('/Dashboard')}
+            onUpgradePlan={() => {}}
+            onSupport={() => {}}
+            showIgnoredButton={!!isIgnoredRequest}
+            isIgnoredRequest={isIgnoredRequest}
+          />
+        </div>
+        <img className='dashboardLogoMobile' src='/crammiLogo.png' alt="logo"/>
+      </div>
+
       <div className='collapsedSidebar'>
         <div className='collapsedSidebarButtons'>
-          
           <button 
             className='homeButton'
             title="Dashboard"
             onClick={() => navigate('/Dashboard')}
-            >
+          >
             <img 
               className='homeButtonIcon' 
               src='https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../releases/preview/2012/png/iconmonstr-home-3.png&r=0&g=0&b=0' 
-              alt='quiz icon'
+              alt='home icon'
             />
           </button>
           
-          <button 
-            className='collapsedSideButton'
-            title="Upgrade Plan"
-          >
-            <img 
-              className='collapsedSidebarIcon' 
-              src='/starIcon.png' 
-              alt='flashcards icon'
-            />
+          <button className='collapsedSideButton' title="Upgrade Plan">
+            <img className='collapsedSidebarIcon' src='/starIcon.png' alt='upgrade icon'/>
           </button>
           
           {isIgnoredRequest && (
@@ -556,7 +470,7 @@ export default function Flashcards() {
               <img 
                 className='collapsedSidebarIcon' 
                 src='https://uxwing.com/wp-content/themes/uxwing/download/signs-and-symbols/exclamation-icon.png' 
-                alt='ignored instructions icon'
+                alt='warning icon'
               />
             </button>
           )}
@@ -610,16 +524,16 @@ export default function Flashcards() {
               <div className='logoutPopupContent'>
                 <div className='popupUpgradePlan'>
                   <button className='bottomDashboardSideButtons'>
-                    <img className='sidebarIcon' src='/starIcon.png' alt='Support icon'/>
+                    <img className='sidebarIcon' src='/starIcon.png' alt='upgrade icon'/>
                     <span>Upgrade Plan</span>
                   </button>
                 </div>
                 <button className='bottomDashboardSideButtons'>
-                  <img className='sidebarIcon' src='https://uxwing.com/wp-content/themes/uxwing/download/computers-mobile-hardware/headphone-headset-icon.png' alt='Support icon'/>
+                  <img className='sidebarIcon' src='https://uxwing.com/wp-content/themes/uxwing/download/computers-mobile-hardware/headphone-headset-icon.png' alt='support icon'/>
                   <span>Support</span>
                 </button>
                 <button className='bottomDashboardSideButtons' onClick={handleSignOut}>
-                  <img className='sidebarIcon' src='https://uxwing.com/wp-content/themes/uxwing/download/web-app-development/log-in-icon.png' alt='Logout icon'/>
+                  <img className='sidebarIcon' src='https://uxwing.com/wp-content/themes/uxwing/download/web-app-development/log-in-icon.png' alt='logout icon'/>
                   <span>Sign Out</span>
                 </button>
               </div>
@@ -663,7 +577,7 @@ export default function Flashcards() {
                 }}
               />
             ) : (
-              `${batchName}`
+              batchName
             )}
           </h1>
           <div className="progress-bar-container">
@@ -691,13 +605,13 @@ export default function Flashcards() {
               <div className="card-face card-front">
                 <div className="card-label">QUESTION</div>
                 <div className="card-content">
-                  <LatexText text={currentCard.front} />
+                  <LatexText text={currentCard?.front || ''} />
                 </div>
               </div>
               <div className="card-face card-back">
                 <div className="card-label">ANSWER</div>
                 <div className="card-content">
-                  <LatexText text={currentCard.back} />
+                  <LatexText text={currentCard?.back || ''} />
                 </div>
               </div>
             </div>

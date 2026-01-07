@@ -78,6 +78,7 @@
   width: 100%;
   height: 32rem;
   perspective: 1000px;
+  isolation: isolate;
 }
 
 /* Card */
@@ -86,8 +87,11 @@
   width: 100%;
   height: 100%;
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   transform-style: preserve-3d;
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 .card.flipped {

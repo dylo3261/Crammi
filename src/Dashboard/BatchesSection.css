@@ -298,6 +298,13 @@
     -webkit-box-orient: vertical;
 }
 
+.no-results{
+    font-family: applethin,arial,sans-serif;
+    color: #5f6368;
+    font-size: 1rem;
+    font-style: italic;
+}
+
 .batch-timestamp {
     font-size: 12px;
     color: #5f6368;

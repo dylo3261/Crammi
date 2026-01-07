@@ -3,7 +3,7 @@ import { fetchAuthSession, fetchUserAttributes, signOut } from 'aws-amplify/auth
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import "./Quiz.css";
 import ViewHamburger from "./ViewHamburger";
-
+import LoadingAnimation from "../Dashboard/LoadingScreen";
 // Load KaTeX once globally
 let katexLoaded = false;
 let katexLoadingPromise = null;
@@ -811,7 +811,8 @@ export default function Quiz() {
     };
 
     if (isLoading) {
-        return <div style={{ padding: '20px' }}>Loading quiz...</div>;
+        return (<LoadingAnimation/>);
+        
     }
 
     if (error) {

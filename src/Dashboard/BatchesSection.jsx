@@ -3,9 +3,7 @@ import { fetchAuthSession } from 'aws-amplify/auth';
 import { useNavigate } from 'react-router-dom';
 import "./BatchesSection.css";
 
-
-
-export default function BatchesSection({ activeTab,batches, setBatches }){
+export default function BatchesSection({ activeTab, batches, setBatches, searchQuery }){
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [openMenuId, setOpenMenuId] = useState(null);
@@ -18,37 +16,44 @@ export default function BatchesSection({ activeTab,batches, setBatches }){
     const navigate = useNavigate();
 
     const handleCardClick = (batchID, status, batchName) => {
-        // Only navigate if batch is complete
         if (status === 'COMPLETE') {
-            if(activeTab==='Exams'){
-                navigate(`/Exam/${batchID}`,{state: {batchName} });
+            if(activeTab === 'Exams'){
+                navigate(`/Exam/${batchID}`, {state: {batchName}});
             }
-            else if(activeTab==='Quizzes'){
-                navigate(`/Quiz/${batchID}`,{state: {batchName} });
+            else if(activeTab === 'Quizzes'){
+                navigate(`/Quiz/${batchID}`, {state: {batchName}});
             }
-            else if(activeTab==='Flashcards'){
-                navigate(`/Flashcards/${batchID}`,{state: {batchName} });
+            else if(activeTab === 'Flashcards'){
+                navigate(`/Flashcards/${batchID}`, {state: {batchName}});
             }
-            // navigate(`/Flashcards/${batchID}?name=${encodeURIComponent(batchName)}`);
-
         }
     };
 
-    
+    const getTimeAgo = (timestamp) => {
+        const now = new Date();
+        const created = new Date(timestamp);
+        const diffMs = now - created;
+        const diffMins = Math.floor(diffMs / 60000);
+        const diffHours = Math.floor(diffMs / 3600000);
+        const diffDays = Math.floor(diffMs / 86400000);
+
+        if (diffMins < 1) return 'Just now';
+        if (diffMins < 60) return `${diffMins} ${diffMins === 1 ? 'minute' : 'minutes'} ago`;
+        if (diffHours < 24) return `${diffHours} ${diffHours === 1 ? 'hour' : 'hours'} ago`;
+        if (diffDays < 7) return `${diffDays} ${diffDays === 1 ? 'day' : 'days'} ago`;
+        
+        // For older items, show the actual date
+        return created.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    };
     const showNotification = (message, type = 'success') => {
         setNotification({ message, type, exiting: false });
-    
-        // start exit animation
         setTimeout(() => {
             setNotification(prev => prev ? { ...prev, exiting: true } : null);
         }, 2500);
-    
-        // remove after animation finishes
         setTimeout(() => {
             setNotification(null);
         }, 3000);
     };
-    
 
     const fetchBatches = useCallback(async () => {
         console.log('🔄 Polling batches...', new Date().toLocaleTimeString());
@@ -91,8 +96,7 @@ export default function BatchesSection({ activeTab,batches, setBatches }){
         }
     }, [fetchBatches]);
 
-    const deleteBatch = async (batchID,batchName) => {
-        // Optimistically remove from UI immediately
+    const deleteBatch = async (batchID, batchName) => {
         const batchToDelete = batches.find(b => b.batchID === batchID);
         setBatches(prevBatches => prevBatches.filter(batch => batch.batchID !== batchID));
         setOpenMenuId(null);
@@ -126,7 +130,6 @@ export default function BatchesSection({ activeTab,batches, setBatches }){
             } else {
                 console.error('Delete failed:', result);
                 showNotification('Failed to delete batch', 'error');
-                // Restore the batch if deletion failed
                 setBatches(prevBatches => [...prevBatches, batchToDelete]);
             }
             
@@ -134,7 +137,6 @@ export default function BatchesSection({ activeTab,batches, setBatches }){
         } catch (err) {
             console.error('Error deleting batch:', err);
             showNotification('Failed to delete batch', 'error');
-            // Restore the batch if deletion failed
             setBatches(prevBatches => [...prevBatches, batchToDelete]);
         }
     };
@@ -146,7 +148,7 @@ export default function BatchesSection({ activeTab,batches, setBatches }){
 
     const handleDelete = async (batchID, event, batchName) => {
         event.stopPropagation();
-        await deleteBatch(batchID,batchName);
+        await deleteBatch(batchID, batchName);
     };
 
     const handleRename = (batchID, currentName, event) => {
@@ -163,11 +165,9 @@ export default function BatchesSection({ activeTab,batches, setBatches }){
             return;
         }
 
-        // Store old name for rollback if needed
         const oldBatch = batches.find(b => b.batchID === batchID);
         const oldName = oldBatch?.batchName;
 
-        // Optimistically update the UI immediately
         setBatches(prevBatches => 
             prevBatches.map(batch => 
                 batch.batchID === batchID 
@@ -176,15 +176,9 @@ export default function BatchesSection({ activeTab,batches, setBatches }){
             )
         );
 
-        // Clear editing state
         setEditingBatchId(null);
         setEditingName('');
 
-        // Here's where you'll hook up your API call
-        console.log('Saving new name:', editingName, 'for batch:', batchID);
-        
-        // TODO: Add your API call here
-        // Example:
         try {
             const session = await fetchAuthSession();
             const token = session.tokens?.idToken?.toString();
@@ -207,7 +201,6 @@ export default function BatchesSection({ activeTab,batches, setBatches }){
                     'success'
                 );
             } else {
-                // Rollback on failure
                 showNotification(
                     <>Failed to rename <span className="notification-name">{activeTab}</span></>,
                     'error'
@@ -226,7 +219,6 @@ export default function BatchesSection({ activeTab,batches, setBatches }){
                 <>Failed to rename <span className="notification-name">{activeTab}</span></>,
                 'error'
             );
-            // Rollback on error
             setBatches(prevBatches => 
                 prevBatches.map(batch => 
                     batch.batchID === batchID 
@@ -314,6 +306,7 @@ export default function BatchesSection({ activeTab,batches, setBatches }){
         };
     }, [batches, fetchBatches]);
 
+    // Filter batches by type
     const filteredBatches = batches.filter(batch => {
         if (activeTab === 'Exams') return batch.type === 'Exams';
         if (activeTab === 'Quizzes') return batch.type === 'Quizzes';
@@ -322,12 +315,24 @@ export default function BatchesSection({ activeTab,batches, setBatches }){
         return false;
     });
 
-    const sortedBatches = [...filteredBatches].sort((a, b) => {
-        // First, sort by status - PENDING comes first
+    // Apply search filter
+    const searchFilteredBatches = filteredBatches.filter(batch => {
+        if (!searchQuery.trim()) return true;
+        
+        const query = searchQuery.toLowerCase();
+        const batchName = (batch.batchName || '').toLowerCase();
+        const description = (batch.description || '').toLowerCase();
+        const type = (batch.type || '').toLowerCase();
+        
+        return batchName.includes(query) || 
+               description.includes(query) || 
+               type.includes(query);
+    });
+
+    // Sort batches
+    const sortedBatches = [...searchFilteredBatches].sort((a, b) => {
         if (a.status === 'PENDING' && b.status !== 'PENDING') return -1;
         if (a.status !== 'PENDING' && b.status === 'PENDING') return 1;
-        
-        // Then sort by newest first (most recent timeCreated)
         return new Date(b.timeCreated) - new Date(a.timeCreated);
     });
 
@@ -338,7 +343,7 @@ export default function BatchesSection({ activeTab,batches, setBatches }){
             case 'FAILED':
                 return `❌ Failed: ${batch.failureReason}`;
             case 'COMPLETE':
-                return 'Created recently';
+                return `Created ${getTimeAgo(batch.timeCreated)}`;
             default:
                 return 'Unknown status';
         }
@@ -371,9 +376,13 @@ export default function BatchesSection({ activeTab,batches, setBatches }){
                         <SkeletonCard />
                         <SkeletonCard />
                     </>
+                ) : sortedBatches.length === 0 ? (
+                    <div className="no-results">
+                        Wow, Such Emptiness... 💤
+                    </div>
                 ) : (
                     sortedBatches.map((batch) => (
-                        <div key={batch.batchID} className={`batch-card ${batch.status === 'PENDING' ? 'processing' : ''}`} onClick={()=>handleCardClick(batch.batchID,batch.status,batch.batchName)}>
+                        <div key={batch.batchID} className={`batch-card ${batch.status === 'PENDING' ? 'processing' : ''}`} onClick={() => handleCardClick(batch.batchID, batch.status, batch.batchName)}>
                             <div className="batch-header">
                                 <span className="batch-type-badge">{batch.type}</span>
                                 <div className="batch-menu-container">
@@ -430,7 +439,6 @@ export default function BatchesSection({ activeTab,batches, setBatches }){
             </div>
         </div>
         
-        {/* Notification Toast */}
         {notification && (
             <div
                 className={`notification-toast 
@@ -440,7 +448,6 @@ export default function BatchesSection({ activeTab,batches, setBatches }){
                 {notification.message}
             </div>
         )}
-
         </>
     )
 }
