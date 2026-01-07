@@ -3,7 +3,7 @@ import { fetchAuthSession } from 'aws-amplify/auth';
 import { useNavigate } from 'react-router-dom';
 import "./BatchesSection.css";
 
-export default function BatchesSection({ activeTab, batches, setBatches, searchQuery }){
+export default function BatchesSection({ activeTab, batches, setBatches, searchQuery, addToRecents, recents, setRecents }){
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [openMenuId, setOpenMenuId] = useState(null);
@@ -21,7 +21,11 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
         if (status === 'COMPLETE') {
             // Track when batch was opened in localStorage
             localStorage.setItem(`batch_${batchID}_lastOpened`, new Date().toISOString());
-            
+            addToRecents({
+                id: batchID,
+                name: batchName,
+                type: batchType
+              });
             if(batchType === 'Exams'){
                 navigate(`/Exam/${batchID}`, {state: {batchName}});
             }
@@ -473,6 +477,11 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
     return(
         <>
         <div className="mainSection">
+            <div className="suchEmptiness" style={{display: sortedBatches.length === 0 ? 'flex': 'none'}}>
+                <div className="no-results">
+                    Wow, Such Emptiness... 💤
+                </div>
+             </div>   
             <div className="batches-grid">
                 {isLoading ? (
                     <>
@@ -484,10 +493,6 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
                         <SkeletonCard />
                         <SkeletonCard />
                     </>
-                ) : sortedBatches.length === 0 ? (
-                    <div className="no-results">
-                        Wow, Such Emptiness... 💤
-                    </div>
                 ) : (
                     <>
                         {today.length > 0 && (

@@ -12,43 +12,68 @@ function UploadBar({activeTab, openUpload, openUploadExisting, searchQuery, setS
   return (
     <>
       <h1 className="bodyActiveTabLabel">{activeTab}</h1>
-      {showUploadButtons && (
-        <button onClick={openUpload} className="bodyUploadButton">
-          <img
-            className="uploadNewIcon"
-            src="https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../releases/preview/2012/png/iconmonstr-plus-6.png&r=255&g=255&b=255"
-            alt="upload new icon"
+      <div style={{display: 'flex', gap: '1rem', alignItems: 'center', marginLeft: 'auto'}}>
+        {showUploadButtons && (
+          <>
+            <button onClick={openUpload} className="bodyUploadButton">
+              <span>➕</span>
+              <span className="dashboardHeaderText">Upload New</span>
+            </button>
+            <button onClick={openUploadExisting} className="bodySecondUploadButton">
+              <img
+                className="uploadExistingIcon"
+                src="https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../releases/preview/2018/png/iconmonstr-cloud-upload-thin.png&r=0&g=0&b=0"
+                alt="upload existing icon"
+              />
+              <span className="dashboardHeaderTextUpload">Upload existing</span>
+            </button>
+          </>
+        )}
+        <div className="searchBarContainer">
+          <input 
+            type="text" 
+            className="searchInput" 
+            placeholder="Search..." 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <span className="dashboardHeaderText">Upload New</span>
-        </button>
-      )}
-
-      {showUploadButtons && (
-        <button onClick={openUploadExisting} className="bodySecondUploadButton">
-          <img
-            className="uploadExistingIcon"
-            src="https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../releases/preview/2018/png/iconmonstr-cloud-upload-thin.png&r=0&g=0&b=0"
-            alt="upload existing icon"
-          />
-          <span className="dashboardHeaderTextUpload">Upload existing</span>
-        </button>
-      )}
-
-      <div className="searchBarContainer">
-        <img
-          src="https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../releases/preview/2018/png/iconmonstr-search-thin.png&r=0&g=0&b=0"
-          alt="search icon"
-          className="searchIcon"
-        />
-        <input 
-          type="text" 
-          className="searchInput" 
-          placeholder="Search..." 
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
+        </div>
       </div>
     </>
+  );
+}
+
+function RecentsSection({recents, onRecentClick}) {
+  if (!recents || recents.length === 0) return null;
+
+  const getEmojiForType = (type) => {
+    switch(type) {
+      case 'Exams': return '📝';
+      case 'Quizzes': return '📋';
+      case 'Flashcards': return '🗂️';
+      default: return '📁';
+    }
+  };
+
+  return (
+    <div className="recentsSection">
+      <div className="recentsSectionHeader">
+        <span className="recentsSectionTitle">RECENT</span>
+      </div>
+      <div className="recentsList">
+        {recents.slice(0, 5).map((recent, index) => (
+          <button 
+            key={`${recent.id}-${index}`}
+            className="recentItem"
+            data-emoji={getEmojiForType(recent.type)}
+            onClick={() => onRecentClick(recent)}
+            title={recent.name}
+          >
+            <span className="recentItemName">{recent.name}</span>
+          </button>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -58,9 +83,23 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
   const [userEmail, setUserEmail] = useState('');
   const [isLogoutPopup, setLogoutPopup] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [recents, setRecents] = useState([]);
   const logoutPopupRef = useRef(null);
   const profileButtonRef = useRef(null);
   const navigate = useNavigate(); 
+
+
+  const addToRecents = (item) => {
+    setRecents(prev => {
+      // Remove if already exists
+      const filtered = prev.filter(r => r.id !== item.id);
+      // Add to front
+      const updated = [item, ...filtered].slice(0, 5);
+      // Save to localStorage
+      localStorage.setItem('crammi_recents', JSON.stringify(updated));
+      return updated;
+    });
+  };
 
   useEffect(() => {
     function handleClick(event) {
@@ -93,14 +132,19 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
 
   useEffect(() => {
     getUserName();
-  }, []);
-  
-  useEffect(() => {
     getUserPFP();
-  }, []);
-  
-  useEffect(() => {
     getUserEmail();
+  }, []);
+
+  useEffect(() => {
+    const savedRecents = localStorage.getItem('crammi_recents');
+    if (savedRecents) {
+      try {
+        setRecents(JSON.parse(savedRecents));
+      } catch (error) {
+        console.error('Error parsing recents:', error);
+      }
+    }
   }, []);
 
   async function getUserName() {
@@ -142,6 +186,23 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
     }
   };
 
+  const handleRecentClick = (recent) => {
+    const batchName=recent.name
+    const batchID=recent.id
+    if(recent.type === 'Exams'){
+      navigate(`/Exam/${batchID}`, {state: {batchName}});
+    }
+    else if(recent.type === 'Quizzes'){
+        navigate(`/Quiz/${batchID}`, {state: {batchName}});
+    }
+    else if(recent.type === 'Flashcards'){
+        navigate(`/Flashcards/${batchID}`, {state: {batchName}});
+    }
+    else if(recent.type === 'Files'){
+        navigate(`/File/${batchID}`, {state: {batchName}});
+    }
+  };
+
   return (
     <>
       <div className='DashboardHeader'>
@@ -155,31 +216,48 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
             handleSignOut={handleSignOut}
           />
         </div>
-        <img className='dashboardLogoMobile' src='/crammiLogo.png'/>
+        <img className='dashboardLogoMobile' src='/crammiLogo.png' alt='Crammi Logo'/>
       </div>
+      
       <div className='sideBar'> 
         <div className='userInfoTab'>
-          <img className='dashboardLogoSidebar' src='/CrammiFinalUppercase.png'/>
+          <img className='dashboardLogoSidebar' src='/CrammiFinalUppercase.png' alt='Crammi'/>
         </div>
-        <div className='sideBarButtonDiv'>                                                              
-          <button onClick={() => changeActiveTab("Exams")} className={activeTab === "Exams" ? 'activeDashboardSideButtons' : 'dashboardSideButtons'}>
-            <img className='sidebarIcon' src='https://uxwing.com/wp-content/themes/uxwing/download/editing-user-action/edit-list-icon.png' alt='exam icon in dashboard'/>
+        
+        <div className='sideBarButtonDiv'>
+          <div className="nav-section-label">MENU</div>
+          <button 
+            data-emoji="📝"
+            onClick={() => changeActiveTab("Exams")} 
+            className={activeTab === "Exams" ? 'activeDashboardSideButtons' : 'dashboardSideButtons'}
+          >
             <span>Exams</span>
           </button>
-          <button onClick={() => changeActiveTab("Quizzes")} className={activeTab === "Quizzes" ? 'activeDashboardSideButtons' : 'dashboardSideButtons'}>
-            <img className='sidebarIcon' src='https://uxwing.com/wp-content/themes/uxwing/download/file-and-folder-type/unknown-file-icon.png' alt='quiz icon'/>
+          <button 
+            data-emoji="📋"
+            onClick={() => changeActiveTab("Quizzes")} 
+            className={activeTab === "Quizzes" ? 'activeDashboardSideButtons' : 'dashboardSideButtons'}
+          >
             <span>Quizzes</span>
           </button>
-          <button onClick={() => changeActiveTab("Flashcards")} className={activeTab === "Flashcards" ? 'activeDashboardSideButtons' : 'dashboardSideButtons'}>
-            <img className='sidebarIcon' src='/FlashcardIcon.png' alt='flashcards icon'/>
+          <button 
+            data-emoji="🗂️"
+            onClick={() => changeActiveTab("Flashcards")} 
+            className={activeTab === "Flashcards" ? 'activeDashboardSideButtons' : 'dashboardSideButtons'}
+          >
             <span>Flashcards</span>
           </button>
+          <button 
+            data-emoji="📁"
+            onClick={() => changeActiveTab("Files")} 
+            className={activeTab === "Files" ? 'activeDashboardSideButtons' : 'dashboardSideButtons'}
+          >
+            <span>Files</span>
+          </button>
         </div>
-        <button onClick={() => changeActiveTab("Files")} className={activeTab === "Files" ? 'activeDashboardSideButtons' : 'dashboardSideButtons'}>
-          <img className='sidebarIcon' src='https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../releases/preview/2012/png/iconmonstr-folder-19.png&r=0&g=0&b=0' alt='flashcards icon'/>
-          <span>Files</span>
-        </button>
+            <RecentsSection recents={recents} onRecentClick={handleRecentClick} />
       </div>
+
       <div className='dashboardBody'>
         <div className='dashboardBodyHeader'>
           <UploadBar 
@@ -196,6 +274,9 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
             batches={batches} 
             setBatches={setBatches}
             searchQuery={searchQuery}
+            addToRecents={addToRecents}
+            recents={recents}
+            setRecents={setRecents}
           />
         </div>
       </div>
@@ -204,28 +285,25 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
         <div className="logoutPopupContainer">
           <div className="logoutPopup" ref={logoutPopupRef}>
             <div className='logoutPopupPFP'>
-              <div className='PFPWrapper'>
-                <button className='PFPButtonPopup'>
-                  <img 
-                    className='userPFPPopup' 
-                    src={userPFP} 
-                    alt='profile picture'
-                    onError={(e) => {
-                      console.log('Image failed to load:', userPFP);
-                      e.target.src = "https://askthescientists.com/wp-content/uploads/2021/04/AdobeStock_240042551-scaled.jpeg";
-                    }}
-                  />
-                  <div>
-                    <span className='userNameText'>{userName}</span>
-                    <p className='accountEmailDisplayPopup'>{userEmail}</p>
-                  </div>
-                </button>
-              </div>
+              <button className='PFPButtonPopup'>
+                <img 
+                  className='userPFPPopup' 
+                  src={userPFP} 
+                  alt='profile picture'
+                  onError={(e) => {
+                    e.target.src = "https://askthescientists.com/wp-content/uploads/2021/04/AdobeStock_240042551-scaled.jpeg";
+                  }}
+                />
+                <div>
+                  <span className='userNameText'>{userName}</span>
+                  <p className='accountEmailDisplayPopup'>{userEmail}</p>
+                </div>
+              </button>
             </div>
             <div className='logoutPopupContent'>
               <div className='popupUpgradePlan'>
                 <button className='bottomDashboardSideButtons'>
-                  <img className='sidebarIcon' src='/starIcon.png' alt='Support icon'/>
+                  <img className='sidebarIcon' src='/starIcon.png' alt='Upgrade icon'/>
                   <span>Upgrade Plan</span>
                 </button>
               </div>
@@ -241,6 +319,7 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
           </div>
         </div>
       )}
+
       <div className='logOutSection'>
         <div className={isLogoutPopup ? 'activePFPWrapper' : 'PFPWrapper'}>
           <button ref={profileButtonRef} className='PFPButton' onClick={(e) => {
@@ -252,17 +331,16 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
               src={userPFP} 
               alt='profile picture'
               onError={(e) => {
-                console.log('Image failed to load:', userPFP);
                 e.target.src = "https://askthescientists.com/wp-content/uploads/2021/04/AdobeStock_240042551-scaled.jpeg";
               }}
             />
             <div>
               <span className='userNameText'>{userName}</span>
-              <p className='accountTierDisplay'>Free</p>
+              <p className='accountTierDisplay'>Free Plan</p>
             </div>
           </button>
           <button className='upgradeButton'>
-            Upgrade
+            Upgrade to Pro
           </button>
         </div>
       </div>

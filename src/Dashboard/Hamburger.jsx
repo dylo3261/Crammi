@@ -18,60 +18,60 @@ export default function Hamburger({ userName, userEmail, userPFP, handleSignOut,
         />
       </button>
 
-      {/* dropdown menu */}
+      {/* Dropdown menu */}
       <div className={`dropdownMenu ${isOpen ? "open" : ""}`}>
         
-        {/* Main Navigation Buttons */}
+        {/* MENU Section Label */}
+        <div className="dropdownMenuLabel">MENU</div>
+        
+        {/* Main Navigation Buttons with emojis */}
         <button 
+          data-emoji="📝"
           className={activeTab === "Exams" ? "activeDropdownItem" : "dropdownItem"} 
           onClick={() => {
             changeActiveTab("Exams");
             setIsopen(false);
           }}
         >
-          <img className="sidebarIcon" src="https://uxwing.com/wp-content/themes/uxwing/download/editing-user-action/edit-list-icon.png" alt="exam icon"/>
-          Exams
+          <span>Exams</span>
         </button>
 
         <button 
+          data-emoji="📋"
           className={activeTab === "Quizzes" ? "activeDropdownItem" : "dropdownItem"} 
           onClick={() => {
             changeActiveTab("Quizzes");
             setIsopen(false);
           }}
         >
-          <img className="sidebarIcon" src="https://uxwing.com/wp-content/themes/uxwing/download/file-and-folder-type/unknown-file-icon.png" alt="quiz icon"/>
-          Quizzes
+          <span>Quizzes</span>
         </button>
 
         <button 
+          data-emoji="🗂️"
           className={activeTab === "Flashcards" ? "activeDropdownItem" : "dropdownItem"} 
           onClick={() => {
             changeActiveTab("Flashcards");
             setIsopen(false);
           }}
         >
-          <img className="sidebarIcon" src="../public/FlashcardIcon.png" alt="flashcards icon"/>
-          Flashcards
+          <span>Flashcards</span>
         </button>
 
         <button 
+          data-emoji="📁"
           className={activeTab === "Files" ? "activeDropdownItem" : "dropdownItem"} 
           onClick={() => {
             changeActiveTab("Files");
             setIsopen(false);
           }}
         >
-          <img className="sidebarIcon" src="https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../releases/preview/2012/png/iconmonstr-folder-19.png&r=0&g=0&b=0" alt="files icon"/>
-          Files
+          <span>Files</span>
         </button>
 
         {/* Bottom Section with Support and Sign Out */}
         <div className='dropdownLogOutSection'>
-          <button className='dropdownItem'>
-            <img className='sidebarIcon' src='/starIcon.png' alt='Upgrade icon'/>
-            <span>Upgrade Plan</span>
-          </button>
+         
           
           <button className='dropdownItem'>
             <img className='sidebarIcon' src='https://uxwing.com/wp-content/themes/uxwing/download/computers-mobile-hardware/headphone-headset-icon.png' alt='Support icon'/>
@@ -98,8 +98,11 @@ export default function Hamburger({ userName, userEmail, userPFP, handleSignOut,
               />
               <div>
                 <span className='userNameText'>{userName}</span>
-                <p className='accountTierDisplay'>Free</p>
+                <p className='accountTierDisplay'>Free Plan</p>
               </div>
+            </button>
+            <button className='upgradeButton'>
+              Upgrade to Pro
             </button>
           </div>
         </div>

@@ -10,8 +10,7 @@
   outline: none;
   display: flex;
   cursor: pointer;
-  
-  z-index: 9999; /* ensures it's always clickable */
+  z-index: 9999;
 }
 
 .hamburgerIcon {
@@ -29,24 +28,20 @@
 
 .logotemp {
   margin-right: 1rem;
-  margin-left: auto; /* Push logo to the right */
+  margin-left: auto;
 }
 
 .dropdownMenu {
   position: fixed;
   top: 6vh;
   left: 0;
-
-  width: 50vw;
+  width: 100vw;
   height: calc(100vh - 6vh);
-
-  background: rgb(246, 246, 246); /* Match sidebar background */
+  background: white;
   display: flex;
   flex-direction: column;
-
-  padding: 0; /* Remove padding to allow proper positioning */
+  padding: 1.5rem 1rem;
   overflow: hidden;
-
   box-shadow: 4px 0px 12px rgba(0,0,0,0.15);
   z-index: 9998;
   transform: translateX(-100%);
@@ -62,150 +57,214 @@
 .dropdownMenuContent {
   flex: 1;
   overflow-y: auto;
-  padding: 20px 0;
+  padding: 0;
 }
 
-/* Profile Section at Bottom - FIXED */
-.dropdownProfileSection {
-  width: 100%;
-  padding: 10px;
-  border-top: 1px solid #ddd;
-  background: rgb(246, 246, 246);
-  position: absolute;
-  bottom: 0;
-  left: 0;
+/* Section Label */
+.dropdownMenuLabel {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #94a3b8;
+  margin-bottom: 1rem;
+  margin-top: 0.5rem;
+  letter-spacing: 0.5px;
+  font-family: 'apple', -apple-system, sans-serif;
+  padding-left: 0.5rem;
 }
 
-/* Ensure PFPWrapper in dropdown doesn't overflow */
-.dropdownProfileSection .PFPWrapper {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  border-radius: 6px;
-  width: 100%;
-  height: 60px;
-  border: 2px solid transparent;
-}
-
-/* Make PFPButton narrower in dropdown to fit upgrade button */
-.dropdownProfileSection .PFPButton {
-  display: flex;
-  align-items: center;
-  border-radius: 6px;
-  width: calc(100% - 80px); /* Leave space for upgrade button */
-  height: 40px;
-  border: 2px solid transparent;
-  cursor: pointer;
-  font-size: 87%;
-  gap: 0.5rem;
-  flex-shrink: 1;
-  min-width: 0; /* Allow shrinking */
-  font-family: applemedium, arial, sans-serif;
-  background-color: transparent;
-  color: rgb(48, 48, 48);
-}
-
-/* Container for username and tier to control overflow */
-.dropdownProfileSection .PFPButton > div {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  min-width: 0; /* Allow shrinking */
-  flex: 1;
-}
-
-/* Truncate username in dropdown */
-.dropdownProfileSection .userNameText {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100px; /* Shorter for mobile dropdown */
-  display: inline-block;
-  margin-bottom: -3px;
-  font-family: applemedium, arial, sans-serif;
-}
-
-.dropdownProfileSection .upgradeButton {
-  padding: 4px;
-  padding-right: 8px;
-  padding-left: 8px;
-  border-radius: 20px;
-  border: none;
-  color: white;
-  background-color: black;
-  font-family: applethin, arial, sans-serif;
-  flex-shrink: 0;
-  cursor: pointer;
-}
-
-/* Main buttons - MATCH DESKTOP SIDEBAR STYLE */
+/* Main buttons - REVAMPED STYLE */
 .dropdownItem {
   display: flex;
   align-items: center;
-  border-radius: 6px;
-  width: 90%;
-  height: 35px;
-  margin: 1% auto 0 auto;
-  border: 2px solid transparent;
-  padding: 0.5rem;
+  border-radius: 10px;
+  width: 100%;
+  height: 44px;
+  margin-bottom: 0.5rem;
+  border: none;
+  padding: 0 1rem;
   cursor: pointer;
-  font-size: 87%;
+  font-size: 0.95rem;
   text-align: left;
-  gap: 0.5rem;
-  font-family: applemedium, arial, sans-serif;
+  gap: 0.75rem;
+  font-family: 'applemedium', -apple-system, sans-serif;
   background-color: transparent;
-  color: rgb(48, 48, 48);
+  color: #64748b;
+  transition: all 0.2s ease;
 }
 
-.dropdownItem:first-child {
-  margin-top: 20px; /* Add top margin to first item */
+.dropdownItem::before {
+  content: attr(data-emoji);
+  font-size: 1.3rem;
+  line-height: 1;
 }
 
 .dropdownItem:hover {
-  background-color: rgb(234, 233, 233);
-  color: rgb(0, 0, 0);
+  background-color: #f8f9fa;
+  color: #0f172a;
 }
 
 /* Active state for dropdown items */
 .activeDropdownItem {
   display: flex;
   align-items: center;
-  border-radius: 6px;
-  width: 90%;
-  height: 35px;
-  margin: 1% auto 0 auto;
-  border: 2px solid transparent;
-  padding: 0.5rem;
+  border-radius: 10px;
+  width: 100%;
+  height: 44px;
+  margin-bottom: 0.5rem;
+  border: none;
+  padding: 0 1rem;
   cursor: pointer;
-  font-size: 87%;
+  font-size: 0.95rem;
   text-align: left;
-  gap: 0.5rem;
-  font-family: applemedium, arial, sans-serif;
-  background-color: rgb(234, 233, 233);
-  color: rgb(0, 0, 0);
+  gap: 0.75rem;
+  font-family: 'apple', -apple-system, sans-serif;
+  background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(171, 159, 242, 0.3);
 }
 
-/* Icons inside dropdown items */
-.dropdownItem .sidebarIcon {
-  height: 1rem;
-  width: auto;
-  filter: brightness(0) saturate(100%) invert(20%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(40%) contrast(100%);
+.activeDropdownItem::before {
+  content: attr(data-emoji);
+  font-size: 1.3rem;
+  line-height: 1;
 }
 
-/* PINNED logout section */
+/* Hide icon images - using emojis instead */
+.dropdownItem .sidebarIcon,
+.activeDropdownItem .sidebarIcon {
+  display: none;
+}
+
+/* Bottom Section Styling */
 .dropdownLogOutSection {
-  border-top: 1px solid #ddd;
+  border-top: 1px solid #e2e8f0;
   display: flex;
   flex-direction: column;
-  background: rgb(246, 246, 246); /* Match sidebar background */
+  background: white;
   width: 100%;
-  padding-top: 5px;
-  padding-bottom: 80px; /* Add space for the fixed profile section at bottom */
+  padding-top: 1rem;
+  padding-bottom: 130px; /* Space for fixed profile section */
+  margin-top: auto;
 }
 
 .dropdownLogOutSection .dropdownItem {
-  /* Same styling as above, inherits from .dropdownItem */
+  color: #0f172a;
+  font-weight: 500;
+}
+
+
+
+.dropdownLogOutSection .dropdownItem .sidebarIcon {
+  display: block;
+  height: 1rem;
+  width: 1rem;
+  filter: brightness(0) saturate(100%) invert(10%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(20%) contrast(100%);
+}
+
+
+
+/* Profile Section at Bottom - FIXED */
+.dropdownProfileSection {
+  width: 100%;
+  padding: 1rem;
+  border-top: 1px solid #e2e8f0;
+  background: white;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.dropdownProfileSection .PFPWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  border-radius: 10px;
+  width: 100%;
+  background: transparent;
+}
+
+.dropdownProfileSection .PFPButton {
+  display: flex;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  gap: 0.75rem;
+  background: transparent;
+  color: #0f172a;
+  padding: 0.75rem;
+  text-align: left;
+  border-radius: 10px;
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.dropdownProfileSection .PFPButton:hover {
+  background: #f8f9fa;
+}
+
+.dropdownProfileSection .userPFP {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
+  flex-shrink: 0;
+}
+
+.dropdownProfileSection .PFPButton > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  min-width: 0;
+  flex: 1;
+}
+
+.dropdownProfileSection .userNameText {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+  display: block;
+  font-family: 'apple', -apple-system, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.dropdownProfileSection .accountTierDisplay {
+  font-family: 'applethin', -apple-system, sans-serif;
+  font-size: 0.75rem;
+  color: #64748b;
+  margin: 0;
+  margin-top: 0.1rem;
+}
+
+.dropdownProfileSection .upgradeButton {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  border: none;
+  color: white;
+  background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
+  font-family: 'apple', -apple-system, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(171, 159, 242, 0.3);
+}
+
+.dropdownProfileSection .upgradeButton::before {
+  content: "⭐ ";
+}
+
+.dropdownProfileSection .upgradeButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(171, 159, 242, 0.4);
 }
 
 @media (min-width: 769px) {
@@ -217,25 +276,22 @@
   }
 }
 
-/* --------------------------- */
-/* HEIGHT-BASED MEDIA QUERIES  */
-/* --------------------------- */
-
+/* Height-based adjustments */
 @media (max-height: 600px) {
   .dropdownMenu {
     display: flex !important;
-    margin-top: 4vh !important;
-    width: 30vw !important;
+    width: 100vw !important;
+    padding: 1rem 0.75rem;
   }
   .hamburgerButton {
     display: flex !important;
   }
-  .dropdownItem {
-    margin: 0% auto 0 auto;
-    height: 20px !important;
+  .dropdownItem,
+  .activeDropdownItem {
+    height: 36px !important;
+    font-size: 0.85rem;
   }
-  .dropdownLogOutSection {
-    margin-top: 0px;
-    margin-bottom: 0px;
+  .dropdownProfileSection {
+    padding: 0.75rem;
   }
 }
