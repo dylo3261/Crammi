@@ -21,7 +21,21 @@ html, body {
   display: flex;
   
 } 
+
+.dashboardLogoSidebar{
+  height: 35px;
+  width: auto;
+  margin-top: 2vh;
+  margin-left: 0.8vw;
  
+}
+
+.dashboardLogoMobile{
+  width: 35px;
+  height: 35px;
+  margin-right: 15px;
+}
+
 /* SIDEBAR (Desktop Default) */
 .sideBar {
   height: 100vh;
@@ -103,7 +117,7 @@ html, body {
   color: rgb(0, 0, 0);
 } 
 .sideBarButtonDiv{
-  margin-top: 6.3vh;
+  margin-top: 1vh;
 }
 .userPFP{
   width: 2rem;  /* Adjust this for size */

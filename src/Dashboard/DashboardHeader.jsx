@@ -162,11 +162,11 @@ const handleSignOut = async () => {
               handleSignOut={handleSignOut}
             />
           </div>
-          <h4 className="logotemp">Logo</h4>
-
+            <img className='dashboardLogoMobile'src='/crammiLogo.png'/>
         </div>
         <div className='sideBar'> 
           <div className='userInfoTab'>
+          <img className='dashboardLogoSidebar'src='/CrammiFinalUppercase.png'/>
           </div>
           <div className='sideBarButtonDiv'>                                                              
           <button onClick={()=> changeActiveTab("Exams")} className={activeTab==="Exams" ? 'activeDashboardSideButtons' : 'dashboardSideButtons' }>
@@ -178,7 +178,7 @@ const handleSignOut = async () => {
             <span>Quizzes</span>
           </button>
           <button onClick={()=> changeActiveTab("Flashcards")} className={activeTab==="Flashcards" ? 'activeDashboardSideButtons' : 'dashboardSideButtons' }>
-            <img className='sidebarIcon' src='../public/FlashcardIcon.png' alt='flashcards icon'/>
+            <img className='sidebarIcon' src='/FlashcardIcon.png' alt='flashcards icon'/>
             <span>Flashcards</span>
           </button>
           </div>

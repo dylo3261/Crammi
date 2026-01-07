@@ -7,6 +7,7 @@ import Dashboard from "./Dashboard/Dashboard.jsx"
 import SignIn from "./Auth/SignIn.jsx"
 import SignUp from "./Auth/Signup.jsx"
 import ForgotPassword from "./Auth/forgotPassword.jsx";
+import LoadingAnimation from "./Dashboard/LoadingScreen.jsx";
 
 import Exam from "./ViewBatches/Exam.jsx"
 import Quiz from "./ViewBatches/Quiz.jsx"
@@ -59,15 +60,8 @@ function AppContent() {
 
   if (isLoading) {
     return (
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-        fontSize: '18px'
-      }}>
-        Loading...
-      </div>
+      <LoadingAnimation /> // Replace the old loading div with this
+
     );
   }
 

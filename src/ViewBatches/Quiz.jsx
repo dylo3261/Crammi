@@ -838,7 +838,7 @@ export default function Quiz() {
                     isIgnoredRequest={isIgnoredRequest}
                 />
                 </div>
-                <h4 className="quizLogotemp">Logo</h4>
+                <img className='dashboardLogoMobile'src='/crammiLogo.png'/>
     
             </div>
             <div className='collapsedSidebar'>

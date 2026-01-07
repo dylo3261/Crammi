@@ -514,7 +514,7 @@ export default function Flashcards() {
                   isIgnoredRequest={isIgnoredRequest}
               />
             </div>
-            <h4 className="flashcardLogotemp">Logo</h4>
+            <img className='dashboardLogoMobile'src='/crammiLogo.png'/>
   
           </div>
       <div className='collapsedSidebar'>

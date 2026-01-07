@@ -930,7 +930,7 @@ export default function Exam() {
                             isIgnoredRequest={isIgnoredRequest}
                         />
                       </div>
-                      <h4 className="logotemp">Logo</h4>
+                      <img className='dashboardLogoMobile'src='/crammiLogo.png'/>
             
                     </div>
                     <div className='collapsedSidebar'>
@@ -1411,7 +1411,7 @@ export default function Exam() {
                             isIgnoredRequest={isIgnoredRequest}
                         />
                       </div>
-                      <h4 className="logotemp">Logo</h4>
+                      <img className='dashboardLogoMobile'src='/crammiLogo.png'/>
             
                     </div>
                     <ExamScorePage 

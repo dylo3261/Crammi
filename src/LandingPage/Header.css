@@ -43,6 +43,15 @@ html, body {
 .left-box {
   flex: 0 0 auto;
   margin-right: 2rem;
+  display: flex; /* Add this */
+  align-items: center; /* Add this */
+}
+.landingPageLogo{
+  width: auto;
+  height: 40px; 
+  max-height: 40px;
+  object-fit: contain; /* Add this to maintain aspect ratio */
+
 }
 
 .center-box {

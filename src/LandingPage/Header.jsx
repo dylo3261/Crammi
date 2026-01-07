@@ -39,7 +39,7 @@ export default function Header() {
     <header className={`header ${scrolled ? "scrolled" : ""}`}>
       {/* Left Logo */}
       <div className="header-box left-box">
-        <h1 className="logo">Logo</h1>
+      <img className='landingPageLogo'src='/CrammiFinalUppercase.png'/>
       </div>
 
       {/* Center Links */}
