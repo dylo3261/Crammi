@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef,useMemo } from "react";
 import { fetchAuthSession, fetchUserAttributes, signOut } from 'aws-amplify/auth';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import "./Exam.css";
+import ViewHamburger from "./ViewHamburger";
 // Load KaTeX once globally
 let katexLoaded = false;
 let katexLoadingPromise = null;
@@ -113,7 +114,7 @@ function LatexText({ text }) {
     return <span ref={containerRef}>{!isReady ? text : ''}</span>;
 }
 
-function ExamInterface({ examData, timeLimit, onExamEnd }) {
+function ExamInterface({ examData, timeLimit, onExamEnd,userName,userEmail,userPFP,handleSignOut,onNavigateDashboard,onUpgradePlan,onSupport, showIgnoredButton,isIgnoredRequest}) {    
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedAnswers, setSelectedAnswers] = useState({});
     const [timeRemaining, setTimeRemaining] = useState(timeLimit * 60);
@@ -282,8 +283,23 @@ function ExamInterface({ examData, timeLimit, onExamEnd }) {
 
             <div className="examMainContent">
                 <div className="examTopBar">
+                    <div className="examTopBarLeft">
+                        <div className="examMobileHamburgerInline">
+                            <ViewHamburger 
+                                userName={userName}
+                                userEmail={userEmail}
+                                userPFP={userPFP}
+                                handleSignOut={handleSignOut}
+                                onNavigateDashboard={onNavigateDashboard}
+                                onUpgradePlan={onUpgradePlan}
+                                onSupport={onSupport}
+                                showIgnoredButton={showIgnoredButton}
+                                isIgnoredRequest={isIgnoredRequest}
+                            />
+                        </div>
                     <div className="examQuestionCounter">
                         {currentQuestionIndex + 1}/{examData.length}
+                    </div>
                     </div>
                     <div className="examTopBarControls">
                         <div className="examTimerDisplay">
@@ -308,6 +324,7 @@ function ExamInterface({ examData, timeLimit, onExamEnd }) {
                 </div>
 
                 <div className="examProgressBar">
+                    
                     <div 
                         className="examProgressBarFill"
                         style={{width: `${((currentQuestionIndex + 1) / examData.length) * 100}%`}}
@@ -896,8 +913,26 @@ export default function Exam() {
 
     return (
         <>  
+            
             {!isExamStarted && !isScorePage ?  (
                 <>
+                <div className='DashboardHeader'>
+                      <div className="mobileHamburger">
+                        <ViewHamburger 
+                            userName={userName}
+                            userEmail={userEmail}
+                            userPFP={userPFP}
+                            handleSignOut={handleSignOut}
+                            onNavigateDashboard={() => navigate('/Dashboard')}
+                            onUpgradePlan={() => {/* Add upgrade logic */}}
+                            onSupport={() => {/* Add support logic */}}
+                            showIgnoredButton={!!isIgnoredRequest}
+                            isIgnoredRequest={isIgnoredRequest}
+                        />
+                      </div>
+                      <h4 className="logotemp">Logo</h4>
+            
+                    </div>
                     <div className='collapsedSidebar'>
                         <div className='collapsedSidebarButtons'>
                             <button 
@@ -1225,13 +1260,23 @@ export default function Exam() {
                     </div>
 
                     <ExamInterface 
-                        examData={batchJSON}
-                        timeLimit={timeLimit}
-                        onExamEnd={handleExamEnd}
+                    examData={batchJSON}
+                    timeLimit={timeLimit}
+                    onExamEnd={handleExamEnd}
+                    userName={userName}
+                    userEmail={userEmail}
+                    userPFP={userPFP}
+                    handleSignOut={handleSignOut}
+                    onNavigateDashboard={() => navigate('/Dashboard')}
+                    onUpgradePlan={() => {/* Add upgrade logic */}}
+                    onSupport={() => {/* Add support logic */}}
+                    showIgnoredButton={!!isIgnoredRequest}
+                    isIgnoredRequest={isIgnoredRequest}
                     />
                 </>
             ): isScorePage? (
                 <>
+                
                  <div className='collapsedSidebar'>
                         <div className='collapsedSidebarButtons'>
                             <button 
@@ -1351,6 +1396,23 @@ export default function Exam() {
                                 </div>
                             </div>
                         )}
+                    </div>
+                    <div className='DashboardHeader'>
+                      <div className="mobileHamburger">
+                        <ViewHamburger 
+                            userName={userName}
+                            userEmail={userEmail}
+                            userPFP={userPFP}
+                            handleSignOut={handleSignOut}
+                            onNavigateDashboard={() => navigate('/Dashboard')}
+                            onUpgradePlan={() => {/* Add upgrade logic */}}
+                            onSupport={() => {/* Add support logic */}}
+                            showIgnoredButton={!!isIgnoredRequest}
+                            isIgnoredRequest={isIgnoredRequest}
+                        />
+                      </div>
+                      <h4 className="logotemp">Logo</h4>
+            
                     </div>
                     <ExamScorePage 
                        examData={batchJSON}

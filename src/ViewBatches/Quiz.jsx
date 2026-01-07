@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import { fetchAuthSession, fetchUserAttributes, signOut } from 'aws-amplify/auth';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import "./Quiz.css";
+import ViewHamburger from "./ViewHamburger";
 
 // Load KaTeX once globally
 let katexLoaded = false;
@@ -798,7 +799,6 @@ export default function Quiz() {
     };
 
     const handleQuizComplete = (results) => {
-        console.log('Quiz completed with results:', results);
         setQuizResults(results);
         setIsQuizStarted(false);
         setIsQuizScorePage(true);
@@ -824,6 +824,23 @@ export default function Quiz() {
 
     return (
         <>  
+        <div className='quizDashboardHeader'>
+                <div className="quizMobileHamburger">
+                <ViewHamburger 
+                    userName={userName}
+                    userEmail={userEmail}
+                    userPFP={userPFP}
+                    handleSignOut={handleSignOut}
+                    onNavigateDashboard={() => navigate('/Dashboard')}
+                    onUpgradePlan={() => {/* Add upgrade logic */}}
+                    onSupport={() => {/* Add support logic */}}
+                    showIgnoredButton={!!isIgnoredRequest}
+                    isIgnoredRequest={isIgnoredRequest}
+                />
+                </div>
+                <h4 className="quizLogotemp">Logo</h4>
+    
+            </div>
             <div className='collapsedSidebar'>
                 <div className='collapsedSidebarButtons'>
                     <button 

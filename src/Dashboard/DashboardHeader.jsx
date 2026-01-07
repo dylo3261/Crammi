@@ -152,10 +152,18 @@ const handleSignOut = async () => {
     return (
       <>
         <div className='DashboardHeader'>
-          <h4 className="logotemp">Logo</h4>
           <div className="mobileHamburger">
-            <Hamburger changeActiveTab={changeActiveTab} activeTab={activeTab}/>
+            <Hamburger 
+              changeActiveTab={changeActiveTab} 
+              activeTab={activeTab}
+              userName={userName}
+              userEmail={userEmail}
+              userPFP={userPFP}
+              handleSignOut={handleSignOut}
+            />
           </div>
+          <h4 className="logotemp">Logo</h4>
+
         </div>
         <div className='sideBar'> 
           <div className='userInfoTab'>

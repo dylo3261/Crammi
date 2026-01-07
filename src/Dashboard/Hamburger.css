@@ -22,62 +22,175 @@
   -webkit-user-drag: none;
 }
 
+/* Mobile header positioning helpers */
+.mobileHamburger {
+  margin-left: 1rem;
+}
 
-
+.logotemp {
+  margin-right: 1rem;
+  margin-left: auto; /* Push logo to the right */
+}
 
 .dropdownMenu {
   position: fixed;
   top: 6vh;
-  right: 0;
+  left: 0;
 
   width: 50vw;
   height: calc(100vh - 6vh);
 
-  background: white;
+  background: rgb(246, 246, 246); /* Match sidebar background */
   display: flex;
   flex-direction: column;
 
-  padding: 20px 0; /* side padding is placed on items instead */
-  overflow: hidden; /* prevents double scrolling */
+  padding: 0; /* Remove padding to allow proper positioning */
+  overflow: hidden;
 
-  box-shadow: -4px 0px 12px rgba(0,0,0,0.15);
+  box-shadow: 4px 0px 12px rgba(0,0,0,0.15);
   z-index: 9998;
-  transform: translateX(100%);   /* start off-screen */
+  transform: translateX(-100%);
   transition: transform 0.35s ease;
-
 }
+
 .dropdownMenu.open {
-  transform: translateX(0);      /* slide fully in */
+  transform: translateX(0);
   opacity: 1;
 }
 
-/* Scrollable middle content (the main menu items) */
+/* Scrollable middle content */
 .dropdownMenuContent {
   flex: 1;
   overflow-y: auto;
-  padding: 0 20px; /* padding moved here */
+  padding: 20px 0;
 }
 
-/* Main buttons */
+/* Profile Section at Bottom - FIXED */
+.dropdownProfileSection {
+  width: 100%;
+  padding: 10px;
+  border-top: 1px solid #ddd;
+  background: rgb(246, 246, 246);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+/* Ensure PFPWrapper in dropdown doesn't overflow */
+.dropdownProfileSection .PFPWrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-radius: 6px;
+  width: 100%;
+  height: 60px;
+  border: 2px solid transparent;
+}
+
+/* Make PFPButton narrower in dropdown to fit upgrade button */
+.dropdownProfileSection .PFPButton {
+  display: flex;
+  align-items: center;
+  border-radius: 6px;
+  width: calc(100% - 80px); /* Leave space for upgrade button */
+  height: 40px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  font-size: 87%;
+  gap: 0.5rem;
+  flex-shrink: 1;
+  min-width: 0; /* Allow shrinking */
+  font-family: applemedium, arial, sans-serif;
+  background-color: transparent;
+  color: rgb(48, 48, 48);
+}
+
+/* Container for username and tier to control overflow */
+.dropdownProfileSection .PFPButton > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  min-width: 0; /* Allow shrinking */
+  flex: 1;
+}
+
+/* Truncate username in dropdown */
+.dropdownProfileSection .userNameText {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100px; /* Shorter for mobile dropdown */
+  display: inline-block;
+  margin-bottom: -3px;
+  font-family: applemedium, arial, sans-serif;
+}
+
+.dropdownProfileSection .upgradeButton {
+  padding: 4px;
+  padding-right: 8px;
+  padding-left: 8px;
+  border-radius: 20px;
+  border: none;
+  color: white;
+  background-color: black;
+  font-family: applethin, arial, sans-serif;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+/* Main buttons - MATCH DESKTOP SIDEBAR STYLE */
 .dropdownItem {
   display: flex;
   align-items: center;
-
-  width: 100%;
-  padding: 1rem;
-
+  border-radius: 6px;
+  width: 90%;
+  height: 35px;
+  margin: 1% auto 0 auto;
   border: 2px solid transparent;
-
+  padding: 0.5rem;
   cursor: pointer;
-  font-size: 95%;
+  font-size: 87%;
+  text-align: left;
   gap: 0.5rem;
+  font-family: applemedium, arial, sans-serif;
+  background-color: transparent;
+  color: rgb(48, 48, 48);
+}
 
-  background-color: white;
-  color: rgb(78, 78, 78);
+.dropdownItem:first-child {
+  margin-top: 20px; /* Add top margin to first item */
 }
 
 .dropdownItem:hover {
   background-color: rgb(234, 233, 233);
+  color: rgb(0, 0, 0);
+}
+
+/* Active state for dropdown items */
+.activeDropdownItem {
+  display: flex;
+  align-items: center;
+  border-radius: 6px;
+  width: 90%;
+  height: 35px;
+  margin: 1% auto 0 auto;
+  border: 2px solid transparent;
+  padding: 0.5rem;
+  cursor: pointer;
+  font-size: 87%;
+  text-align: left;
+  gap: 0.5rem;
+  font-family: applemedium, arial, sans-serif;
+  background-color: rgb(234, 233, 233);
+  color: rgb(0, 0, 0);
+}
+
+/* Icons inside dropdown items */
+.dropdownItem .sidebarIcon {
+  height: 1rem;
+  width: auto;
+  filter: brightness(0) saturate(100%) invert(20%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(40%) contrast(100%);
 }
 
 /* PINNED logout section */
@@ -85,28 +198,16 @@
   border-top: 1px solid #ddd;
   display: flex;
   flex-direction: column;
-  background: white;
-  
+  background: rgb(246, 246, 246); /* Match sidebar background */
   width: 100%;
+  padding-top: 5px;
+  padding-bottom: 80px; /* Add space for the fixed profile section at bottom */
 }
 
-.bottomDropdownButton {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-
-  width: 100%;
-  padding: 1rem;
-
-  background: white;
-  border-radius: 6px;
-  cursor: pointer;
-  color: rgb(78, 78, 78);
+.dropdownLogOutSection .dropdownItem {
+  /* Same styling as above, inherits from .dropdownItem */
 }
 
-.bottomDropdownButton:hover {
-  background-color: rgb(234, 233, 233);
-}
 @media (min-width: 769px) {
   .dropdownMenu {
     display: none !important;
@@ -123,17 +224,17 @@
 @media (max-height: 600px) {
   .dropdownMenu {
     display: flex !important;
-    margin-top: 4vh!important;
-    width: 30vw!important;
+    margin-top: 4vh !important;
+    width: 30vw !important;
   }
   .hamburgerButton {
     display: flex !important;
   }
   .dropdownItem {
     margin: 0% auto 0 auto;
-    height: 20px!important;
+    height: 20px !important;
   }
-  .dropdownLogOutSection{
+  .dropdownLogOutSection {
     margin-top: 0px;
     margin-bottom: 0px;
   }

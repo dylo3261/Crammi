@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { fetchAuthSession, fetchUserAttributes, signOut } from 'aws-amplify/auth';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-
+import ViewHamburger from "./ViewHamburger";
 import "./Flashcards.css";
 
 // Load KaTeX once globally
@@ -500,6 +500,23 @@ export default function Flashcards() {
 
   return (
     <>
+         <div className='flashcardDashboardHeader'>
+            <div className="flashcardMobileHamburger">
+              <ViewHamburger 
+                  userName={userName}
+                  userEmail={userEmail}
+                  userPFP={userPFP}
+                  handleSignOut={handleSignOut}
+                  onNavigateDashboard={() => navigate('/Dashboard')}
+                  onUpgradePlan={() => {/* Add upgrade logic */}}
+                  onSupport={() => {/* Add support logic */}}
+                  showIgnoredButton={!!isIgnoredRequest}
+                  isIgnoredRequest={isIgnoredRequest}
+              />
+            </div>
+            <h4 className="flashcardLogotemp">Logo</h4>
+  
+          </div>
       <div className='collapsedSidebar'>
         <div className='collapsedSidebarButtons'>
           
