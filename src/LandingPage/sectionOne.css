@@ -14,6 +14,7 @@
     justify-content: center; /* center boxes horizontally */
     margin: 2rem auto;
     max-width: 1400px; /* max width for large screens */
+    margin-top: -1vh;
   }
   
   /* Individual boxes */
@@ -33,7 +34,7 @@
   
   /* Title styling */
   .sectionOneTitle {
-    font-family: applebold, Arial, sans-serif;
+    font-family: applemedium, Arial, sans-serif;
     font-size: clamp(3.4rem, 2.5vw, 3.3rem); /* larger min, slower shrink */
     text-align: left;
     margin-bottom: 2.5rem;
@@ -107,7 +108,8 @@
     margin-top: 1rem;
     background-color: #ffffff;
     color: black;
-    border: 0.1px solid rgb(152, 152, 152);
+    /* border: 0.1px solid rgb(152, 152, 152); */
+    border: 1px solid #ab9ff2;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
     flex-wrap: wrap; /* allow image + text to wrap */
   }
@@ -120,7 +122,7 @@
   }
   
   .googleSignUp img {
-    height: 1.5rem;
+    height: 1.0rem;
     width: auto;
   }
   

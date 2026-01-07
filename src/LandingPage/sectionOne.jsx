@@ -28,7 +28,7 @@ export default function SectionOne() {
     <section className="section-one">
       <div className="box">
         <h1 className="sectionOneTitle">
-          Say Goodbye to Slow Learning. Effortless study starts here.
+          Say goodbye to slow learning. Effortless study starts here.
         </h1>
         <h2 className="description">
           From handwritten notes to PDFs and prompts, Crammi makes study

@@ -48,7 +48,7 @@ html, body {
 }
 .landingPageLogo{
   width: auto;
-  height: 40px; 
+  height: 30px; 
   max-height: 40px;
   object-fit: contain; /* Add this to maintain aspect ratio */
 
@@ -67,18 +67,14 @@ html, body {
   justify-content: flex-end;
 }
 
-/* Logo styling */
-.logo {
-  font-size: 1.4rem;
-  font-weight: 700;
-}
+
 
 /* Buttons general */
 .header-btn,
 .centerBoxButtons,
 .dropdown button {
   background-color: white;
-  color: black;
+  color: #515151;
   border: none;
   padding: 0.46rem 1.05rem;
   border-radius: 6px;
