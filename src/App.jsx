@@ -96,9 +96,7 @@ function AppContent() {
       />
        <Route 
         path="/ForgotPassword" 
-        element={
-          isAuthenticated ? <Navigate to="/Dashboard" replace /> : <ForgotPassword/>
-        }
+        element={<ForgotPassword />}
       />
       <Route 
         path='/Dashboard' 

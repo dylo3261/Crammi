@@ -124,11 +124,19 @@ export default function BatchesSection({
         const batchToDelete = batches.find(b => b.batchID === batchID);
         setBatches(prevBatches => prevBatches.filter(batch => batch.batchID !== batchID));
         setOpenMenuId(null);
-
+    
         // Clean up localStorage entry for this batch with user-specific key
         const key = userEmail ? `batch_${batchID}_lastOpened_${userEmail}` : `batch_${batchID}_lastOpened`;
         localStorage.removeItem(key);
-
+    
+        // Remove from recents
+        const updatedRecents = recents.filter(recent => recent.id !== batchID);
+        setRecents(updatedRecents);
+        
+        // Update recents in localStorage with user-specific key
+        const recentsKey = userEmail ? `recentBatches_${userEmail}` : 'recentBatches';
+        localStorage.setItem(recentsKey, JSON.stringify(updatedRecents));
+    
         try {
             const session = await fetchAuthSession();
             const token = session.tokens?.idToken?.toString();
@@ -159,6 +167,9 @@ export default function BatchesSection({
                 console.error('Delete failed:', result);
                 showNotification('Failed to delete batch', 'error');
                 setBatches(prevBatches => [...prevBatches, batchToDelete]);
+                // Restore recents if delete failed
+                setRecents(recents);
+                localStorage.setItem(recentsKey, JSON.stringify(recents));
             }
             
             return result;
@@ -166,6 +177,10 @@ export default function BatchesSection({
             console.error('Error deleting batch:', err);
             showNotification('Failed to delete batch', 'error');
             setBatches(prevBatches => [...prevBatches, batchToDelete]);
+            // Restore recents if delete failed
+            setRecents(recents);
+            const recentsKey = userEmail ? `recentBatches_${userEmail}` : 'recentBatches';
+            localStorage.setItem(recentsKey, JSON.stringify(recents));
         }
     };
 

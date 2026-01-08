@@ -182,7 +182,7 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
     try {
       const session = await fetchAuthSession();
       const attributes = await fetchUserAttributes();
-      setUserPFP(attributes.picture || "https://askthescientists.com/wp-content/uploads/2021/04/AdobeStock_240042551-scaled.jpeg");
+      setUserPFP(attributes.picture || "crammipink.png");
     } catch (error) {
       console.error('Error:', error);
     }
@@ -313,7 +313,7 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
                   src={userPFP} 
                   alt='profile picture'
                   onError={(e) => {
-                    e.target.src = "https://askthescientists.com/wp-content/uploads/2021/04/AdobeStock_240042551-scaled.jpeg";
+                    e.target.src = "crammipink.png";
                   }}
                 />
                 <div>
@@ -353,7 +353,7 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
               src={userPFP} 
               alt='profile picture'
               onError={(e) => {
-                e.target.src = "https://askthescientists.com/wp-content/uploads/2021/04/AdobeStock_240042551-scaled.jpeg";
+                e.target.src = "crammipink.png";
               }}
             />
             <div>

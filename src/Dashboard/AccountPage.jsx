@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchUserAttributes, fetchAuthSession, signOut } from 'aws-amplify/auth';
+import { fetchUserAttributes, fetchAuthSession, signOut, updateUserAttributes } from 'aws-amplify/auth';
 import './AccountPage.css';
 import { useNavigate } from 'react-router-dom';
 import LoadingAnimation from './LoadingScreen';
@@ -33,7 +33,7 @@ export default function AccountPage({ onNavigateBack }){
       
       setFullName(attributes.name || attributes.email || '');
       setUserEmail(attributes.email || '');
-      setUserPFP(attributes.picture || 'https://askthescientists.com/wp-content/uploads/2021/04/AdobeStock_240042551-scaled.jpeg');
+      setUserPFP(attributes.picture || 'crammipink.png');
       
       // Check if user is federated (signed in with Google)
       const identities = attributes.identities;
@@ -72,12 +72,37 @@ export default function AccountPage({ onNavigateBack }){
     }
   };
 
-  const handleSavePreferences = () => {
-    // Save to localStorage
-    localStorage.setItem('preferredName', preferredName);
-    
-    // Show success message or feedback
-    alert('Settings saved successfully!');
+  const handleSavePreferences = async () => {
+    try {
+      // Validate input length
+      if (preferredName.trim().length === 0) {
+        alert('Please enter a name.');
+        return;
+      }
+      
+      if (preferredName.length > 100) {
+        alert('Name is too long. Please keep it under 100 characters.');
+        return;
+      }
+      
+      // Save to Cognito User Pool
+      await updateUserAttributes({
+        userAttributes: {
+          name: preferredName.trim(), // Also trim whitespace
+        }
+      });
+      
+      // Also save to localStorage as backup
+      localStorage.setItem('preferredName', preferredName.trim());
+      
+      // Update local state
+      setFullName(preferredName.trim());
+      
+      alert('Settings saved successfully!');
+    } catch (error) {
+      console.error('Error saving preferences:', error);
+      alert('Failed to save settings. Please try again.');
+    }
   };
 
   const handleSignOut = async () => {
