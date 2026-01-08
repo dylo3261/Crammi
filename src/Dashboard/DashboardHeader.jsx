@@ -16,7 +16,7 @@ function UploadBar({activeTab, openUpload, openUploadExisting, searchQuery, setS
         {showUploadButtons && (
           <>
             <button onClick={openUpload} className="bodyUploadButton">
-              <span>➕</span>
+              <span className="plusButtonIcon">➕</span>
               <span className="dashboardHeaderText">Upload New</span>
             </button>
             <button onClick={openUploadExisting} className="bodySecondUploadButton">

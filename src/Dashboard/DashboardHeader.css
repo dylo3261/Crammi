@@ -20,6 +20,11 @@ html, body {
   display: flex;
 } 
 
+.plusButtonIcon{
+  filter: brightness(0) invert(1);
+
+}
+
 .dashboardLogoSidebar{
   height: 45px;
   width: auto;
