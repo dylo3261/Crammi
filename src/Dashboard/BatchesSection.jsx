@@ -2,8 +2,21 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { fetchAuthSession } from 'aws-amplify/auth';
 import { useNavigate } from 'react-router-dom';
 import "./BatchesSection.css";
+import LimitReached from "./limitReached";
 
-export default function BatchesSection({ activeTab, batches, setBatches, searchQuery, addToRecents, recents, setRecents }){
+export default function BatchesSection({ 
+    activeTab, 
+    batches = [], 
+    setBatches, 
+    searchQuery, 
+    addToRecents, 
+    recents, 
+    setRecents,
+    userEmail,
+    isLimitReached,
+    setIsLimitReached,
+    limitReachedMessage
+}){
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [openMenuId, setOpenMenuId] = useState(null);
@@ -17,10 +30,13 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
     const pollCountRef = useRef(0);
     const MAX_POLLS = 18;
 
+    
+
     const handleCardClick = (batchID, status, batchName, batchType) => {
         if (status === 'COMPLETE') {
-            // Track when batch was opened in localStorage
-            localStorage.setItem(`batch_${batchID}_lastOpened`, new Date().toISOString());
+            // Track when batch was opened with user-specific key
+            const key = userEmail ? `batch_${batchID}_lastOpened_${userEmail}` : `batch_${batchID}_lastOpened`;
+            localStorage.setItem(key, new Date().toISOString());
             addToRecents({
                 id: batchID,
                 name: batchName,
@@ -96,11 +112,11 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
           setError(err.message);
           setIsLoading(false);
         }
-    }, [setBatches]); // Add setBatches dependency
+    }, [setBatches]);
 
     const startPolling = useCallback(() => {
         console.log('🚀 Manually starting polling');
-        pollCountRef.current = 0; // Reset counter
+        pollCountRef.current = 0;
         fetchBatches();
     }, [fetchBatches]);
 
@@ -109,8 +125,9 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
         setBatches(prevBatches => prevBatches.filter(batch => batch.batchID !== batchID));
         setOpenMenuId(null);
 
-        // Clean up localStorage entry for this batch
-        localStorage.removeItem(`batch_${batchID}_lastOpened`);
+        // Clean up localStorage entry for this batch with user-specific key
+        const key = userEmail ? `batch_${batchID}_lastOpened_${userEmail}` : `batch_${batchID}_lastOpened`;
+        localStorage.removeItem(key);
 
         try {
             const session = await fetchAuthSession();
@@ -245,9 +262,9 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
         setEditingName('');
     };
 
-    const handleRenameKeyDown = (e, batchID,batchType) => {
+    const handleRenameKeyDown = (e, batchID, batchType) => {
         if (e.key === 'Enter') {
-            handleRenameSubmit(batchID,batchType);
+            handleRenameSubmit(batchID, batchType);
         } else if (e.key === 'Escape') {
             handleRenameCancel();
         }
@@ -330,6 +347,7 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
             pollCountRef.current = 0;
         }
     }, [batches, fetchBatches]);
+
     // Filter batches by type
     const filteredBatches = batches.filter(batch => {
         if (activeTab === 'Exams') return batch.type === 'Exams';
@@ -371,8 +389,9 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
         const earlier = [];
         
         batches.forEach(batch => {
-            // Check localStorage for last opened time
-            const lastOpenedStr = localStorage.getItem(`batch_${batch.batchID}_lastOpened`);
+            // Check localStorage for last opened time with user-specific key
+            const key = userEmail ? `batch_${batch.batchID}_lastOpened_${userEmail}` : `batch_${batch.batchID}_lastOpened`;
+            const lastOpenedStr = localStorage.getItem(key);
             const lastOpenedDate = lastOpenedStr ? new Date(lastOpenedStr) : null;
             const createdDate = new Date(batch.timeCreated);
             
@@ -419,14 +438,14 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
     );
 
     const renderBatchCard = (batch) => (
-        <div key={batch.batchID} className={`batch-card ${batch.status === 'PENDING' ? 'processing' : ''} ${batch.status === 'FAILED' ? 'failed' : ''}`} onClick={() => handleCardClick(batch.batchID, batch.status, batch.batchName,batch.type)}>
+        <div key={batch.batchID} className={`batch-card ${batch.status === 'PENDING' ? 'processing' : ''} ${batch.status === 'FAILED' ? 'failed' : ''}`} onClick={() => handleCardClick(batch.batchID, batch.status, batch.batchName, batch.type)}>
             <div className="batch-header">
                 <span className="batch-type-badge">{batch.type}</span>
                 <div className="batch-menu-container">
                     <button 
                         className="batch-menu" 
                         onClick={(e) => handleMenuClick(batch.batchID, e)}
-                        style={{display: batch.status ==="PENDING" ? 'none' : 'flex'}}
+                        style={{display: batch.status === "PENDING" ? 'none' : 'flex'}}
                     >
                         ⋯
                     </button>
@@ -477,7 +496,14 @@ export default function BatchesSection({ activeTab, batches, setBatches, searchQ
     return(
         <>
         <div className="mainSection">
-            <div className="suchEmptiness" style={{display: sortedBatches.length === 0 ? 'flex': 'none'}}>
+            <div className="isLimitReached?" style={{display: isLimitReached? 'flex' : 'none'}}>
+                <LimitReached 
+                    isLimitReached={isLimitReached}
+                    setIsLimitReached={setIsLimitReached}
+                    limitReachedMessage={limitReachedMessage}
+                />            
+                </div>
+            <div className="suchEmptiness" style={{display: sortedBatches.length === 0 && !isLoading ? 'flex': 'none'}}>
                 <div className="no-results">
                     Wow, Such Emptiness... 💤
                 </div>

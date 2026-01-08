@@ -177,7 +177,7 @@
     padding: 16px 32px;
     border: none;
     border-radius: 12px;
-    background: #AB9FF2;
+    background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
     color: white;
     cursor: pointer;
     font-size: 18px;
@@ -186,7 +186,7 @@
 }
 
 .examViewStartButton:hover {
-    background: #9b8fe8;
+  background: linear-gradient(135deg, #a495f7 0%, #6366f1 100%);
     box-shadow: 0 4px 12px rgba(171, 159, 242, 0.3);
 }
 
@@ -633,7 +633,7 @@
     padding: 12px 32px;
     border: none;
     border-radius: 8px;
-    background: #AB9FF2;
+    background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
     color: white;
     cursor: pointer;
     font-size: 16px;
@@ -644,7 +644,7 @@
 }
 
 .examNextButton:hover {
-    background: #9b8fe8;
+  background: linear-gradient(135deg, #a090f8 0%, #6366f1 100%);
 }
 
 .examNextButtonArrow {
@@ -658,7 +658,7 @@
     bottom: 20px;
     right: 20px;
     padding: 12px 20px;
-    background: #AB9FF2;
+    background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
     color: white;
     border: none;
     border-radius: 24px;
@@ -902,7 +902,7 @@
   /* Return Button */
   .return-button {
     width: 100%;
-    background-color: #ab9ff2;
+    background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
     color: white;
     font-family: applemedium,arial,sans-serif;
     padding: 0.75rem 1.5rem;
@@ -913,7 +913,7 @@
   }
   
   .return-button:hover {
-    background-color: #9b8fe8;
+    background: linear-gradient(135deg, #ad9fff 0%, #6366f1 100%);
   }
   
   /* Question Review Section */

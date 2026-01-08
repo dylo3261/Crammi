@@ -502,7 +502,7 @@ export default function Flashcards() {
         {isLogoutPopup && (
           <div className="collapsedLogoutPopupContainer">
             <div className="logoutPopup" ref={logoutPopupRef}>
-              <div className='logoutPopupPFP'>
+              <div className='viewLogoutPopupPFP'>
                 <div className='PFPWrapper'>
                   <button className='PFPButtonPopup'>
                     <img 

@@ -325,9 +325,12 @@ html, body {
 
 .logoutPopupPFP {
   padding: 1rem;
-  background: #fafafa;
+  background: white;
+  
 }
-
+.viewLogoutPopupPFP {
+  background-color: rgb(238, 238, 238);
+}
 .PFPButtonPopup {
   display: flex;
   align-items: center;

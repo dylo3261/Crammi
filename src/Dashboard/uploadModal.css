@@ -436,7 +436,7 @@
 /* Buttons */
 .closeUploadModal {
   padding: 0.8rem 2rem;
-  background-color: #AB9FF2;
+  background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
   color: white;
   border: none;
   border-radius: 6px;
@@ -526,7 +526,7 @@
 
 .selectButtonsContainer .selectButtons {
   padding: 0.8rem 2rem;
-  background-color: #AB9FF2;
+  background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
   color: white;
   border: none;
   border-radius: 6px;

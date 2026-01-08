@@ -17,6 +17,9 @@ export default function Dashboard(){
     const [idToken, setIdToken] = useState(null);
     //to pass down to uploadexisting and batchessection
     const [batches, setBatches] = useState([])
+
+    const [isLimitReached, setIsLimitReached]= useState(false);
+    const [limitReachedMessage, setLimitReachedMessage]= useState(null)
     
     // Save activeTab to localStorage whenever it changes
     useEffect(() => {
@@ -64,11 +67,11 @@ export default function Dashboard(){
     
     return(
        <>
-        <DashboardHeader openUpload={()=>changeActiveUpload(true)} changeActiveTab={changeActiveTab} activeTab={activeTab} openUploadExisting={()=>changeActiveUploadExisting(true)} batches={batches} setBatches={setBatches}>
+        <DashboardHeader openUpload={()=>changeActiveUpload(true)} changeActiveTab={changeActiveTab} activeTab={activeTab} openUploadExisting={()=>changeActiveUploadExisting(true)} batches={batches} setBatches={setBatches} isLimitReached={isLimitReached} setIsLimitReached={setIsLimitReached} limitReachedMessage={limitReachedMessage}>
             <Hamburger changeActiveTab={changeActiveTab} activeTab={activeTab}/>
         </DashboardHeader>
-        <UploadModal isOpen={activeUpload} close={() => changeActiveUpload(false)} activeTab={activeTab} userProfile={userProfile} setUserProfile={setUserProfile} />
-        <UploadExistingModal isOpen={activeUploadExisting} close={()=>changeActiveUploadExisting(false)} activeTab={activeTab} batches={batches}/>
+        <UploadModal isOpen={activeUpload} close={() => changeActiveUpload(false)} activeTab={activeTab} userProfile={userProfile} setUserProfile={setUserProfile} setIsLimitReached={setIsLimitReached} setLimitReachedMessage={setLimitReachedMessage} />
+        <UploadExistingModal isOpen={activeUploadExisting} close={()=>changeActiveUploadExisting(false)} activeTab={activeTab} batches={batches} setIsLimitReached={setIsLimitReached} setLimitReachedMessage={setLimitReachedMessage}/>
         </>
     )
 }

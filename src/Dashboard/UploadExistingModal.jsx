@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { fetchAuthSession } from 'aws-amplify/auth';
 import "./uploadModal.css";
 
-export default function UploadExistingModal({isOpen, close, activeTab, batches}){
+export default function UploadExistingModal({isOpen, close, activeTab, batches, setIsLimitReached, setLimitReachedMessage}){
     const modalRef = useRef(null);
     const [uploadInstructions, setUploadInstructions] = useState("");
     const [selectedBatch, setSelectedBatch] = useState(null);
@@ -81,7 +81,9 @@ export default function UploadExistingModal({isOpen, close, activeTab, batches})
             console.log('Response status:', response.status);
             if (!response.ok) {
             const errorData = await response.json();
-            console.error('Upload failed:', errorData);
+            // console.error('Upload failed:', errorData);
+            setIsLimitReached(true);
+            setLimitReachedMessage(errorData.error);
             return;
             }
     

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./Hamburger.css";
 
-export default function Hamburger({ userName, userEmail, userPFP, handleSignOut, changeActiveTab, activeTab }) { 
+export default function Hamburger({ userName, userEmail, userPFP, handleSignOut, changeActiveTab, activeTab, recents, onRecentClick, RecentsSection }) { 
   const [isOpen, setIsopen] = useState(false);
   
   return (
@@ -68,7 +68,7 @@ export default function Hamburger({ userName, userEmail, userPFP, handleSignOut,
         >
           <span>Files</span>
         </button>
-
+        <RecentsSection recents={recents} onRecentClick={onRecentClick} />
         {/* Bottom Section with Support and Sign Out */}
         <div className='dropdownLogOutSection'>
          

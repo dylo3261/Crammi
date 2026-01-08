@@ -45,7 +45,7 @@ function UploadBar({activeTab, openUpload, openUploadExisting, searchQuery, setS
 
 function RecentsSection({recents, onRecentClick}) {
   if (!recents || recents.length === 0) return null;
-
+  
   const getEmojiForType = (type) => {
     switch(type) {
       case 'Exams': return '📝';
@@ -77,7 +77,7 @@ function RecentsSection({recents, onRecentClick}) {
   );
 }
 
-export default function DashboardHeader({openUpload, changeActiveTab, activeTab, openUploadExisting, batches, setBatches}) {
+export default function DashboardHeader({openUpload, changeActiveTab, activeTab, openUploadExisting, batches, setBatches, isLimitReached, setIsLimitReached, limitReachedMessage}) {
   const [userName, setUserName] = useState('');
   const [userPFP, setUserPFP] = useState(null);
   const [userEmail, setUserEmail] = useState('');
@@ -88,6 +88,10 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
   const profileButtonRef = useRef(null);
   const navigate = useNavigate(); 
 
+  // Helper function to get user-specific localStorage key
+  const getRecentsKey = () => {
+    return userEmail ? `crammi_recents_${userEmail}` : 'crammi_recents';
+  };
 
   const addToRecents = (item) => {
     setRecents(prev => {
@@ -95,8 +99,10 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
       const filtered = prev.filter(r => r.id !== item.id);
       // Add to front
       const updated = [item, ...filtered].slice(0, 5);
-      // Save to localStorage
-      localStorage.setItem('crammi_recents', JSON.stringify(updated));
+      // Save to localStorage with user-specific key
+      if (userEmail) {
+        localStorage.setItem(getRecentsKey(), JSON.stringify(updated));
+      }
       return updated;
     });
   };
@@ -136,16 +142,23 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
     getUserEmail();
   }, []);
 
+  // Modified: Load recents when userEmail is available
   useEffect(() => {
-    const savedRecents = localStorage.getItem('crammi_recents');
-    if (savedRecents) {
-      try {
-        setRecents(JSON.parse(savedRecents));
-      } catch (error) {
-        console.error('Error parsing recents:', error);
+    if (userEmail) {
+      const savedRecents = localStorage.getItem(getRecentsKey());
+      if (savedRecents) {
+        try {
+          setRecents(JSON.parse(savedRecents));
+        } catch (error) {
+          console.error('Error parsing recents:', error);
+          setRecents([]);
+        }
+      } else {
+        // No recents for this user yet
+        setRecents([]);
       }
     }
-  }, []);
+  }, [userEmail]);
 
   async function getUserName() {
     try {
@@ -179,6 +192,8 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
     try {
       sessionStorage.removeItem('oauth_source');
       sessionStorage.removeItem('oauth_completed');
+      // Clear recents on sign out
+      setRecents([]);
       await signOut({ global: true });
       setTimeout(() => navigate('/'), 0); 
     } catch (error) {
@@ -187,8 +202,8 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
   };
 
   const handleRecentClick = (recent) => {
-    const batchName=recent.name
-    const batchID=recent.id
+    const batchName = recent.name;
+    const batchID = recent.id;
     if(recent.type === 'Exams'){
       navigate(`/Exam/${batchID}`, {state: {batchName}});
     }
@@ -214,6 +229,9 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
             userEmail={userEmail}
             userPFP={userPFP}
             handleSignOut={handleSignOut}
+            recents={recents} 
+            onRecentClick={handleRecentClick}
+            RecentsSection={RecentsSection}
           />
         </div>
         <img className='dashboardLogoMobile' src='/crammiLogo.png' alt='Crammi Logo'/>
@@ -255,7 +273,7 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
             <span>Files</span>
           </button>
         </div>
-            <RecentsSection recents={recents} onRecentClick={handleRecentClick} />
+        <RecentsSection recents={recents} onRecentClick={handleRecentClick} />
       </div>
 
       <div className='dashboardBody'>
@@ -277,6 +295,10 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
             addToRecents={addToRecents}
             recents={recents}
             setRecents={setRecents}
+            userEmail={userEmail}
+            isLimitReached={isLimitReached}
+            setIsLimitReached={setIsLimitReached}
+            limitReachedMessage={limitReachedMessage}
           />
         </div>
       </div>

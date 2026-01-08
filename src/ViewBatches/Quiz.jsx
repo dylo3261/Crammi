@@ -429,7 +429,7 @@ function QuizScorePage({ results, onReturnToStart, batchName }) {
               onClick={onReturnToStart}
               className="quiz-return-button"
             >
-              Return to Start
+              Finish
             </button>
           </div>
   
@@ -912,7 +912,7 @@ export default function Quiz() {
                 {isLogoutPopup && (
                     <div className="collapsedLogoutPopupContainer">
                         <div className="logoutPopup" ref={logoutPopupRef}>
-                            <div className='logoutPopupPFP'>
+                            <div className='viewLogoutPopupPFP'>
                                 <div className='PFPWrapper'>
                                     <button className='PFPButtonPopup'>
                                         <img 

@@ -53,7 +53,7 @@ html, body {
 
 .quizViewStartButton {
     padding: 1rem 3rem;
-    background-color: #AB9FF2;
+    background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
     color: white;
     border: none;
     border-radius: 2.5rem;
@@ -64,8 +64,8 @@ html, body {
 }
 
 .quizViewStartButton:hover {
-    background-color: #9688e0;
-    box-shadow: 0 20px 25px -5px rgba(171, 159, 242, 0.2);
+  background: linear-gradient(135deg, #a292fa 0%, #6366f1 100%);
+  box-shadow: 0 20px 25px -5px rgba(171, 159, 242, 0.2);
 }
 
 /* Quiz Interface Container */
@@ -276,7 +276,7 @@ html, body {
 
 .quizCheckAnswerButton {
     padding: 0.875rem 2rem;
-    background-color: #AB9FF2;
+    background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
     color: white;
     border: none;
     border-radius: 0.5rem;
@@ -309,7 +309,7 @@ html, body {
 
 .quizFinishButton {
     padding: 1rem 3rem;
-    background-color: #AB9FF2;
+    background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
     color: white;
     border: none;
     border-radius: 0.5rem;
@@ -320,8 +320,8 @@ html, body {
 }
 
 .quizFinishButton:hover {
-    background-color: #9f91ee;
-    box-shadow: 0 2px 20px -5px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(135deg, #a697f8 0%, #6366f1 100%);
+  box-shadow: 0 2px 20px -5px rgba(0, 0, 0, 0.3);
 }
 
 /* Collapsed Sidebar Styles */
@@ -334,7 +334,7 @@ html, body {
     height: 35px;
     border: 2px solid transparent;
     cursor: pointer;
-    background-color: #AB9FF2;
+    background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
     transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
@@ -826,7 +826,7 @@ html, body {
   /* Return Button */
   .quiz-return-button {
     width: 100%;
-    background-color: #ab9ff2;
+    background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
     color: white;
     font-family: applemedium, arial, sans-serif;
     padding: 0.75rem 1.5rem;
@@ -838,7 +838,7 @@ html, body {
   }
   
   .quiz-return-button:hover {
-    background-color: #9b8fe8;
+    background: linear-gradient(135deg, #a294f6 0%, #6366f1 100%);
   }
   
   /* Question Review Section */

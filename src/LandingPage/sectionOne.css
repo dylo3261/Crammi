@@ -81,7 +81,7 @@
   /* Sign-up button */
   .signUpButton {
     margin-top: 1rem;
-    background-color: #AB9FF2;
+    background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
     color: white;
     border: 0.0px solid black;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);

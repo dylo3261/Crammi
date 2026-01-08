@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef, act } from "react";
 import * as pdfjsLib from "pdfjs-dist/build/pdf.mjs";
 import { fetchAuthSession } from 'aws-amplify/auth';
-
+import LimitReached from "./limitReached";
 pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.mjs";
 
 import "./uploadModal.css";
 import StudyLoader from "./StudyLoader";
-export default function UploadModal({ isOpen, close , activeTab, userProfile, setUserProfile }) {
+export default function UploadModal({ isOpen, close , activeTab, userProfile, setUserProfile, setIsLimitReached, setLimitReachedMessage}) {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [dragOver, setDragOver] = useState(false);
   const [pickPages, setPickPages] = useState(false);
@@ -132,6 +132,9 @@ export default function UploadModal({ isOpen, close , activeTab, userProfile, se
         if (!response.ok) {
           const errorData = await response.json();
           console.error('Upload failed:', errorData);
+          setIsUploadingPhotos(false);
+          setIsLimitReached(true);
+          setLimitReachedMessage(errorData.error);
           return;
         }
         
