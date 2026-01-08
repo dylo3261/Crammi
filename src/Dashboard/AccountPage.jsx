@@ -23,6 +23,8 @@ export default function AccountPage({ onNavigateBack }){
     fetchUserData();
   }, []);
 
+ 
+
   const fetchUserData = async () => {
     try {
       setLoading(true);
@@ -64,11 +66,31 @@ export default function AccountPage({ onNavigateBack }){
       });
       const data = await response.json();
       setUserProfile(data);
-      
+      console.log('User Profile Data:', data);
+    console.log('Subscription:', data?.accountTier);
     } catch (error) {
       console.error('Error fetching user data:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const getUserPlanDisplay = () => {
+    if (!userProfile?.accountTier) return 'Free Plan';
+    
+    const tier = userProfile.accountTier.toLowerCase();
+    
+    switch(tier) {
+      case 'free':
+        return 'Free Plan';
+      case 'plus':
+        return 'Plus Plan';
+      case 'pro':
+        return 'Pro Plan';
+      
+      default:
+        // Capitalize first letter for any unknown tiers
+        return tier.charAt(0).toUpperCase() + tier.slice(1) + ' Plan';
     }
   };
 
@@ -126,7 +148,7 @@ export default function AccountPage({ onNavigateBack }){
       const token = session.tokens?.idToken?.toString();
       
       // Call your delete account API endpoint
-      const response = await fetch('', {
+      const response = await fetch('https://plbscwf6pk.execute-api.us-west-2.amazonaws.com/delAcc', {
         method: 'DELETE',
         headers: { 
           'Authorization': `Bearer ${token}`,
@@ -325,20 +347,8 @@ export default function AccountPage({ onNavigateBack }){
                 </div>
                 <div className="info-item">
                   <span className="info-label">Account Type:</span>
-                  <span className="info-value">{userProfile?.subscription || 'Free Plan'}</span>
+                  <span className="info-value">{getUserPlanDisplay()}</span>
                 </div>
-                {userProfile?.examsGenerated !== undefined && (
-                  <div className="info-item">
-                    <span className="info-label">Exams Generated:</span>
-                    <span className="info-value">{userProfile.examsGenerated}</span>
-                  </div>
-                )}
-                {userProfile?.quizzesGenerated !== undefined && (
-                  <div className="info-item">
-                    <span className="info-label">Quizzes Generated:</span>
-                    <span className="info-value">{userProfile.quizzesGenerated}</span>
-                  </div>
-                )}
               </div>
             </section>
 
@@ -367,7 +377,7 @@ export default function AccountPage({ onNavigateBack }){
             <div className="info-card">
               <div className="info-item">
                 <span className="info-label">Current Plan:</span>
-                <span className="info-value">{userProfile?.subscription || 'Free'}</span>
+                <span className="info-value">{getUserPlanDisplay()}</span>
               </div>
               <button className="upgrade-button-large">
                 ⭐ Upgrade to Pro
