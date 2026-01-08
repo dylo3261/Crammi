@@ -38,7 +38,7 @@ export default function LimitReached({ isLimitReached, setIsLimitReached, limitR
         <div className="errorTextWrapper">
           <h3 className="errorTitle">Upload Failed</h3>
           <p className="errorMessage">
-            Daily Upload limit reached. Please upgrade your account plan or {limitReachedMessage || "try again later"}.
+            Weekly Upload limit reached. Please upgrade your account plan or {limitReachedMessage || "try again later"}.
           </p>
         </div>
         <button 

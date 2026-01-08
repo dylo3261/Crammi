@@ -307,7 +307,7 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
         <div className="logoutPopupContainer">
           <div className="logoutPopup" ref={logoutPopupRef}>
             <div className='logoutPopupPFP'>
-              <button className='PFPButtonPopup'>
+              <button className='PFPButtonPopup' onClick={()=>navigate('/Settings')}>
                 <img 
                   className='userPFPPopup' 
                   src={userPFP} 

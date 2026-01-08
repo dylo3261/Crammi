@@ -8,6 +8,7 @@ import SignIn from "./Auth/SignIn.jsx"
 import SignUp from "./Auth/Signup.jsx"
 import ForgotPassword from "./Auth/forgotPassword.jsx";
 import LoadingAnimation from "./Dashboard/LoadingScreen.jsx";
+import AccountPage from "./Dashboard/AccountPage.jsx";
 
 import Exam from "./ViewBatches/Exam.jsx"
 import Quiz from "./ViewBatches/Quiz.jsx"
@@ -123,6 +124,12 @@ function AppContent() {
           isAuthenticated ? <Flashcards /> : <Navigate to="/" replace />
         }
       />
+      <Route 
+        path='/Settings' 
+        element={
+          isAuthenticated ? <AccountPage/> : <Navigate to="/" replace />
+        }
+        />
     </Routes>
   );
 }
