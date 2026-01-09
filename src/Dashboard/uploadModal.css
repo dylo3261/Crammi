@@ -5,11 +5,12 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 3000;
+  backdrop-filter: blur(4px);
 }
 
 /* Upload Modal Content */
@@ -20,18 +21,18 @@
   max-width: 90%;
   height: auto;
   max-height: 550px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  font-family: applethin,Arial, sans-serif;
+  font-family: 'apple', -apple-system, sans-serif;
   text-align: center;
-  border-radius: 8px;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
 }
 
 @media (max-width: 768px) {
-
   /* Keep modal at top */
   .uploadModalOverlay {
     align-items: flex-start !important;
@@ -39,57 +40,65 @@
     position: fixed!important;
     overflow-x: hidden;
   }
+  
   /* PDF modal fixed to top on mobile */
-.selectPDFPages {
-  top: 0 !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
+  .selectPDFPages {
+    top: 0 !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 100% !important;
+    max-width: 90% !important;
+    height: 90% !important;
+    max-height: 100% !important;
+    box-sizing: border-box;
+    border-radius: 10px !important;
+    padding: 1rem !important;
+    overflow-y: auto !important;
+    overflow-x: hidden;
+  }
+  
+  /* PDF modal buttons - keep size on mobile */
+  .selectButtonsContainer .selectButtons {
+    flex-shrink: 0 !important;
+    padding: 0.6rem 2rem !important;
+    font-size: 1rem !important;
+    min-width: 100px;
+  }
 
-  width: 100% !important;
-  max-width: 90% !important;
-  height: 90% !important;
-  max-height: 100% !important;
-  box-sizing: border-box;
-  border-radius: 10 !important;
-  padding: 1rem !important;
-  overflow-y: auto !important;
-  overflow-x: hidden;
-
-}
-/* PDF modal buttons - keep size on mobile */
-.selectButtonsContainer .selectButtons {
-  flex-shrink: 0 !important;      /* prevent shrinking */
-  padding: 0.6rem 2rem !important; /* keep padding */
-  font-size: 1rem !important;      /* keep font size */
-  min-width: 100px;                /* optional: minimum width */
-}
-
-.ok{
-  z-index: 9999 !important;
-}
+  .ok{
+    z-index: 9999 !important;
+  }
+  
   .infoIcon{
     width:15px !important;
     height:15px !important;
   }
+  
   .filesRemaining{
-    margin-top: -7px!important;
+    margin-top: 4px!important;
     box-sizing: border-box;
     text-align: left;
+    margin-left: -1rem !important;
+    margin-right: -1rem !important;
+    width: calc(100% + 2rem) !important;
+    padding: 0.4rem 1rem !important;
   }
+  
   .uploadFileText{
     z-index: 9999 !important;
+    font-size: 2rem !important;
   }
+  
   /* Compact modal — but still readable */
   .uploadModalContent {
     width: 90% !important;
     max-width: 90% !important;
     max-height: 70vh !important;
-    padding: 12px;
-    border-radius: 10px;
-
+    padding: 12px !important;
+    border-radius: 10px !important;
     display: flex;
     flex-direction: column;
-    gap: 10px;               /* prevents overlap */
+    gap: 10px;
     overflow-y: auto;
     overflow-x: hidden;
   }
@@ -97,7 +106,7 @@
   /* SAFE text shrink — not too small */
   .uploadModalContent * {
     font-size: 14px !important;
-    line-height: 1.2 !important;   /* FIX: prevents overlap */
+    line-height: 1.2 !important;
   }
 
   /* Shrink header padding */
@@ -109,6 +118,7 @@
   .fileSizeHeader{
     margin-top: -10px;
   }
+  
   .bottomHeader{
     margin-bottom: -10px!important;
     margin-top: -10px!important;
@@ -120,10 +130,10 @@
     font-size: 16px!important;
     height: 45px;
   }
+  
   .numChars{
     margin-bottom: 20px;
   }
-  
 
   /* Perfect small dropzone */
   .uploadDropZone {
@@ -147,7 +157,6 @@
   }
 
   /* File rows spacing */
-  
   .fileName {
     max-width: 60%;
   }
@@ -168,71 +177,79 @@
     padding: 12px !important;
     margin-top: 10px;
     gap: 6px !important;  
-    
   }
-    .uploadModalIcon {
-      width: 35px !important;
-      height: 35px !important;
-      overflow-y: hidden;
-    }
-}
   
-
-
+  .uploadModalIcon {
+    width: 35px !important;
+    height: 35px !important;
+    overflow-y: hidden;
+  }
+}
 
 /* Header */
 .uploadFileHeader {
   display: flex;
-  flex-direction: column; /* stack vertically */
-  align-items: flex-start; /* optional: left-align text */
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
 }
 
 .uploadFileText {
-  font-family: apple, arial, sans-serif;
-  font-size: 2rem;
+  font-family: 'apple', -apple-system, sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #0f172a;
   margin: 0;
-}
-.filesRemaining {
-  font-family: applethin, arial, sans-serif;
-  /* font-weight: lighter; */
-  letter-spacing: 0.7px;
-  margin-top: 0.25rem;
-  margin-bottom: 1vh;
-
-  /* background-color: rgb(208, 235, 254); */
-  background-color: white;
   display: flex;
-  justify-content: space-between;   /* spreads text left, icon right */
-  align-items: center;              /* vertical centering */
-
-  width: calc(100% + 3rem);
-  margin-left: -1.5rem;
-  margin-right: -1.5rem;
-
-  padding: 0.4rem 1rem; 
-  text-align: left;
-  
+  align-items: center;
+  gap: 0.5rem;
 }
 
+.filesRemaining {
+  font-family: 'applethin', -apple-system, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+  margin-top: 0.75rem;
+  margin-bottom: 0;
+  background-color: #f8f9fa;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: calc(100% + 4rem);
+  margin-left: -2rem;
+  margin-right: -2rem;
+  padding: 0.75rem 2rem;
+  text-align: left;
+  color: #64748b;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+}
 
+.asterik {
+  color: #6366f1;
+  font-weight: 700;
+}
 
 /* Drag & Drop Zone */
 .uploadDropZone {
   flex: 1;
-  min-height: 300px;
-  border: 2.5px dashed #ccc;
+  min-height: 280px;
+  border: 2px dashed #cbd5e1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   padding: 2rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
   gap: 1rem;
   overflow-y: auto;
-  transition: background-color 0.2s, border-color 0.2s;
-  background-color: #f9f7f7;
+  transition: all 0.3s ease;
+  background-color: #f8f9fa;
+  border-radius: 12px;
 }
+
 @media (max-width: 400px) {
   .uploadDropZone {
     padding: 1rem;
@@ -240,48 +257,49 @@
   }
 }
 
-.asterik{
-  color: red;
-}
 .uploadDropZone.dragOver {
-  background-color: #f0f0f0;
-  border-color: #AB9FF2;
+  background-color: #f0f4ff;
+  border-color: #ab9ff2;
+  border-width: 2px;
+  box-shadow: 0 0 0 4px rgba(171, 159, 242, 0.1);
 }
 
-/* .uploadDropZone p {
-  font-size: 1.2rem;
-  color: #555;
-} */
 .addFileButton {
   border: none;
   background: transparent;
-  color: #007bff;     /* link blue */
-  font-size: 13px;
+  color: #6366f1;
+  font-size: 0.875rem;
   cursor: pointer;
-  padding: 0;         /* remove button padding */
-  text-decoration: none; 
+  padding: 0;
+  text-decoration: none;
   text-decoration: underline;
-  font-style: italic;
-
-
+  font-style: normal;
+  font-family: 'applemedium', -apple-system, sans-serif;
+  transition: color 0.2s ease;
 }
 
-.addAnotherFile{
-  display:flex;
-  margin-bottom: 0.5vh;
-  font-family: applethin,Arial, sans-serif;
-  font-size: 13.5px ;
-  font-style: italic;
+.addFileButton:hover {
+  color: #ab9ff2;
+}
 
-  
+.addAnotherFile {
+  display: flex;
+  margin-bottom: 0.75rem;
+  font-family: 'applethin', -apple-system, sans-serif;
+  font-size: 0.875rem;
+  font-style: normal;
+  color: #64748b;
 }
 
 .fileListHeader {
   display: flex;
   align-items: center;
-  font-family: applemedium, arial, sans-serif;
-  font-size: 14px;
-  color: #555;
+  font-family: 'applemedium', -apple-system, sans-serif;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
 }
 
 /* Name column — takes leftover space */
@@ -301,61 +319,91 @@
 
 /* Spacer for the delete button column */
 .removeHeader {
-  width: 3.2rem;   /* same width as your X button */
+  width: 3.2rem;
   flex-shrink: 0;
 }
 
-
-.bottomHeader{
-  border: 2px;
-  border-bottom: 2px solid #cbcbcb;
-  margin-bottom: 1.5vh;
-  margin-top: 0.5vh;
+.bottomHeader {
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 1rem;
+  margin-top: 0.5rem;
 }
+
 .uploadModalIcon {
-  width: 80px;
-  height: 80px;
-  filter: brightness(0) saturate(100%) invert(40%) sepia(0%) saturate(0%) hue-rotate(151deg) brightness(95%) contrast(90%);
+  width: 64px;
+  height: 64px;
+  opacity: 0.4;
+  filter: brightness(0) saturate(100%) invert(40%) sepia(20%) saturate(500%) hue-rotate(200deg) brightness(95%) contrast(90%);
 }
 
 .infoIcon {
   filter: invert(58%) sepia(32%) saturate(2650%) hue-rotate(185deg) brightness(103%) contrast(94%);
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
 }
+
+.infoIcon:hover {
+  opacity: 1;
+}
+
 .tooltipWrapper {
   position: relative;
   display: inline-block;
-  margin-left: 6px;
+  margin-left: 0.5rem;
 }
 
 .tooltipBox {
   position: absolute;
-  top: -5px;              /* move upward */
-  left: 100%;             /* place to the right of icon */
-  transform: translateY(-100%);  /* shift fully above */
-
-  background: rgb(255, 255, 255);
-  border: 2px solid #AB9FF2;
-  padding: 8px 12px;
+  top: -5px;
+  left: 100%;
+  transform: translateY(-100%);
+  background: #0f172a;
+  color: white;
+  padding: 0.5rem 0.75rem;
   border-radius: 8px;
-  font-style: italic;
-  font-family: applethin, arial, sans-serif;
-  font-weight: lighter;
-  font-size: 0.9rem;
+  font-style: normal;
+  font-family: 'applethin', -apple-system, sans-serif;
+  font-weight: 400;
+  font-size: 0.75rem;
   white-space: nowrap;
-
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   visibility: hidden;
   opacity: 0;
   transition: opacity 0.2s ease;
   z-index: 9999;
 }
 
+.tooltipBox::before {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 10px;
+  width: 8px;
+  height: 8px;
+  background: #0f172a;
+  transform: rotate(45deg);
+}
+
 .tooltipWrapper:hover .tooltipBox {
   visibility: visible;
   opacity: 1;
+}
+@media (max-width: 768px) {
+  .tooltipBox {
+    top: 100%;
+    left: 300%;
+    transform: translateX(-50%);
+    margin-top: 8px;
+  }
+
+  .tooltipBox::before {
+    top: -4px;
+    bottom: auto;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+  }
 }
 
 /* File List */
@@ -367,122 +415,124 @@
   max-height: 250px;
   overflow-y: auto;
   text-align: left;
-  align-self: flex-start; /* <-- ensures it sticks to top */
-
+  align-self: flex-start;
 }
 
 .fileList li {
   background-color: #ffffff;
-  border: 1px solid #ddd;
-  margin: 0.3rem 0;
-  padding: 0.2rem 1rem;
-  font-size: .9rem;
-  color: #555;
+  border: 1px solid #e2e8f0;
+  margin: 0.5rem 0;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  color: #0f172a;
   word-break: break-all;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: applemedium, arial, sans-serif;
+  font-family: 'applemedium', -apple-system, sans-serif;
+  border-radius: 8px;
+  transition: all 0.2s ease;
 }
 
 .fileList li:hover {
-  background-color: #f0f0f0;
-}
-
-.removeFile {
-  color: black;
-  font-weight: bold;
-  cursor: pointer;
-  margin-left: 0.5rem;
-  font-size: 1.2rem;
-}
-
-
-
-.fileList li {
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid #ddd;
+  background-color: #f8f9fa;
+  border-color: #cbd5e1;
 }
 
 .fileName {
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap; /* long filenames won’t wrap */
-  
+  white-space: nowrap;
+  color: #0f172a;
+  font-weight: 500;
 }
 
 .chosenFileSize {
-  margin-left: auto; /* pushes size + X to the right */
-  margin-right: 0.5rem; /* small spacing before X */
+  margin-left: auto;
+  margin-right: 0.75rem;
   white-space: nowrap;
-  flex-shrink: 0; /* prevent shrinking */
-  color:black;
-  font-size: 0.9rem;
-  font-family: apple,arial,sans-serif;
-  font-size: 13px;
+  flex-shrink: 0;
+  color: #64748b;
+  font-size: 0.8rem;
+  font-family: 'applethin', -apple-system, sans-serif;
 }
-.colorizeFileSize{
-  color:#555;
-  font-family: applethin,arial,sans-serif;
+
+.colorizeFileSize {
+  color: #94a3b8;
+  font-family: 'applethin', -apple-system, sans-serif;
 }
 
 .removeFile {
   cursor: pointer;
   flex-shrink: 0;
-  color: red;
+  color: #ef4444;
+  font-size: 1.25rem;
+  font-weight: 700;
+  transition: all 0.2s ease;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.removeFile:hover {
+  background-color: #fee2e2;
+  color: #dc2626;
 }
 
 /* Buttons */
 .closeUploadModal {
-  padding: 0.8rem 2rem;
+  padding: 0.75rem 1.5rem;
   background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
-  font-family: applemedium, arial, sans-serif;
-
-  /* layout adjustments */
-  display: inline-flex;          /* good for centering content inside button */
+  transition: all 0.3s ease;
+  font-family: 'apple', -apple-system, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  display: inline-flex;
   justify-content: center;
   align-items: center;
-  margin-top: 1rem;              /* spacing from previous element */
+  margin-top: 1rem;
+  box-shadow: 0 2px 8px rgba(171, 159, 242, 0.3);
 }
-
 
 .closeUploadModal:hover {
-  background-color: #a393fc; 
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(171, 159, 242, 0.4);
 }
 
-.selectPageHeader{
-  display:inline;
-  letter-spacing: 1px;
+.selectPageHeader {
+  display: inline;
+  letter-spacing: 0.5px;
+  font-weight: 700;
 }
 
 .uploadButton {
   display: flex;
   justify-content: center;
   gap: 1rem;
-
-  /* prevent flex-grow from stretching buttons */
   flex-shrink: 0;
   flex-grow: 0;
-  align-self: center;  /* center horizontally in modal */
+  align-self: center;
 }
 
 .uploadBoxDescription {
-  font-family: apple, arial, sans-serif;
-  font-size: 1.8rem;
-  color:#555;
-  margin-bottom: -1.2vh;
+  font-family: 'apple', -apple-system, sans-serif;
+  font-size: 1.125rem;
+  color: #64748b;
+  margin-bottom: 0.25rem;
+  font-weight: 500;
 }
-.fileTypeSpecify{
-  font-family: applethin,arial,sans-serif;
-  color:#555;
 
+.fileTypeSpecify {
+  font-family: 'applethin', -apple-system, sans-serif;
+  color: #94a3b8;
+  font-size: 0.875rem;
 }
 
 /* PDF Page Grid Modal */
@@ -496,28 +546,47 @@
   max-width: 1500px;
   height: 85%;
   max-height: 85%;
-  border-radius: 10px;
-  padding: 1rem 1.5rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
   display: flex;
   flex-direction: column;
-  overflow-y: hidden; /* we'll scroll the grid separately */
-  font-family: applethin,Arial, sans-serif;
+  overflow-y: hidden;
+  font-family: 'applethin', -apple-system, sans-serif;
   text-align: center;
   z-index: 5000;
-  padding-bottom: 4rem; /* give space for buttons */
+  padding-bottom: 5rem;
+  border: 1px solid #e2e8f0;
 }
-.PDFOverallHeader{
+
+.PDFOverallHeader {
   text-align: left;
+  margin-bottom: 1.5rem;
+}
+
+.PDFOverallHeader h1 {
+  font-family: 'apple', -apple-system, sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #0f172a;
   margin-bottom: 1rem;
 }
+
+.PDFOverallHeader h4 {
+  font-family: 'applethin', -apple-system, sans-serif;
+  font-size: 0.875rem;
+  color: #64748b;
+  font-weight: 400;
+  margin: 0.5rem 0;
+}
+
 /* Button Container at Bottom */
 .selectButtonsContainer {
   display: flex;
   justify-content: center;
   gap: 1rem;
   position: absolute;
-  bottom: 1rem;
+  bottom: 2rem;
   left: 50%;
   transform: translateX(-50%);
   width: auto;
@@ -525,31 +594,34 @@
 }
 
 .selectButtonsContainer .selectButtons {
-  padding: 0.8rem 2rem;
+  padding: 0.75rem 1.5rem;
   background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 10px;
   cursor: pointer;
-  font-family: applemedium, arial, sans-serif;
-  transition: all 0.2s ease;
+  font-family: 'apple', -apple-system, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(171, 159, 242, 0.3);
 }
 
 .selectButtonsContainer .selectButtons:hover {
-  background-color: #a393fc; 
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(171, 159, 242, 0.4);
 }
 
 /* PDF Grid */
 .pdfGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, max-content)); 
-  gap: 20px;  
+  grid-template-columns: repeat(auto-fill, minmax(400px, max-content));
+  gap: 20px;
   padding: 16px;
   overflow-y: auto;
   max-height: 70vh;
-  justify-content: start; /* left align last row */
-  flex:1;
+  justify-content: start;
+  flex: 1;
 }
 
 /* Individual PDF page container */
@@ -557,16 +629,22 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: #f7f7f7;
-  padding: 10px; 
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  background: #f8f9fa;
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   overflow: visible;
-
-  /* Prevent layout shiftu on border */
-  border: 4px solid transparent; /* invisible border by default */
+  border: 3px solid transparent;
   box-sizing: border-box;
+  transition: all 0.2s ease;
+  cursor: pointer;
 }
+
+.pdfPageContainer:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
 @media (max-width: 600px) {
   .pdfGrid {
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -575,92 +653,87 @@
   }
 
   .pdfPageContainer img {
-    max-width: 100%;  /* fill container */
+    max-width: 100%;
     height: auto;
   }
 
   .pdfPageContainer {
-    padding: 6px;
+    padding: 8px;
   }
 }
 
-.warning{
-  display:flex;
-  margin-bottom: 0.5vh;
-  font-family: applethin,Arial, sans-serif;
-  font-size: 13.5px ;
-  font-style: italic;
-  color: red;
+.warning {
+  display: flex;
+  margin-bottom: 0.75rem;
+  font-family: 'applethin', -apple-system, sans-serif;
+  font-size: 0.875rem;
+  color: #ef4444;
+  background-color: #fee2e2;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border-left: 3px solid #ef4444;
 }
 
-/* Selected state (click to stay) */
+/* Selected state */
 .pdfPageContainer.selected {
-  border: 4px solid #AB99F2;
+  border: 3px solid #6366f1;
+  background-color: #f0f4ff;
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.2);
 }
 
 /* Images of PDF pages */
 .pdfPageContainer img {
-  width: 100%;    
-  max-width: 450px; 
+  width: 100%;
+  max-width: 450px;
   height: auto;
-  border-radius: 4px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
-
-
 /* PDF page label */
 .pdfPageLabel {
-  font-size: 13px; 
+  font-size: 0.8rem;
   margin-bottom: 8px;
   text-align: center;
   word-break: break-word;
-}
-
-
-
-/* Selected state (click to stay) */
-.pdfPageContainer.selected {
-  border: 4px solid #AB99F2;
-  border-radius: 8px;
+  color: #64748b;
+  font-family: 'applemedium', -apple-system, sans-serif;
 }
 
 .specialInstructions {
   width: 100%;
-  font-family: applethin, Arial, sans-serif;
-  font-size: 1rem;
-  color: #555;
-  padding: 0.6rem 0.9rem;
-  border: 1px solid #d1d1d1;
-  border-radius: 8px;
-  background-color: #f9f7f7;
+  font-family: 'applethin', -apple-system, sans-serif;
+  font-size: 0.95rem;
+  color: #0f172a;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background-color: #f8f9fa;
   outline: none;
   box-sizing: border-box;
-  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+  transition: all 0.2s ease;
 }
 
 /* Focus ring */
 .specialInstructions:focus {
-  border-color: #AB9FF2;
-  box-shadow:
-    0 0 0 3px #fff,
-    0 0 0 6px rgba(171, 159, 242, 0.5);
+  border-color: #ab9ff2;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(171, 159, 242, 0.1);
 }
 
 /* Placeholder styling */
 .specialInstructions::placeholder {
-  color: #888;
+  color: #94a3b8;
   opacity: 1;
 }
 
-.numChars{
+.numChars {
   text-align: right;
-  font-family: applethin,arial,sans-serif;
-  color:rgb(84, 84, 84);
-  font-size: 13px;
-  margin-top: 4px;
-  height:0px;
+  font-family: 'applethin', -apple-system, sans-serif;
+  color: #64748b;
+  font-size: 0.75rem;
+  margin-top: 0.5rem;
+  height: 0px;
 }
-
