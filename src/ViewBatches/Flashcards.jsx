@@ -148,6 +148,8 @@ export default function Flashcards() {
   const ignoredButtonRef = useRef(null);
   const profileButtonRef = useRef(null);
 
+  const userProfile = location.state?.userProfile;
+
   // Memoize current card to prevent unnecessary re-renders
   const currentCard = useMemo(() => {
     return batchJSON?.[currentIndex];
@@ -430,7 +432,7 @@ export default function Flashcards() {
             userPFP={userPFP}
             handleSignOut={handleSignOut}
             onNavigateDashboard={() => navigate('/Dashboard')}
-            onUpgradePlan={() => {}}
+            onUpgradePlan={() => {navigate('/Upgrade', { state: { userProfile: userProfile } })}}
             onSupport={() => {}}
             showIgnoredButton={!!isIgnoredRequest}
             isIgnoredRequest={isIgnoredRequest}
@@ -453,7 +455,8 @@ export default function Flashcards() {
             />
           </button>
           
-          <button className='collapsedSideButton' title="Upgrade Plan">
+          <button className='collapsedSideButton' title="Upgrade Plan" onClick={()=>navigate('/Upgrade', { state: { userProfile: userProfile } })}
+          >
             <img className='collapsedSidebarIcon' src='/starIcon.png' alt='upgrade icon'/>
           </button>
           
@@ -523,7 +526,7 @@ export default function Flashcards() {
           
               <div className='logoutPopupContent'>
                 <div className='popupUpgradePlan'>
-                  <button className='bottomDashboardSideButtons'>
+                  <button className='bottomDashboardSideButtons' onClick={()=>navigate('/Upgrade', { state: { userProfile: userProfile } })}>
                     <img className='sidebarIcon' src='/starIcon.png' alt='upgrade icon'/>
                     <span>Upgrade Plan</span>
                   </button>

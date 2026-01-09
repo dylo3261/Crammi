@@ -15,7 +15,8 @@ export default function BatchesSection({
     userEmail,
     isLimitReached,
     setIsLimitReached,
-    limitReachedMessage
+    limitReachedMessage,
+    userProfile
 }){
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -43,16 +44,16 @@ export default function BatchesSection({
                 type: batchType
               });
             if(batchType === 'Exams'){
-                navigate(`/Exam/${batchID}`, {state: {batchName}});
+                navigate(`/Exam/${batchID}`, { state: { batchName, userProfile } });
             }
             else if(batchType === 'Quizzes'){
-                navigate(`/Quiz/${batchID}`, {state: {batchName}});
+                navigate(`/Exam/${batchID}`, { state: { batchName, userProfile } });
             }
             else if(batchType === 'Flashcards'){
-                navigate(`/Flashcards/${batchID}`, {state: {batchName}});
+                navigate(`/Exam/${batchID}`, { state: { batchName, userProfile } });
             }
             else if(batchType === 'Files'){
-                navigate(`/File/${batchID}`, {state: {batchName}});
+                navigate(`/Exam/${batchID}`, { state: { batchName, userProfile } });
             }
         }
     };

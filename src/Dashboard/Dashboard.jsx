@@ -33,10 +33,10 @@ export default function Dashboard(){
         const cached = localStorage.getItem('userProfile');
         const cacheTime = localStorage.getItem('userProfileTime');
         
-        // Use cache if less than 5 minutes old
+        // Use cache if less than 2 minutes old
         if (cached && cacheTime) {
           const age = Date.now() - parseInt(cacheTime);
-          if (age < 5 * 60 * 1000) { // 5 minutes
+          if (age < 0 * 60 * 1000) { // 2 minutes
             setUserProfile(JSON.parse(cached));
             return;
           }
@@ -67,8 +67,8 @@ export default function Dashboard(){
     
     return(
        <>
-        <DashboardHeader openUpload={()=>changeActiveUpload(true)} changeActiveTab={changeActiveTab} activeTab={activeTab} openUploadExisting={()=>changeActiveUploadExisting(true)} batches={batches} setBatches={setBatches} isLimitReached={isLimitReached} setIsLimitReached={setIsLimitReached} limitReachedMessage={limitReachedMessage}>
-            <Hamburger changeActiveTab={changeActiveTab} activeTab={activeTab}/>
+        <DashboardHeader openUpload={()=>changeActiveUpload(true)} changeActiveTab={changeActiveTab} activeTab={activeTab} openUploadExisting={()=>changeActiveUploadExisting(true)} batches={batches} setBatches={setBatches} isLimitReached={isLimitReached} setIsLimitReached={setIsLimitReached} limitReachedMessage={limitReachedMessage} userProfile={userProfile}>
+            <Hamburger changeActiveTab={changeActiveTab} activeTab={activeTab} />
         </DashboardHeader>
         <UploadModal isOpen={activeUpload} close={() => changeActiveUpload(false)} activeTab={activeTab} userProfile={userProfile} setUserProfile={setUserProfile} setIsLimitReached={setIsLimitReached} setLimitReachedMessage={setLimitReachedMessage} />
         <UploadExistingModal isOpen={activeUploadExisting} close={()=>changeActiveUploadExisting(false)} activeTab={activeTab} batches={batches} setIsLimitReached={setIsLimitReached} setLimitReachedMessage={setLimitReachedMessage}/>

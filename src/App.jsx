@@ -9,6 +9,7 @@ import SignUp from "./Auth/Signup.jsx"
 import ForgotPassword from "./Auth/forgotPassword.jsx";
 import LoadingAnimation from "./Dashboard/LoadingScreen.jsx";
 import AccountPage from "./Dashboard/AccountPage.jsx";
+import Upgrade from "./Dashboard/Upgrade.jsx";
 
 import Exam from "./ViewBatches/Exam.jsx"
 import Quiz from "./ViewBatches/Quiz.jsx"
@@ -126,6 +127,12 @@ function AppContent() {
         path='/Settings' 
         element={
           isAuthenticated ? <AccountPage/> : <Navigate to="/" replace />
+        }
+        />
+       <Route 
+        path='/Upgrade' 
+        element={
+          isAuthenticated ? <Upgrade/> : <Navigate to="/" replace />
         }
         />
     </Routes>

@@ -4,7 +4,8 @@ import './AccountPage.css';
 import { useNavigate } from 'react-router-dom';
 import LoadingAnimation from './LoadingScreen';
 
-export default function AccountPage({ onNavigateBack }){
+
+export default function AccountPage(){
   const [loading, setLoading] = useState(true);
   const [userProfile, setUserProfile] = useState(null);
   const navigate = useNavigate();
@@ -18,12 +19,12 @@ export default function AccountPage({ onNavigateBack }){
   const [isFederatedUser, setIsFederatedUser] = useState(false);
   const [identityProvider, setIdentityProvider] = useState('');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+  const [cancelLoading, setCancelLoading] = useState(false);
 
   useEffect(() => {
     fetchUserData();
   }, []);
-
- 
 
   const fetchUserData = async () => {
     try {
@@ -67,7 +68,7 @@ export default function AccountPage({ onNavigateBack }){
       const data = await response.json();
       setUserProfile(data);
       console.log('User Profile Data:', data);
-    console.log('Subscription:', data?.accountTier);
+      console.log('Subscription:', data?.accountTier);
     } catch (error) {
       console.error('Error fetching user data:', error);
     } finally {
@@ -87,10 +88,40 @@ export default function AccountPage({ onNavigateBack }){
         return 'Plus Plan';
       case 'pro':
         return 'Pro Plan';
-      
       default:
-        // Capitalize first letter for any unknown tiers
         return tier.charAt(0).toUpperCase() + tier.slice(1) + ' Plan';
+    }
+  };
+
+  const handleCancelSubscription = async () => {
+    try {
+      setCancelLoading(true);
+      const session = await fetchAuthSession();
+      const token = session.tokens?.idToken?.toString();
+      
+      const response = await fetch('https://js065tswp1.execute-api.us-west-2.amazonaws.com/cancel', {
+        method: 'POST',
+        headers: { 
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(data.message || 'Subscription canceled successfully. You will retain access until the end of your billing period.');
+        setShowCancelConfirm(false);
+        // Refresh user data to get updated subscription status
+        await fetchUserData();
+      } else {
+        alert(data.message || 'Failed to cancel subscription. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error canceling subscription:', error);
+      alert('An error occurred while canceling your subscription. Please try again.');
+    } finally {
+      setCancelLoading(false);
     }
   };
 
@@ -110,7 +141,7 @@ export default function AccountPage({ onNavigateBack }){
       // Save to Cognito User Pool
       await updateUserAttributes({
         userAttributes: {
-          name: preferredName.trim(), // Also trim whitespace
+          name: preferredName.trim(),
         }
       });
       
@@ -181,20 +212,50 @@ export default function AccountPage({ onNavigateBack }){
   };
 
   if (loading) {
-    return (
-      <LoadingAnimation/>
-    );
+    return <LoadingAnimation/>;
   }
+
+  const isSubscribed = userProfile?.accountTier && userProfile.accountTier.toLowerCase() !== 'free';
 
   return (
     <div className="account-settings-container">
+      {/* Cancel Subscription Modal */}
+      {showCancelConfirm && (
+        <div className="delete-modal-overlay" onClick={() => setShowCancelConfirm(false)}>
+          <div className="delete-modal" onClick={(e) => e.stopPropagation()}>
+            <h2 className="delete-modal-title">Cancel Subscription</h2>
+            <p className="delete-modal-text">
+              Are you sure you want to cancel your subscription? You will retain {getUserPlanDisplay()} access 
+              until the end of your current billing period, after which your account will be downgraded to the Free Plan.
+            </p>
+            <div className="delete-modal-buttons">
+              <button 
+                className="delete-cancel-button" 
+                onClick={() => setShowCancelConfirm(false)}
+                disabled={cancelLoading}
+              >
+                Keep Subscription
+              </button>
+              <button 
+                className="delete-confirm-button" 
+                onClick={handleCancelSubscription}
+                disabled={cancelLoading}
+              >
+                {cancelLoading ? 'Canceling...' : 'Cancel Subscription'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Account Modal */}
       {showDeleteConfirm && (
         <div className="delete-modal-overlay" onClick={() => setShowDeleteConfirm(false)}>
           <div className="delete-modal" onClick={(e) => e.stopPropagation()}>
             <h2 className="delete-modal-title">Delete Account</h2>
             <p className="delete-modal-text">
               Are you sure you want to delete your account? This action cannot be undone. 
-              All your data, including exams, quizzes, and flashcards will be permanently deleted.
+              All your data, including exams, quizzes, and flashcards will be permanently deleted. Any active subscriptions will be canceled.
             </p>
             <div className="delete-modal-buttons">
               <button className="delete-cancel-button" onClick={() => setShowDeleteConfirm(false)}>
@@ -379,9 +440,19 @@ export default function AccountPage({ onNavigateBack }){
                 <span className="info-label">Current Plan:</span>
                 <span className="info-value">{getUserPlanDisplay()}</span>
               </div>
-              <button className="upgrade-button-large">
-                ⭐ Upgrade to Pro
-              </button>
+              
+              {isSubscribed ? (
+                <button 
+                  className="cancel-subscription-button" 
+                  onClick={() => setShowCancelConfirm(true)}
+                >
+                  Cancel Subscription
+                </button>
+              ) : (
+                <button className="upgrade-button-large">
+                  ⭐ Upgrade to Pro
+                </button>
+              )}
             </div>
           </section>
         )}

@@ -562,6 +562,8 @@ export default function Quiz() {
     const [isQuizScorePage, setIsQuizScorePage] = useState(false);
     const [quizResults, setQuizResults] = useState(null);
 
+    const userProfile = location.state?.userProfile;
+
     useEffect(() => {
         getUserName();
         getUserEmail();
@@ -833,7 +835,7 @@ export default function Quiz() {
                     userPFP={userPFP}
                     handleSignOut={handleSignOut}
                     onNavigateDashboard={() => navigate('/Dashboard')}
-                    onUpgradePlan={() => {/* Add upgrade logic */}}
+                    onUpgradePlan={() => {navigate('/Upgrade', { state: { userProfile: userProfile } })}}
                     onSupport={() => {/* Add support logic */}}
                     showIgnoredButton={!!isIgnoredRequest}
                     isIgnoredRequest={isIgnoredRequest}
@@ -859,6 +861,7 @@ export default function Quiz() {
                     <button 
                         className='collapsedSideButton'
                         title="Upgrade Plan"
+                        onClick={()=>navigate('/Upgrade', { state: { userProfile: userProfile } })}
                     >
                         <img 
                             className='collapsedSidebarIcon' 
@@ -933,7 +936,8 @@ export default function Quiz() {
                         
                             <div className='logoutPopupContent'>
                                 <div className='popupUpgradePlan'>
-                                    <button className='bottomDashboardSideButtons'>
+                                    <button className='bottomDashboardSideButtons'onClick={()=>navigate('/Upgrade', { state: { userProfile: userProfile } })}
+                                    >
                                         <img className='sidebarIcon' src='/starIcon.png' alt='upgrade'/>
                                         <span>Upgrade Plan</span>
                                     </button>

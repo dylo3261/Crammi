@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import "./Hamburger.css";
+import { useNavigate } from "react-router-dom";
 
-export default function Hamburger({ userName, userEmail, userPFP, handleSignOut, changeActiveTab, activeTab, recents, onRecentClick, RecentsSection }) { 
+export default function Hamburger({ userName, userEmail, userPFP, handleSignOut, changeActiveTab, activeTab, recents, onRecentClick, RecentsSection, userProfile }) { 
   const [isOpen, setIsopen] = useState(false);
+  const navigate = useNavigate(); 
+  
   
   return (
     <>
@@ -101,7 +104,7 @@ export default function Hamburger({ userName, userEmail, userPFP, handleSignOut,
                 <p className='accountTierDisplay'>Free Plan</p>
               </div>
             </button>
-            <button className='upgradeButton'>
+            <button className='upgradeButton' onClick={() => navigate('/Upgrade', { state: { userProfile: userProfile } })}>
               Upgrade to Pro
             </button>
           </div>

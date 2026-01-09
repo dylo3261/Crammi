@@ -631,6 +631,8 @@ export default function Exam() {
     const [isScorePage, setIsScorePage] = useState(false);
     const [examResults, setExamResults] = useState(null);
 
+    const userProfile = location.state?.userProfile;
+
 
     const handleStartExam = () => {
         setIsExamStarted(true);
@@ -924,7 +926,7 @@ export default function Exam() {
                             userPFP={userPFP}
                             handleSignOut={handleSignOut}
                             onNavigateDashboard={() => navigate('/Dashboard')}
-                            onUpgradePlan={() => {/* Add upgrade logic */}}
+                            onUpgradePlan={() => {navigate('/Upgrade', { state: { userProfile: userProfile } })}}
                             onSupport={() => {/* Add support logic */}}
                             showIgnoredButton={!!isIgnoredRequest}
                             isIgnoredRequest={isIgnoredRequest}
@@ -950,6 +952,7 @@ export default function Exam() {
                             <button 
                                 className='collapsedSideButton'
                                 title="Upgrade Plan"
+                                onClick={()=>navigate('/Upgrade', { state: { userProfile: userProfile } })}
                             >
                                 <img 
                                     className='collapsedSidebarIcon' 
@@ -1024,7 +1027,7 @@ export default function Exam() {
                                 
                                     <div className='logoutPopupContent'>
                                         <div className='popupUpgradePlan'>
-                                            <button className='bottomDashboardSideButtons'>
+                                            <button className='bottomDashboardSideButtons' onClick={()=>navigate('/Upgrade', { state: { userProfile: userProfile } })}>
                                                 <img className='sidebarIcon' src='/starIcon.png' alt='Support icon'/>
                                                 <span>Upgrade Plan</span>
                                             </button>
@@ -1155,6 +1158,7 @@ export default function Exam() {
                             <button 
                                 className='collapsedSideButton'
                                 title="Upgrade Plan"
+                                onClick={()=>navigate('/Upgrade', { state: { userProfile: userProfile } })}
                             >
                                 <img 
                                     className='collapsedSidebarIcon' 
@@ -1229,7 +1233,7 @@ export default function Exam() {
                                 
                                     <div className='logoutPopupContent'>
                                         <div className='popupUpgradePlan'>
-                                            <button className='bottomDashboardSideButtons'>
+                                            <button className='bottomDashboardSideButtons' onClick={()=>navigate('/Upgrade', { state: { userProfile: userProfile } })}>
                                                 <img className='sidebarIcon' src='/starIcon.png' alt='Support icon'/>
                                                 <span>Upgrade Plan</span>
                                             </button>
@@ -1293,6 +1297,7 @@ export default function Exam() {
                             
                             <button 
                                 className='collapsedSideButton'
+                                onClick={()=>navigate('/Upgrade', { state: { userProfile: userProfile } })}
                                 title="Upgrade Plan"
                             >
                                 <img 
@@ -1368,7 +1373,7 @@ export default function Exam() {
                                 
                                     <div className='logoutPopupContent'>
                                         <div className='popupUpgradePlan'>
-                                            <button className='bottomDashboardSideButtons'>
+                                            <button className='bottomDashboardSideButtons' onClick={()=>navigate('/Upgrade', { state: { userProfile: userProfile } })}>
                                                 <img className='sidebarIcon' src='/starIcon.png' alt='Support icon'/>
                                                 <span>Upgrade Plan</span>
                                             </button>

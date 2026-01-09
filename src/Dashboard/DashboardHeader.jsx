@@ -77,7 +77,7 @@ function RecentsSection({recents, onRecentClick}) {
   );
 }
 
-export default function DashboardHeader({openUpload, changeActiveTab, activeTab, openUploadExisting, batches, setBatches, isLimitReached, setIsLimitReached, limitReachedMessage}) {
+export default function DashboardHeader({openUpload, changeActiveTab, activeTab, openUploadExisting, batches, setBatches, isLimitReached, setIsLimitReached, limitReachedMessage,userProfile}) {
   const [userName, setUserName] = useState('');
   const [userPFP, setUserPFP] = useState(null);
   const [userEmail, setUserEmail] = useState('');
@@ -232,6 +232,7 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
             recents={recents} 
             onRecentClick={handleRecentClick}
             RecentsSection={RecentsSection}
+            userProfile={userProfile}
           />
         </div>
         <img className='dashboardLogoMobile' src='/crammiLogo.png' alt='Crammi Logo'/>
@@ -299,6 +300,7 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
             isLimitReached={isLimitReached}
             setIsLimitReached={setIsLimitReached}
             limitReachedMessage={limitReachedMessage}
+            userProfile={userProfile}
           />
         </div>
       </div>
@@ -323,8 +325,8 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
               </button>
             </div>
             <div className='logoutPopupContent'>
-              <div className='popupUpgradePlan'>
-                <button className='bottomDashboardSideButtons'>
+              <div className='popupUpgradePlan'style={{display: userProfile.accountTier==="pro"? 'none': 'flex'}}>
+                <button className='bottomDashboardSideButtons' onClick={() => navigate('/Upgrade', { state: { userProfile: userProfile } })} style={{display: userProfile.accountTier==="pro"? 'none': 'flex'}}>
                   <img className='sidebarIcon' src='/starIcon.png' alt='Upgrade icon'/>
                   <span>Upgrade Plan</span>
                 </button>
@@ -358,10 +360,10 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
             />
             <div>
               <span className='userNameText'>{userName}</span>
-              <p className='accountTierDisplay'>Free Plan</p>
+              <p className='accountTierDisplay'>{userProfile?.accountTier==='pro'? 'Pro Plan' : userProfile?.accountTier==='plus'? 'Plus Plan' : 'Free Plan'}</p>
             </div>
           </button>
-          <button className='upgradeButton'>
+          <button className='upgradeButton' style={{display:userProfile?.accountTier==='pro'? 'none': 'block'}} onClick={() => navigate('/Upgrade', { state: { userProfile: userProfile } })}>
             Upgrade to Pro
           </button>
         </div>

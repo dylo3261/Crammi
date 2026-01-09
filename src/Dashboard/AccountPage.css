@@ -6,7 +6,31 @@
     color: #0f172a;
     font-family: 'apple', -apple-system, sans-serif;
   }
+  /* Cancel Subscription Button */
+.cancel-subscription-button {
+    width: 100%;
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    border: 1px solid #ef4444;
+    background-color: white;
+    color: #ef4444;
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-family: 'apple', -apple-system, sans-serif;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 1.5rem;
+  }
   
+  .cancel-subscription-button:hover {
+    background-color: #ef4444;
+    color: white;
+  }
+  
+  .cancel-subscription-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
   /* Sidebar */
   .account-settings-sidebar {
     width: 280px;
