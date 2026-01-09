@@ -24,6 +24,7 @@ export default function BatchesSection({
     const [notification, setNotification] = useState(null);
     const [editingBatchId, setEditingBatchId] = useState(null);
     const [editingName, setEditingName] = useState('');
+    const [stuckBatches, setStuckBatches] = useState(new Set());
     const menuRef = useRef(null);
     const pollIntervalRef = useRef(null);
     const inputRef = useRef(null);
@@ -31,7 +32,21 @@ export default function BatchesSection({
     const pollCountRef = useRef(0);
     const MAX_POLLS = 18;
 
-    
+    useEffect(() => {
+        if (batches.length > 0) {
+            batches.forEach(batch => {
+                // If a previously stuck batch is now complete, remove from stuck set
+                if (stuckBatches.has(batch.batchID) && 
+                    (batch.status === 'COMPLETE' || batch.status === 'FAILED')) {
+                    setStuckBatches(prev => {
+                        const newSet = new Set(prev);
+                        newSet.delete(batch.batchID);
+                        return newSet;
+                    });
+                }
+            });
+        }
+    }, [batches, stuckBatches]);
 
     const handleCardClick = (batchID, status, batchName, batchType) => {
         if (status === 'COMPLETE') {
@@ -47,13 +62,10 @@ export default function BatchesSection({
                 navigate(`/Exam/${batchID}`, { state: { batchName, userProfile } });
             }
             else if(batchType === 'Quizzes'){
-                navigate(`/Exam/${batchID}`, { state: { batchName, userProfile } });
+                navigate(`/Quiz/${batchID}`, { state: { batchName, userProfile } });
             }
             else if(batchType === 'Flashcards'){
-                navigate(`/Exam/${batchID}`, { state: { batchName, userProfile } });
-            }
-            else if(batchType === 'Files'){
-                navigate(`/Exam/${batchID}`, { state: { batchName, userProfile } });
+                navigate(`/Flashcards/${batchID}`, { state: { batchName, userProfile } });
             }
         }
     };
@@ -351,6 +363,13 @@ export default function BatchesSection({
                     pollIntervalRef.current = null;
                     pollCountRef.current = 0;
                     console.log('⏹️ Stopping polling - max polls reached');
+                    
+                    // Mark any still-pending batches as "stuck"
+                    const stillPending = batches
+                        .filter(b => b.status === 'PENDING')
+                        .map(b => b.batchID);
+                    setStuckBatches(new Set(stillPending));
+                    
                     return;
                 }
                 
@@ -361,8 +380,27 @@ export default function BatchesSection({
             clearInterval(pollIntervalRef.current);
             pollIntervalRef.current = null;
             pollCountRef.current = 0;
+            setStuckBatches(new Set());
         }
     }, [batches, fetchBatches]);
+
+    useEffect(() => {
+        // Remove batches from stuck set if they're no longer pending
+        setStuckBatches(prev => {
+            const newSet = new Set(prev);
+            let changed = false;
+            
+            prev.forEach(batchID => {
+                const batch = batches.find(b => b.batchID === batchID);
+                if (!batch || batch.status !== 'PENDING') {
+                    newSet.delete(batchID);
+                    changed = true;
+                }
+            });
+            
+            return changed ? newSet : prev;
+        });
+    }, [batches]);
 
     // Filter batches by type
     const filteredBatches = batches.filter(batch => {
@@ -405,6 +443,8 @@ export default function BatchesSection({
         const earlier = [];
         
         batches.forEach(batch => {
+
+
             // Check localStorage for last opened time with user-specific key
             const key = userEmail ? `batch_${batch.batchID}_lastOpened_${userEmail}` : `batch_${batch.batchID}_lastOpened`;
             const lastOpenedStr = localStorage.getItem(key);
@@ -430,6 +470,9 @@ export default function BatchesSection({
     const getStatusDisplay = (batch) => {
         switch(batch.status) {
             case 'PENDING':
+                if (stuckBatches.has(batch.batchID)) {
+                    return '🕒 Taking longer than usual... Check back later';
+                }
                 return '⏳ Processing...';
             case 'FAILED':
                 return `❌ Failed: ${batch.failureReason}`;
@@ -454,10 +497,15 @@ export default function BatchesSection({
     );
 
     const renderBatchCard = (batch) => (
-        <div key={batch.batchID} className={`batch-card ${batch.status === 'PENDING' ? 'processing' : ''} ${batch.status === 'FAILED' ? 'failed' : ''}`} onClick={() => handleCardClick(batch.batchID, batch.status, batch.batchName, batch.type)}>
+        <div 
+            key={batch.batchID} 
+            className={`batch-card ${batch.status === 'PENDING' ? 'processing' : ''} ${batch.status === 'FAILED' ? 'failed' : ''} ${stuckBatches.has(batch.batchID) ? 'stuck' : ''}`} 
+            onClick={() => handleCardClick(batch.batchID, batch.status, batch.batchName, batch.type)}
+        >
             <div className="batch-header">
                 <span className="batch-type-badge">{batch.type}</span>
                 <div className="batch-menu-container">
+                    
                     <button 
                         className="batch-menu" 
                         onClick={(e) => handleMenuClick(batch.batchID, e)}
@@ -502,6 +550,7 @@ export default function BatchesSection({
             <p className="batch-description">{batch.description}</p>
             <p className="batch-timestamp" style={{
                 color: batch.status === 'FAILED' ? '#d32f2f' : 
+                       (batch.status === 'PENDING' && stuckBatches.has(batch.batchID)) ? '#ff9800' :
                        batch.status === 'PENDING' ? '#f57c00' : '#5f6368'
             }}>
                 {getStatusDisplay(batch)}
