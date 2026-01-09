@@ -207,10 +207,10 @@
 
 .filesRemaining {
   font-family: 'applethin', -apple-system, sans-serif;
-  font-size: 0.875rem;
+  font-size: 1.1rem;
   font-weight: 400;
   letter-spacing: 0.3px;
-  margin-top: 0.75rem;
+  margin-top: 0.60rem;
   margin-bottom: 0;
   background-color: #f8f9fa;
   display: flex;
@@ -366,7 +366,7 @@
   font-style: normal;
   font-family: 'applethin', -apple-system, sans-serif;
   font-weight: 400;
-  font-size: 0.75rem;
+  font-size: 0.9rem;
   white-space: nowrap;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   visibility: hidden;
