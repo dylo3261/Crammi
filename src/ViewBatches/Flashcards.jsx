@@ -168,6 +168,7 @@ export default function Flashcards() {
       }
     };
     fetchUserData();
+
   }, []);
 
   const handleSignOut = useCallback(async () => {
@@ -455,7 +456,7 @@ export default function Flashcards() {
             />
           </button>
           
-          <button className='collapsedSideButton' title="Upgrade Plan" onClick={()=>navigate('/Upgrade', { state: { userProfile: userProfile } })}
+          <button className='collapsedSideButton' title="Upgrade Plan"  style={{display: userProfile.accountTier==='pro'? 'none' : 'flex'}} onClick={()=>navigate('/Upgrade', { state: { userProfile: userProfile } })}
           >
             <img className='collapsedSidebarIcon' src='/starIcon.png' alt='upgrade icon'/>
           </button>
@@ -526,7 +527,7 @@ export default function Flashcards() {
           
               <div className='logoutPopupContent'>
                 <div className='popupUpgradePlan'>
-                  <button className='bottomDashboardSideButtons' onClick={()=>navigate('/Upgrade', { state: { userProfile: userProfile } })}>
+                  <button className='bottomDashboardSideButtons'style={{display: userProfile.accountTier==='pro'? 'none' : 'flex'}} onClick={()=>navigate('/Upgrade', { state: { userProfile: userProfile } })}>
                     <img className='sidebarIcon' src='/starIcon.png' alt='upgrade icon'/>
                     <span>Upgrade Plan</span>
                   </button>

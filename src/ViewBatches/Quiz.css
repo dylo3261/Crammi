@@ -576,12 +576,15 @@ html, body {
     font-weight: 600;
     color: #333;
     display: block;
+    max-width: 100px;
 }
 
 .accountEmailDisplayPopup {
     font-size: 0.75rem;
     color: #666;
     margin: 0;
+    max-width: 100px; /* or width */
+
 }
 
 .logoutPopupContent {

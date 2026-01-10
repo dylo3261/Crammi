@@ -83,6 +83,7 @@
     border-radius: 8px;
     background-color: #f9f7f7;
     outline: none;
+    margin-bottom: 0.75rem;
     box-sizing: border-box;
     transition: box-shadow 0.25s ease, border-color 0.25s ease;
     resize: none;
@@ -153,7 +154,7 @@
   /* Existing File Selection - the scrollable container */
   .existingFileSelection {
     flex: 1;
-    min-height: 0;
+    min-height: 140px;
     max-height: 300px;
     overflow-y: auto;
     overflow-x: hidden;
@@ -168,6 +169,7 @@
     margin: 0;
     width: 100%;
     text-align: left;
+    
   }
   
   /* Mobile */

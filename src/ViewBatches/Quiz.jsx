@@ -213,7 +213,7 @@ function QuizInterface({ quizData, onQuizComplete }) {
             total: quizData.length,
             attempted: attemptedCount,
             firstTryCorrect: firstTryCount,
-            percentage: attemptedCount > 0 ? Math.round((correctCount / attemptedCount) * 100) : 0,
+            percentage: attemptedCount > 0 ? Math.round((correctCount / quizData.length) * 100) : 0,
             detailedResults: detailedResults
         };
     };
@@ -861,6 +861,7 @@ export default function Quiz() {
                     <button 
                         className='collapsedSideButton'
                         title="Upgrade Plan"
+                        style={{display: userProfile.accountTier==='pro'? 'none' : 'flex'}}
                         onClick={()=>navigate('/Upgrade', { state: { userProfile: userProfile } })}
                     >
                         <img 
@@ -936,7 +937,7 @@ export default function Quiz() {
                         
                             <div className='logoutPopupContent'>
                                 <div className='popupUpgradePlan'>
-                                    <button className='bottomDashboardSideButtons'onClick={()=>navigate('/Upgrade', { state: { userProfile: userProfile } })}
+                                    <button className='bottomDashboardSideButtons'style={{display: userProfile.accountTier==='pro'? 'none' : 'flex'}} onClick={()=>navigate('/Upgrade', { state: { userProfile: userProfile } })}
                                     >
                                         <img className='sidebarIcon' src='/starIcon.png' alt='upgrade'/>
                                         <span>Upgrade Plan</span>

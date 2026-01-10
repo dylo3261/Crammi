@@ -19,8 +19,8 @@ export default function AccountPage(){
   const [isFederatedUser, setIsFederatedUser] = useState(false);
   const [identityProvider, setIdentityProvider] = useState('');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
-  const [cancelLoading, setCancelLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [portalLoading, setPortalLoading] = useState(false);
 
   useEffect(() => {
     fetchUserData();
@@ -93,35 +93,37 @@ export default function AccountPage(){
     }
   };
 
-  const handleCancelSubscription = async () => {
+  const handleManageBilling = async () => {
     try {
-      setCancelLoading(true);
+      setPortalLoading(true);
       const session = await fetchAuthSession();
       const token = session.tokens?.idToken?.toString();
       
-      const response = await fetch('https://js065tswp1.execute-api.us-west-2.amazonaws.com/cancel', {
+      // Get current URL for return after billing portal
+      const returnUrl = window.location.origin + '/Settings';
+      
+      const response = await fetch('https://js065tswp1.execute-api.us-west-2.amazonaws.com/billing', {
         method: 'POST',
         headers: { 
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
-        }
+        },
+        body: JSON.stringify({ returnUrl })
       });
 
       const data = await response.json();
 
-      if (response.ok) {
-        alert(data.message || 'Subscription canceled successfully. You will retain access until the end of your billing period.');
-        setShowCancelConfirm(false);
-        // Refresh user data to get updated subscription status
-        await fetchUserData();
+      if (response.ok && data.url) {
+        // Redirect to Stripe Customer Portal
+        window.location.href = data.url;
       } else {
-        alert(data.message || 'Failed to cancel subscription. Please try again.');
+        alert(data.error || 'Failed to open billing portal. Please try again.');
+        setPortalLoading(false);
       }
     } catch (error) {
-      console.error('Error canceling subscription:', error);
-      alert('An error occurred while canceling your subscription. Please try again.');
-    } finally {
-      setCancelLoading(false);
+      console.error('Error opening billing portal:', error);
+      alert('An error occurred. Please try again.');
+      setPortalLoading(false);
     }
   };
 
@@ -175,6 +177,7 @@ export default function AccountPage(){
 
   const handleDeleteAccount = async () => {
     try {
+      setDeleteLoading(true);
       const session = await fetchAuthSession();
       const token = session.tokens?.idToken?.toString();
       
@@ -202,6 +205,8 @@ export default function AccountPage(){
     } catch (error) {
       console.error('Error deleting account:', error);
       alert('An error occurred while deleting your account. Please contact support.');
+    } finally {
+      setDeleteLoading(false);
     }
   };
 
@@ -219,38 +224,9 @@ export default function AccountPage(){
 
   return (
     <div className="account-settings-container">
-      {/* Cancel Subscription Modal */}
-      {showCancelConfirm && (
-        <div className="delete-modal-overlay" onClick={() => setShowCancelConfirm(false)}>
-          <div className="delete-modal" onClick={(e) => e.stopPropagation()}>
-            <h2 className="delete-modal-title">Cancel Subscription</h2>
-            <p className="delete-modal-text">
-              Are you sure you want to cancel your subscription? You will retain {getUserPlanDisplay()} access 
-              until the end of your current billing period, after which your account will be downgraded to the Free Plan.
-            </p>
-            <div className="delete-modal-buttons">
-              <button 
-                className="delete-cancel-button" 
-                onClick={() => setShowCancelConfirm(false)}
-                disabled={cancelLoading}
-              >
-                Keep Subscription
-              </button>
-              <button 
-                className="delete-confirm-button" 
-                onClick={handleCancelSubscription}
-                disabled={cancelLoading}
-              >
-                {cancelLoading ? 'Canceling...' : 'Cancel Subscription'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Delete Account Modal */}
       {showDeleteConfirm && (
-        <div className="delete-modal-overlay" onClick={() => setShowDeleteConfirm(false)}>
+        <div className="delete-modal-overlay" onClick={() => !deleteLoading && setShowDeleteConfirm(false)}>
           <div className="delete-modal" onClick={(e) => e.stopPropagation()}>
             <h2 className="delete-modal-title">Delete Account</h2>
             <p className="delete-modal-text">
@@ -258,11 +234,19 @@ export default function AccountPage(){
               All your data, including exams, quizzes, and flashcards will be permanently deleted. Any active subscriptions will be canceled.
             </p>
             <div className="delete-modal-buttons">
-              <button className="delete-cancel-button" onClick={() => setShowDeleteConfirm(false)}>
+              <button 
+                className="delete-cancel-button" 
+                onClick={() => setShowDeleteConfirm(false)}
+                disabled={deleteLoading}
+              >
                 Cancel
               </button>
-              <button className="delete-confirm-button" onClick={handleDeleteAccount}>
-                Delete My Account
+              <button 
+                className="delete-confirm-button" 
+                onClick={handleDeleteAccount}
+                disabled={deleteLoading}
+              >
+                {deleteLoading ? 'Processing...' : 'Delete My Account'}
               </button>
             </div>
           </div>
@@ -434,7 +418,7 @@ export default function AccountPage(){
 
         {activeSection === 'Billing' && (
           <section className="settings-section">
-            <h2 className="section-title">Billing</h2>
+            <h2 className="section-title">Billing & Subscription</h2>
             <div className="info-card">
               <div className="info-item">
                 <span className="info-label">Current Plan:</span>
@@ -442,14 +426,34 @@ export default function AccountPage(){
               </div>
               
               {isSubscribed ? (
-                <button 
-                  className="cancel-subscription-button" 
-                  onClick={() => setShowCancelConfirm(true)}
-                >
-                  Cancel Subscription
-                </button>
+                <>
+                  {userProfile?.accountTier?.toLowerCase() === 'plus' && (
+                    <button 
+                      className="upgrade-button-large"
+                      onClick={() => navigate('/Upgrade', { state: { userProfile: userProfile } })}
+                      >
+                      ⭐ Upgrade to Pro
+                    </button>
+                  )}
+                  <button 
+                    className="manage-billing-button" 
+                    onClick={handleManageBilling}
+                    disabled={portalLoading}
+                  >
+                    {portalLoading ? 'Opening Portal...' : '⚙️ Manage Billing & Subscription'}
+                  </button>
+                  <p className="billing-description">
+                    {userProfile?.accountTier?.toLowerCase() === 'plus' 
+                      ? 'Upgrade to Pro for more features, or manage your current subscription'
+                      : 'Update payment method, view invoices, and manage your subscription'
+                    }
+                  </p>
+                </>
               ) : (
-                <button className="upgrade-button-large">
+                <button 
+                  className="upgrade-button-large"
+                  onClick={() => navigate('/Upgrade', { state: { userProfile: userProfile } })}               
+                   >
                   ⭐ Upgrade to Pro
                 </button>
               )}

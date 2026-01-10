@@ -9,6 +9,44 @@
     padding: 1.5rem;
     max-width: 1100px;
 }
+
+/* Manage Billing Button */
+.manage-billing-button {
+    width: 100%;
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    background-color: white;
+    color: #0f172a;
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-family: 'apple', -apple-system, sans-serif;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 1.5rem;
+  }
+  
+  .manage-billing-button:hover {
+    background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
+    color: white;
+    border-color: #ab9ff2;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(171, 159, 242, 0.3);
+  }
+  
+  .manage-billing-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+  
+  .billing-description {
+    font-size: 0.85rem;
+    color: #64748b;
+    text-align: center;
+    margin-top: 0.75rem;
+    font-family: 'applethin', -apple-system, sans-serif;
+  }
 /* Stuck batch state */
 .batch-card.stuck {
     border-left: 3px solid #ff9800;

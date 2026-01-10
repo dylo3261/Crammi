@@ -953,6 +953,7 @@ export default function Exam() {
                                 className='collapsedSideButton'
                                 title="Upgrade Plan"
                                 onClick={()=>navigate('/Upgrade', { state: { userProfile: userProfile } })}
+                                style={{display: userProfile.accountTier==='pro'? 'none' : 'flex'}}
                             >
                                 <img 
                                     className='collapsedSidebarIcon' 
@@ -1027,7 +1028,7 @@ export default function Exam() {
                                 
                                     <div className='logoutPopupContent'>
                                         <div className='popupUpgradePlan'>
-                                            <button className='bottomDashboardSideButtons' onClick={()=>navigate('/Upgrade', { state: { userProfile: userProfile } })}>
+                                            <button className='bottomDashboardSideButtons' style={{display: userProfile.accountTier==='pro'? 'none' : 'flex'}} onClick={()=>navigate('/Upgrade', { state: { userProfile: userProfile } })}>
                                                 <img className='sidebarIcon' src='/starIcon.png' alt='Support icon'/>
                                                 <span>Upgrade Plan</span>
                                             </button>
@@ -1159,6 +1160,7 @@ export default function Exam() {
                                 className='collapsedSideButton'
                                 title="Upgrade Plan"
                                 onClick={()=>navigate('/Upgrade', { state: { userProfile: userProfile } })}
+                                style={{display: userProfile.accountTier==='pro'? 'none' : 'flex'}}
                             >
                                 <img 
                                     className='collapsedSidebarIcon' 
@@ -1233,7 +1235,7 @@ export default function Exam() {
                                 
                                     <div className='logoutPopupContent'>
                                         <div className='popupUpgradePlan'>
-                                            <button className='bottomDashboardSideButtons' onClick={()=>navigate('/Upgrade', { state: { userProfile: userProfile } })}>
+                                            <button className='bottomDashboardSideButtons'style={{display: userProfile.accountTier==='pro'? 'none' : 'flex'}} onClick={()=>navigate('/Upgrade', { state: { userProfile: userProfile } })}>
                                                 <img className='sidebarIcon' src='/starIcon.png' alt='Support icon'/>
                                                 <span>Upgrade Plan</span>
                                             </button>

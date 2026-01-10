@@ -33,20 +33,20 @@ export default function BatchesSection({
     const MAX_POLLS = 18;
 
     useEffect(() => {
-        if (batches.length > 0) {
-            batches.forEach(batch => {
-                // If a previously stuck batch is now complete, remove from stuck set
-                if (stuckBatches.has(batch.batchID) && 
-                    (batch.status === 'COMPLETE' || batch.status === 'FAILED')) {
-                    setStuckBatches(prev => {
-                        const newSet = new Set(prev);
-                        newSet.delete(batch.batchID);
-                        return newSet;
-                    });
-                }
-            });
-        }
-    }, [batches, stuckBatches]);
+    if (batches.length > 0) {
+        batches.forEach(batch => {
+            // If a previously stuck batch is now complete, remove from stuck set
+            if (stuckBatches.has(batch.batchID) && 
+                (batch.status === 'COMPLETE' || batch.status === 'FAILED')) {
+                setStuckBatches(prev => {
+                    const newSet = new Set(prev);
+                    newSet.delete(batch.batchID);
+                    return newSet;
+                });
+            }
+        });
+    }
+}, [batches, stuckBatches]);
 
     const handleCardClick = (batchID, status, batchName, batchType) => {
         if (status === 'COMPLETE') {
