@@ -3,6 +3,7 @@ import { fetchAuthSession, fetchUserAttributes, signOut } from 'aws-amplify/auth
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import "./Exam.css";
 import ViewHamburger from "./ViewHamburger";
+import LoadingAnimation from "../Dashboard/LoadingScreen";
 // Load KaTeX once globally
 let katexLoaded = false;
 let katexLoadingPromise = null;
@@ -1059,6 +1060,9 @@ export default function Exam() {
                     </div>
 
                     <div className="examViewContainer">
+                        {isLoading ? (
+                                <LoadingAnimation />
+                    ) : (
                         <div className="examViewContent">
                             <h1 className="examViewTitle" onClick={handleTitleClick} style={{ cursor: 'pointer' }}>
                                 {isEditingTitle ? (
@@ -1138,7 +1142,9 @@ export default function Exam() {
                                 Start Exam
                             </button>
                         </div>
+                    )}
                     </div>
+                
                 </>
             ) : isExamStarted? (
                 <>
