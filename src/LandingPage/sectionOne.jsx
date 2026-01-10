@@ -10,16 +10,21 @@ export default function SectionOne() {
   const handleEmailSignUp = () => {
     navigate('/signup');
   };
-  const handleEmailSignIn=()=>{
-    navigate('/signin')
-  }
+  
+  const handleEmailSignIn = () => {
+    navigate('/signin');
+  };
 
   const handleGoogleSignUp = async () => {
     try {
+      // Set the source to signup page so errors can be displayed there
+      sessionStorage.setItem('oauth_source', '/signup');
       await signInWithRedirect({
         provider: 'Google'
       });
     } catch (error) {
+      // Clear the source if OAuth fails to initiate
+      sessionStorage.removeItem('oauth_source');
       console.error('Google sign up error:', error);
     }
   };

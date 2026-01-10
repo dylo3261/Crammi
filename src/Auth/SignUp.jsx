@@ -60,7 +60,8 @@ export default function SignUp() {
       const oauthCompleted = sessionStorage.getItem('oauth_completed');
       const oauthSource = sessionStorage.getItem('oauth_source');
       
-      if (oauthCompleted === 'true' && oauthSource === '/signup') {
+      // Check if OAuth was initiated from landing page or signup page
+      if (oauthCompleted === 'true' && (oauthSource === '/signup' || oauthSource === '/')) {
         sessionStorage.removeItem('oauth_source');
         sessionStorage.removeItem('oauth_completed');
         
