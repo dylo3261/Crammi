@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, act } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import * as pdfjsLib from "pdfjs-dist/build/pdf.mjs";
 import { fetchAuthSession } from 'aws-amplify/auth';
 import LimitReached from "./limitReached";
@@ -6,59 +6,70 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.mjs";
 
 import "./uploadModal.css";
 import StudyLoader from "./StudyLoader";
-export default function UploadModal({ isOpen, close , activeTab, userProfile, setUserProfile, setIsLimitReached, setLimitReachedMessage}) {
+
+export default function UploadModal({ isOpen, close, activeTab, userProfile, setUserProfile, setIsLimitReached, setLimitReachedMessage}) {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [dragOver, setDragOver] = useState(false);
   const [pickPages, setPickPages] = useState(false);
-  const [isWarning,setWarning]=useState(false);
-  const [isWarning2, setWarning2]=useState(false);
-  const [isWarning3, setWarning3]=useState(false);
+  const [isWarning, setWarning] = useState(false);
+  const [isWarning2, setWarning2] = useState(false);
+  const [isWarning3, setWarning3] = useState(false);
   const [pdfFiles, setPdfFiles] = useState([]);
-  const [pdfPages, setPdfPages] = useState([]);
+  const [allPdfPages, setAllPdfPages] = useState([]); // Store ALL pages
   const [selectedPages, setSelectedPages] = useState([]);
-  const [numSelectedPages,setnNumSelectedPages]=useState(0);
+  const [numSelectedPages, setnNumSelectedPages] = useState(0);
   const [specialInstructions, setSpecialInstructions] = useState(""); 
-  const [isUploadingPhotos, setIsUploadingPhotos]= useState(false);
-   useEffect(() => {
-          function handleEscape(event) {
-              if (event.key === "Escape") {
-                  close();
-              }
-          }
+  const [isUploadingPhotos, setIsUploadingPhotos] = useState(false);
   
-          if (isOpen) {
-              document.addEventListener("keydown", handleEscape);
-          }
-  
-          return () => {
-              document.removeEventListener("keydown", handleEscape);
-          };
-      }, [isOpen, close]);
-  /////////////
-  const handleUploadS3 = async (selectedFiles, uploads)=>{
-    const uploadResults=[];
-    const fileKeys=Object.keys(uploads);
-    for (let i=0; i<fileKeys.length; i++){
-      const curFileKey=fileKeys[i];
-      const curUploadInfo=uploads[curFileKey];
-      const file= selectedFiles[i];
-      try{
-        const formData= new FormData();
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pagesPerView] = useState(10);
+
+  // Calculate current page slice
+  const totalPages = Math.ceil(allPdfPages.length / pagesPerView);
+  const startIndex = (currentPage - 1) * pagesPerView;
+  const endIndex = startIndex + pagesPerView;
+  const currentPdfPages = allPdfPages.slice(startIndex, endIndex);
+
+  useEffect(() => {
+    function handleEscape(event) {
+      if (event.key === "Escape") {
+        close();
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener("keydown", handleEscape);
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [isOpen, close]);
+
+  const handleUploadS3 = async (selectedFiles, uploads) => {
+    const uploadResults = [];
+    const fileKeys = Object.keys(uploads);
+    for (let i = 0; i < fileKeys.length; i++) {
+      const curFileKey = fileKeys[i];
+      const curUploadInfo = uploads[curFileKey];
+      const file = selectedFiles[i];
+      try {
+        const formData = new FormData();
         
-        Object.keys(curUploadInfo.fields).forEach(key => { //create the URL
+        Object.keys(curUploadInfo.fields).forEach(key => {
           formData.append(key, curUploadInfo.fields[key]);
         });
 
         formData.append('Content-Type', file.type);
-        formData.append('file',file) //finish the URL to upload
+        formData.append('file', file);
 
-        // Upload to S3
         const response = await fetch(curUploadInfo.url, {
           method: 'POST',
           body: formData,
         });
+        
         if (response.ok) {
-          // Construct the final URL
           const uploadedFileUrl = `${curUploadInfo.url}${curUploadInfo.fields.key}`;
           console.log(`${curFileKey} uploaded successfully: ${uploadedFileUrl}`);
           
@@ -68,37 +79,34 @@ export default function UploadModal({ isOpen, close , activeTab, userProfile, se
             success: true,
             url: uploadedFileUrl,
           });
-        } else { //if something went wrong in the upload
-            const errorText = await response.text();
-            console.error(`${curFileKey} upload failed:`, errorText);
-            
-            uploadResults.push({
-              fileKey: curFileKey, 
-              fileName: file.name,
-              success: false,
-              error: errorText,
-            });
+        } else {
+          const errorText = await response.text();
+          console.error(`${curFileKey} upload failed:`, errorText);
+          
+          uploadResults.push({
+            fileKey: curFileKey, 
+            fileName: file.name,
+            success: false,
+            error: errorText,
+          });
         }
-      }catch (error) {
+      } catch (error) {
         console.error(`Error uploading ${curFileKey}:`, error);
         uploadResults.push({
-        fileKey: curFileKey, 
-        fileName: file.name,
-        success: false,
-        error: error.message,
+          fileKey: curFileKey, 
+          fileName: file.name,
+          success: false,
+          error: error.message,
         });
       }
-
-
     }
     setIsUploadingPhotos(false);
     return uploadResults;
   }
 
   const handleUploadSign = async (selectedFiles, activeTab) => {
-    if(selectedFiles.length > 0){
+    if (selectedFiles.length > 0) {
       try {
-        // Get fresh token
         const session = await fetchAuthSession();
         const token = session.tokens?.idToken?.toString();
         
@@ -145,18 +153,17 @@ export default function UploadModal({ isOpen, close , activeTab, userProfile, se
         console.log('Batch ID:', batchID);
         console.log('Uploads:', uploads);
 
-        window.dispatchEvent(new Event('batchUploaded')); //start polling
+        window.dispatchEvent(new Event('batchUploaded'));
 
-        const results= await handleUploadS3(selectedFiles,uploads);
+        const results = await handleUploadS3(selectedFiles, uploads);
         const allSucceeded = results.every(r => r.success);
         
         if (allSucceeded) {
           console.log('All files uploaded successfully!');          
         } else {
           console.error('Some uploads failed:', results.filter(r => !r.success));
-          // Handle partial failures
         }
-        triggerWorkerLambda(batchID,activeTab,token)
+        triggerWorkerLambda(batchID, activeTab, token);
         
         return results;
       } catch (error) {
@@ -164,14 +171,15 @@ export default function UploadModal({ isOpen, close , activeTab, userProfile, se
       }
     }
   }
-  const triggerWorkerLambda= async (batchID,activeTab,token) => {
-    const batchInfo={
+
+  const triggerWorkerLambda = async (batchID, activeTab, token) => {
+    const batchInfo = {
       requestedCram: activeTab,
       batch_ID: batchID,
       special_instructions: specialInstructions
     }
-    console.log('Triggering worker for batch',batchID);
-    console.log('Requested Cram:',activeTab);
+    console.log('Triggering worker for batch', batchID);
+    console.log('Requested Cram:', activeTab);
 
     const response = await fetch('https://ul9ffsljla.execute-api.us-west-2.amazonaws.com/prod/get-json', {
       method: 'POST',
@@ -191,42 +199,35 @@ export default function UploadModal({ isOpen, close , activeTab, userProfile, se
     }
   }
 
-   // Calculate limits based on user tier
- const maxNumFiles = userProfile?.accountTier === 'pro' ? 50 : userProfile?.accountTier === 'plus' ? 20 : 5;
- const maxFileSize = userProfile?.accountTier === 'pro' ? 50 * 1024 * 1024 : userProfile?.accountTier === 'plus' ? 20 * 1024 * 1024 : 5 * 1024 * 1024; //50 10 or 5mb
+  const maxNumFiles = userProfile?.accountTier === 'pro' ? 50 : userProfile?.accountTier === 'plus' ? 20 : 5;
+  const maxFileSize = userProfile?.accountTier === 'pro' ? 50 * 1024 * 1024 : userProfile?.accountTier === 'plus' ? 20 * 1024 * 1024 : 5 * 1024 * 1024;
 
- const [fileSizeRemaining, changeFileSizeRemaining] = useState(maxFileSize);
- const [remainingFiles, setRemainingFiles] = useState(maxNumFiles);
- const fileInputRef = useRef(null);
+  const [fileSizeRemaining, changeFileSizeRemaining] = useState(maxFileSize);
+  const [remainingFiles, setRemainingFiles] = useState(maxNumFiles);
+  const fileInputRef = useRef(null);
 
- useEffect(() => { 
-  if (isOpen && userProfile) {
-    const maxFiles =  userProfile.accountTier === 'pro' ? 50 : userProfile?.accountTier === 'plus' ? 20 : 5;
-    const maxSize = userProfile.accountTier === 'pro' ? 50 * 1024 * 1024 : userProfile?.accountTier === 'plus' ? 20 * 1024 * 1024 : 5 * 1024 * 1024; //50 10 or 5mb
-    
-    setRemainingFiles(maxFiles);
-    changeFileSizeRemaining(maxSize);
+  useEffect(() => { 
+    if (isOpen && userProfile) {
+      const maxFiles = userProfile.accountTier === 'pro' ? 50 : userProfile?.accountTier === 'plus' ? 20 : 5;
+      const maxSize = userProfile.accountTier === 'pro' ? 50 * 1024 * 1024 : userProfile?.accountTier === 'plus' ? 20 * 1024 * 1024 : 5 * 1024 * 1024;
+      
+      setRemainingFiles(maxFiles);
+      changeFileSizeRemaining(maxSize);
 
-    setSelectedFiles([]);
-    clearPDF();
-  }
-}, [isOpen, userProfile]);
+      setSelectedFiles([]);
+      clearPDF();
+    }
+  }, [isOpen, userProfile]);
 
-///////////////////////////////
-
-
-  //are we mobile
   const [isMobile, setIsMobile] = useState(false);
 
-useEffect(() => {
-  const check = () => setIsMobile(window.innerWidth < 768);
-  check();
-  window.addEventListener("resize", check);
-  return () => window.removeEventListener("resize", check);
-}, []);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
-
-    //stop dashboard scrolling when modal open
   useEffect(() => {
     if (isOpen) {
       const scrollY = window.scrollY;
@@ -237,7 +238,7 @@ useEffect(() => {
       const scrollY = -parseInt(document.body.style.top || '0', 10);
       document.body.style.position = '';
       document.body.style.top = '';
-      window.scrollTo(0, scrollY); // restore scroll position
+      window.scrollTo(0, scrollY);
     }
   
     return () => {
@@ -245,28 +246,23 @@ useEffect(() => {
       document.body.style.top = '';
     };
   }, [isOpen]);
-  
-  //edge case variables
-  // let numFilesRemaining=10;
 
-  //file conversion for sizing
   const formatFileSize = (size) => {
     if (size < 1024) return size;
-    else if (size < 1024 * 1024) return (size / 1024).toFixed(1) ;
-    else return (size / (1024 * 1024)).toFixed(1) ;
+    else if (size < 1024 * 1024) return (size / 1024).toFixed(1);
+    else return (size / (1024 * 1024)).toFixed(1);
   };
+
   const formatFileSizeDecoration = (size) => {
-    if (size < 1024) return" B";
-    else if (size < 1024 * 1024) return" KB";
+    if (size < 1024) return " B";
+    else if (size < 1024 * 1024) return " KB";
     else return " MB";
   };
 
-
-  //PDF IMAGE LAZY LOADER HELPER
-  const renderPage = async (pageObj, index) => {
-    if (pageObj.src) return; // already rendered
+  const renderPage = async (pageObj, displayIndex) => {
+    if (pageObj.src) return;
   
-    try{
+    try {
       const page = await pageObj.pdf.getPage(pageObj.pageNumber);
       const viewport = page.getViewport({ scale: 1.5 });
     
@@ -279,58 +275,58 @@ useEffect(() => {
         viewport
       }).promise;
     
-      setPdfPages(prev => {
+      setAllPdfPages(prev => {
         const updated = [...prev];
-        updated[index] = { ...updated[index], src: canvas.toDataURL() };
+        const actualIndex = startIndex + displayIndex;
+        updated[actualIndex] = { ...updated[actualIndex], src: canvas.toDataURL() };
         return updated;
       });
-  }catch(error){
-    console.error(`Failed to render page ${pageObj.pageNumber}:`, error);
+    } catch(error) {
+      console.error(`Failed to render page ${pageObj.pageNumber}:`, error);
       alert(`Failed to render page ${pageObj.pageNumber} of ${pageObj.name}`);
-      setPdfPages(prev => {
+      setAllPdfPages(prev => {
         const updated = [...prev];
-        updated[index] = { ...updated[index], src: "error" };
+        const actualIndex = startIndex + displayIndex;
+        updated[actualIndex] = { ...updated[actualIndex], src: "error" };
         return updated;
       });
-  }
+    }
   };
-  
 
-  // Toggle page selection
-  const togglePage = (index) => {
+  const togglePage = (displayIndex) => {
+    const actualIndex = startIndex + displayIndex;
     setSelectedPages((prev) =>
-      prev.includes(index)
-        ? prev.filter((i) => i !== index)
-        : [...prev, index]
+      prev.includes(actualIndex)
+        ? prev.filter((i) => i !== actualIndex)
+        : [...prev, actualIndex]
     );
   };
 
-  // Drag events
   const handleDragOver = (e) => { e.preventDefault(); setDragOver(true); };
   const handleDragLeave = (e) => { e.preventDefault(); setDragOver(false); };
 
-  // Clear only the PDF preview
   const clearPDF = () => {
     const thumbs = document.querySelectorAll('.lazyThumb');
     thumbs.forEach(thumb => {
-    if (thumb._observer) {
-      thumb._observer.disconnect();
-      delete thumb._observer;
-    }
+      if (thumb._observer) {
+        thumb._observer.disconnect();
+        delete thumb._observer;
+      }
     });
 
     const uniquePdfs = new Set();
-    pdfPages.forEach(page => {
+    allPdfPages.forEach(page => {
       if (page.pdf && !uniquePdfs.has(page.pdf)) {
         uniquePdfs.add(page.pdf);
         page.pdf.destroy();
       }
     });
 
-    setPdfPages([]);
+    setAllPdfPages([]);
     setPdfFiles([]);
     setPickPages(false);
     setSelectedPages([]);
+    setCurrentPage(1);
   };
 
   const processFiles = (files) => {
@@ -339,52 +335,46 @@ useEffect(() => {
     );
   
     if (unsupported) {
-      setWarning(true);      // If any invalid file found , reject entire batch
+      setWarning(true);
       return;
     }
-    let curRemainingFiles=remainingFiles;
+    let curRemainingFiles = remainingFiles;
 
-    // If all files are valid, handle images
     const newSelectedFiles = files.filter((f) => f.type.startsWith("image/"));
-    if (newSelectedFiles.length > 0 && curRemainingFiles-newSelectedFiles.length>=0) {
-      let PDFExceededFileSize=false;
-      let curRemaining=fileSizeRemaining;
-      let usedFileSize=0;
+    if (newSelectedFiles.length > 0 && curRemainingFiles - newSelectedFiles.length >= 0) {
+      let PDFExceededFileSize = false;
+      let curRemaining = fileSizeRemaining;
+      let usedFileSize = 0;
       for (const f of newSelectedFiles) {
-        curRemaining-=f.size;
-        usedFileSize+=f.size;
+        curRemaining -= f.size;
+        usedFileSize += f.size;
   
-        if(curRemaining<0){
-          PDFExceededFileSize=true;
+        if (curRemaining < 0) {
+          PDFExceededFileSize = true;
           break;
         }
       }
 
-      //if file size has been exceeded, reject entire batch
-    if(PDFExceededFileSize){
-      setSelectedFiles((prev) =>prev);
-      setRemainingFiles((prev) => prev);
-      setWarning(false);
-      setWarning2(true);
-      setWarning3(false);
-    }
-    else{
-      changeFileSizeRemaining(prev => prev - usedFileSize);
-      setSelectedFiles((prev) => [...prev, ...newSelectedFiles]);
-      setRemainingFiles((prev) => prev - newSelectedFiles.length);
-      setWarning(false);
-      setWarning2(false);
-      setWarning3(false);
-    }
-     
-    }
-    else{ //if file size exceeds limit # of files
+      if (PDFExceededFileSize) {
+        setSelectedFiles((prev) => prev);
+        setRemainingFiles((prev) => prev);
+        setWarning(false);
+        setWarning2(true);
+        setWarning3(false);
+      } else {
+        changeFileSizeRemaining(prev => prev - usedFileSize);
+        setSelectedFiles((prev) => [...prev, ...newSelectedFiles]);
+        setRemainingFiles((prev) => prev - newSelectedFiles.length);
+        setWarning(false);
+        setWarning2(false);
+        setWarning3(false);
+      }
+    } else {
       setWarning(false);
       setWarning2(false);
       setWarning3(true);
     }
   
-    // Handle PDFs
     const newPDFs = files.filter((f) => f.type === "application/pdf");
     if (newPDFs.length > 0) {
       clearPDF();
@@ -395,9 +385,7 @@ useEffect(() => {
       setPickPages(true);
     }
   };
-  
-  
-  
+
   const handleFileSelect = (e) => {
     processFiles(Array.from(e.target.files));
     e.target.value = null;
@@ -411,9 +399,7 @@ useEffect(() => {
 
   const openFileDialog = () => fileInputRef.current.click();
 
-  // Clear all uploaded files
   const clearFiles = () => {
-
     const totalSize = selectedFiles.reduce((sum, file) => sum + file.size, 0);
     changeFileSizeRemaining(prev => prev + totalSize);
     setRemainingFiles(prev => prev + selectedFiles.length);
@@ -422,59 +408,54 @@ useEffect(() => {
     clearPDF();
   };
 
-  // Remove single file from list
   const removeFile = (index) => {
     const removedFile = selectedFiles[index];
     changeFileSizeRemaining(prev => prev + removedFile.size);
     setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
-    setPdfPages((prev) => prev.filter((_, i) => i !== index));
     setSelectedPages([]);
     setRemainingFiles((prev) => prev + 1);
   };
-  
 
-  // Render PDFs to canvases
- // Render PDFs lazily
-useEffect(() => {
-  if (pdfFiles.length === 0) {
-    setPdfPages([]);
-    return;
-  }
+  useEffect(() => {
+    if (pdfFiles.length === 0) {
+      setAllPdfPages([]);
+      return;
+    }
 
-  const loadPDF = async () => {
-    try{
-      const placeholders = [];
+    const loadPDF = async () => {
+      try {
+        const placeholders = [];
 
-      for (let pdfFile of pdfFiles) {
-        const arrayBuffer = await pdfFile.arrayBuffer();
-        const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+        for (let pdfFile of pdfFiles) {
+          const arrayBuffer = await pdfFile.arrayBuffer();
+          const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
 
-        for (let i = 1; i <= pdf.numPages; i++) {
-          placeholders.push({
-            name: pdfFile.name,
-            pageNumber: i,
-            pdf,               // store reference for lazy loading
-            src: null          // NOT LOADED YET
-          });
+          for (let i = 1; i <= pdf.numPages; i++) {
+            placeholders.push({
+              name: pdfFile.name,
+              pageNumber: i,
+              pdf,
+              src: null
+            });
+          }
         }
+
+        setAllPdfPages(placeholders);
+        setCurrentPage(1);
+      } catch(error) {
+        console.error('Failed to load PDF:', error);
+        alert('Failed to load PDF. The file may be corrupted.');
+        setPdfFiles([]);
+        setPickPages(false);
       }
+    };
 
-      setPdfPages(placeholders);
-  }catch(error){
-      console.error('Failed to load PDF:', error);
-      alert('Failed to load PDF. The file may be corrupted.');
-      setPdfFiles([]);
-      setPickPages(false);
-  }
-  };
-
-  loadPDF();
-}, [pdfFiles]);
-
+    loadPDF();
+  }, [pdfFiles]);
 
   const addSelectedPagesToFiles = () => {
     const newFiles = selectedPages.map((index) => {
-      const page = pdfPages[index];
+      const page = allPdfPages[index];
       const arr = page.src.split(",");
       const mime = arr[0].match(/:(.*?);/)[1];
       const bstr = atob(arr[1]);
@@ -487,108 +468,99 @@ useEffect(() => {
 
       return new File([u8arr], `${page.name}-page${page.pageNumber}.png`, { type: mime });
     });
-    if(remainingFiles-newFiles.length >=0){
-    let PDFExceededFileSize=false;
-    let curRemaining=fileSizeRemaining;
-    let usedFileSize=0;
-    for (const f of newFiles) {
-      curRemaining-=f.size;
-      usedFileSize+=f.size;
+    
+    if (remainingFiles - newFiles.length >= 0) {
+      let PDFExceededFileSize = false;
+      let curRemaining = fileSizeRemaining;
+      let usedFileSize = 0;
+      for (const f of newFiles) {
+        curRemaining -= f.size;
+        usedFileSize += f.size;
 
-      if(curRemaining<0){
-        PDFExceededFileSize=true;
-        break;
+        if (curRemaining < 0) {
+          PDFExceededFileSize = true;
+          break;
+        }
       }
-    }
 
-      //if file size has been exceeded, reject entire batch
-    if(PDFExceededFileSize){
-      setWarning2(true);
-      
-      setSelectedFiles(prev => prev);
-      setRemainingFiles(prev => prev);
+      if (PDFExceededFileSize) {
+        setWarning2(true);
+        setSelectedFiles(prev => prev);
+        setRemainingFiles(prev => prev);
+      } else {
+        changeFileSizeRemaining(prev => prev - usedFileSize);
+        setSelectedFiles((prev) => [...prev, ...newFiles]);
+        setRemainingFiles((prev) => prev - newFiles.length);
+      }
+    } else {
+      setWarning3(true);
     }
-    else{
-      changeFileSizeRemaining(prev => prev - usedFileSize);
-      setSelectedFiles((prev) => [...prev, ...newFiles] );
-      setRemainingFiles((prev) => prev - newFiles.length);
-     
-    }
-  }
-   else{
-    setWarning3(true);
-   }
-   clearPDF();
-   setnNumSelectedPages(0);
+    clearPDF();
+    setnNumSelectedPages(0);
   };
-
 
   return (
     <>
-      {/* UPLOAD MODAL */}
-    <div
-      className="uploadModalOverlay"
-      style={{ display: isOpen ? "flex" : "none" }}
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}   // ← always active
-    >
-      <div className="uploadModalContent">
-        <div className="uploadFileHeader">
-          <h1 className="uploadFileText">
-            Upload Files
-            <div className="tooltipWrapper">
-              <img
-                className="infoIcon"
-                src="https://uxwing.com/wp-content/themes/uxwing/download/signs-and-symbols/info-circle-icon.png"
-                alt="info about remaining files"
-              />
-              <span className="tooltipBox">
-                *Your account plan limits the number of files <br /> you can upload in a single batch.
+      <div
+        className="uploadModalOverlay"
+        style={{ display: isOpen ? "flex" : "none" }}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+      >
+        <div className="uploadModalContent">
+          <div className="uploadFileHeader">
+            <h1 className="uploadFileText">
+              Upload Files
+              <div className="tooltipWrapper">
+                <img
+                  className="infoIcon"
+                  src="https://uxwing.com/wp-content/themes/uxwing/download/signs-and-symbols/info-circle-icon.png"
+                  alt="info about remaining files"
+                />
+                <span className="tooltipBox">
+                  *Your account plan limits the number of files <br /> you can upload in a single batch.
+                </span>
+              </div>
+            </h1>
+            
+            <h4 className="filesRemaining">
+              <span><span className="asterik"> * </span>Files Remaining: {remainingFiles}</span>
+            </h4>
+          </div>
+
+          <div className="addAnotherFile" style={{ display: selectedFiles.length > 0 ? "flex" : "none" }}>
+            <p>
+              Add files via Drag & Drop or{" "}
+              <span>
+                <button className="addFileButton" onClick={openFileDialog}>
+                  Browse Files
+                </button>
               </span>
-            </div>
-          </h1>
-          
-          <h4 className="filesRemaining">
-            <span><span className="asterik"> * </span>Files Remaining: {remainingFiles}</span>
-          </h4>
-         
-        </div>
+            </p>
+          </div>
 
-        {/* "Add Another File" bar */}
-        <div className="addAnotherFile" style={{ display: selectedFiles.length > 0 ? "flex" : "none" }}>
-          <p>
-            Add files via Drag & Drop or{" "}
-            <span>
-              <button className="addFileButton" onClick={openFileDialog}>
-                Browse Files
-              </button>
-            </span>
-          </p>
-          
-        </div>
-        <div className="specialInstructionsCharacters">
-        <textarea
-        style={{
-          display: (selectedFiles.length > 0)&& isMobile ? "flex" : "none",
-          resize: "none",
-        }}
+          <div className="specialInstructionsCharacters">
+            <textarea
+              style={{
+                display: (selectedFiles.length > 0) && isMobile ? "flex" : "none",
+                resize: "none",
+              }}
+              className="specialInstructions"
+              placeholder="Special Instructions..."
+              value={specialInstructions}
+              onChange={(e) => {
+                setSpecialInstructions(e.target.value);
+              }}
+              rows={2}
+              maxLength={200}
+            />
+            <p className="numChars" style={{display: (specialInstructions.length > 0 && selectedFiles.length > 0) && isMobile ? "block" : "none"}}>
+              <span style={{color: specialInstructions.length === 200 ? "red" : "#555"}}>Characters: {specialInstructions.length} / 200</span>
+            </p>
+          </div>
       
-        className="specialInstructions"
-        placeholder="Special Instructions..."
-        value={specialInstructions}
-        onChange={(e) => {
-          setSpecialInstructions(e.target.value); // update state
-          // console.log(e.target.value);            // log current input
-        }}
-        rows={2}
-        maxLength={200}
-      />
-      <p className="numChars" style={{display: (specialInstructions.length > 0 && selectedFiles.length>0) && isMobile ? "block" : "none"}}> <span style={{color: specialInstructions.length===200 ? "red" :"#555"}}>Characters: {specialInstructions.length} / 200</span> </p>
-
-        </div>
-      
-        <p className="warning" style={{ display: isWarning ? "block" : "none" }}>
+          <p className="warning" style={{ display: isWarning ? "block" : "none" }}>
             Please make sure to upload either photos or PDFs.
           </p> 
           <p className="warning" style={{ display: isWarning2 ? "block" : "none" }}>
@@ -597,214 +569,230 @@ useEffect(() => {
           <p className="warning" style={{ display: isWarning3 ? "block" : "none" }}>
             File upload limit reached. You can only upload up to {maxNumFiles} files.
           </p> 
-        {/* File List Header */}
-        <div className="fileListHeader" style={{ display: selectedFiles.length > 0 ? "flex" : "none" }}>
-          <span className="fileNameHeader">Name</span>
-          <span className="fileSizeHeader">Size</span>
-          <span className="removeHeader"></span>
-        </div>
-        <div className="bottomHeader" style={{ display: selectedFiles.length > 0 ? "flex" : "none" }}></div>
 
-        {/* Drag & Drop Zone (visual only when empty) */}
-        <div
-          className={`uploadDropZone ${dragOver ? "dragOver" : ""}`}
-          style={{ display: selectedFiles.length === 0 ? "flex" : "none" }}
-          onClick={openFileDialog}
-        >
+          <div className="fileListHeader" style={{ display: selectedFiles.length > 0 ? "flex" : "none" }}>
+            <span className="fileNameHeader">Name</span>
+            <span className="fileSizeHeader">Size</span>
+            <span className="removeHeader"></span>
+          </div>
+          <div className="bottomHeader" style={{ display: selectedFiles.length > 0 ? "flex" : "none" }}></div>
+
+          <div
+            className={`uploadDropZone ${dragOver ? "dragOver" : ""}`}
+            style={{ display: selectedFiles.length === 0 ? "flex" : "none" }}
+            onClick={openFileDialog}
+          >
+            <img
+              className="uploadModalIcon"
+              src="https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../releases/preview/2017/png/iconmonstr-upload-21.png&r=0&g=0&b=0"
+              alt="Upload Icon"
+            />
+            <p className="uploadBoxDescription">Drag & drop or click to upload</p>
+            <p className="fileTypeSpecify">PDF & Image file types</p>
+          </div>
           
-          <img
-            className="uploadModalIcon"
-            src="https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../releases/preview/2017/png/iconmonstr-upload-21.png&r=0&g=0&b=0"
-            alt="Upload Icon"
+          <input
+            type="file"
+            multiple
+            ref={fileInputRef}
+            onChange={handleFileSelect}
+            style={{ display: "none" }}
           />
-
-          <p className="uploadBoxDescription">Drag & drop or click to upload</p>
-          <p className="fileTypeSpecify">PDF & Image file types</p>
-        </div>
-          
-        <input
-          type="file"
-          multiple
-          ref={fileInputRef}
-          onChange={handleFileSelect}
-          style={{ display: "none" }}
-        />
         
-        {/* File List */}
-        {selectedFiles.length > 0 && (
-          <ul className="fileList">
-            {selectedFiles.map((file, i) => (
-              <li key={i}>
-                <span className="fileName">{file.name}</span>
-                <span className="chosenFileSize">
-                  {formatFileSize(file.size)}
-                  <span className="colorizeFileSize">{formatFileSizeDecoration(file.size)}</span>
-                </span>
-                <span
-                  className="removeFile"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    removeFile(i);
+          {selectedFiles.length > 0 && (
+            <ul className="fileList">
+              {selectedFiles.map((file, i) => (
+                <li key={i}>
+                  <span className="fileName">{file.name}</span>
+                  <span className="chosenFileSize">
+                    {formatFileSize(file.size)}
+                    <span className="colorizeFileSize">{formatFileSizeDecoration(file.size)}</span>
+                  </span>
+                  <span
+                    className="removeFile"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeFile(i);
+                    }}
+                  >
+                    ×
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          <div className="bottomHeader" style={{ display: selectedFiles.length > 0 ? "flex" : "none" }}></div>
+        
+          <div className="specialInstructionsCharacters">
+            <textarea
+              style={{
+                display: (selectedFiles.length > 0) && !isMobile ? "flex" : "none",
+                resize: "none",
+              }}
+              className="specialInstructions"
+              placeholder="Special Instructions..."
+              value={specialInstructions}
+              onChange={(e) => {
+                setSpecialInstructions(e.target.value);
+              }}
+              rows={2}
+              maxLength={200}
+            />
+            <p className="numChars" style={{display: (specialInstructions.length > 0 && selectedFiles.length > 0) && !isMobile ? "block" : "none"}}>
+              <span style={{color: specialInstructions.length === 200 ? "red" : "#555"}}>Characters: {specialInstructions.length} / 200</span>
+            </p>
+          </div>
+
+          <div className="uploadButton">
+            <button
+              className="closeUploadModal"
+              onClick={() => {
+                setWarning(false);
+                setWarning2(false);
+                setWarning3(false);
+                changeFileSizeRemaining(maxFileSize); 
+                setRemainingFiles(maxNumFiles);
+                close();
+                clearFiles();
+                setSpecialInstructions("");
+              }}
+            >
+              {selectedFiles.length > 0 ? "Cancel" : "Close"}
+            </button>
+
+            {selectedFiles.length > 0 && (
+              <button className="closeUploadModal" onClick={() => {
+                handleUploadSign(selectedFiles, activeTab);
+                close();
+                clearFiles();
+                setIsUploadingPhotos(true);
+                setSpecialInstructions("");
+                setWarning(false);
+                setWarning2(false);
+                setWarning3(false);
+                changeFileSizeRemaining(maxFileSize); 
+                setRemainingFiles(maxNumFiles);
+              }}>
+                Upload
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className='uploadModalOverlay' style={{display: isUploadingPhotos ? 'flex' : 'none'}}>
+        <StudyLoader/>
+      </div>
+
+      {/* PDF PAGE GRID MODAL WITH PAGINATION */}
+      <div style={{ display: pickPages ? "flex" : "none" }} className="selectPDFPages">
+        <div className="PDFOverallHeader">
+          <h1 className="selectPageHeader">Select PDF Pages</h1>
+          
+          <h4 className="ok">
+            <span className="asterik">* </span>Files Remaining: {remainingFiles}
+          </h4>
+          <h4>
+            <span className="asterik">* </span>Files Selected: {numSelectedPages}
+          </h4>
+        </div>
+    
+        <div className="pdfGrid">
+          {currentPdfPages.map((page, i) => {
+            const actualIndex = startIndex + i;
+            return (
+              <div
+                key={actualIndex}
+                className={`pdfPageContainer ${selectedPages.includes(actualIndex) ? "selected" : ""}`}
+                onClick={() => {
+                  togglePage(i);
+                  setnNumSelectedPages(prev =>
+                    selectedPages.includes(actualIndex) ? prev - 1 : prev + 1
+                  );
+                }}
+              >
+                <div className="pdfPageLabel">
+                  {page.name} - Page {page.pageNumber}
+                </div>
+                <div
+                  className="lazyThumb"
+                  data-index={actualIndex}
+                  ref={(el) => {
+                    if (!el) return;
+
+                    const observer = new IntersectionObserver(
+                      (entries) => {
+                        entries.forEach(entry => {
+                          if (entry.isIntersecting) {
+                            renderPage(currentPdfPages[i], i);
+                            observer.disconnect();
+                          }
+                        });
+                      },
+                      { rootMargin: "200px" }
+                    );
+
+                    observer.observe(el);
+                    el._observer = observer;
                   }}
                 >
-                  ×
-                </span>
-              </li>
-            ))}
-          </ul>
-        )}
-
-        <div className="bottomHeader" style={{ display: selectedFiles.length > 0 ? "flex" : "none" }}></div>
-        
-        <div className="specialInstructionsCharacters">
-        <textarea
-        style={{
-          display: (selectedFiles.length > 0)&& !isMobile ? "flex" : "none",
-          resize: "none",
-        }}
-      
-        className="specialInstructions"
-        placeholder="Special Instructions..."
-        value={specialInstructions}
-        onChange={(e) => {
-          setSpecialInstructions(e.target.value); // update state
-          // console.log(e.target.value);            // log current input
-        }}
-        rows={2}
-        maxLength={200}
-      />
-      <p className="numChars" style={{display: (specialInstructions.length > 0 && selectedFiles.length>0) && !isMobile ? "block" : "none"}}> <span style={{color: specialInstructions.length===200 ? "red" :"#555"}}>Characters: {specialInstructions.length} / 200</span> </p>
-
+                  {page.src === "error" ? (
+                    <div className="pdfPlaceholder" style={{ color: "red" }}>
+                      Failed to load
+                    </div>
+                  ) : page.src ? (
+                    <img src={page.src} alt={`${page.name} - Page ${page.pageNumber}`} />
+                  ) : (
+                    <div className="pdfPlaceholder">Loading…</div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
-
-        {/* Buttons */}
-        <div className="uploadButton">
-          <button
-            className="closeUploadModal"
-            onClick={() => {
-              setWarning(false);
-              setWarning2(false);
-              setWarning3(false);
-              changeFileSizeRemaining(maxFileSize); 
-              setRemainingFiles(maxNumFiles);
-              close();
-              clearFiles();
-              setSpecialInstructions("");
-            }}
+        
+        {/* Pagination Controls */}
+        <div className="paginationControls">
+          <button 
+            className="paginationButton"
+            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+            disabled={currentPage === 1}
           >
-            {selectedFiles.length > 0 ? "Cancel" : "Close"}
+            Previous
           </button>
+          
+          <span className="paginationInfo">
+            Page <strong>{currentPage}</strong> of <strong>{totalPages}</strong>
+          </span>
+          
+          <button 
+            className="paginationButton"
+            onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
+        </div>
 
-          {selectedFiles.length > 0 && (
-            <button className="closeUploadModal" onClick={()=>{
-              handleUploadSign(selectedFiles,activeTab);
-              close();
-              clearFiles();
-              setIsUploadingPhotos(true);
-              setSpecialInstructions("");
-              setWarning(false);
-              setWarning2(false);
-              setWarning3(false);
-              changeFileSizeRemaining(maxFileSize); 
-              setRemainingFiles(maxNumFiles);
-
-              }}>
-              Upload
-            </button>
-          )}
+        {/* Action Buttons */}
+        <div className="selectButtonsContainer">
+          <button className="selectButtons" onClick={() => { clearPDF(); setnNumSelectedPages(0); }}>
+            Close
+          </button>
+          
+          <button
+            className="selectButtons"
+            style={{ display: selectedPages.length > 0 ? "flex" : "none" }}
+            onClick={() => {
+              addSelectedPagesToFiles();
+              setnNumSelectedPages(0);
+            }}
+          >
+            Select Pages
+          </button>
         </div>
       </div>
-    </div>
-    <div className='uploadModalOverlay' style={{display: isUploadingPhotos? 'flex' : 'none'}}>
-          <StudyLoader/>
-    </div>
-
-    {/* PDF PAGE GRID MODAL */}
-    <div style={{ display: pickPages ? "flex" : "none" }} className="selectPDFPages">
-      <div className="PDFOverallHeader">
-      <h1 className="selectPageHeader">Select PDF Pages</h1>
-      
-      <h4 className="ok">
-        <span className="asterik">* </span>Files Remaining: {remainingFiles}
-      </h4>
-      <h4>
-        <span className="asterik">* </span>Files Selected: {numSelectedPages}
-      </h4>
-
-      </div>
-    
-      
-      <div className="pdfGrid">
-        {pdfPages.map((page, i) => (
-          <div
-            key={i}
-            className={`pdfPageContainer ${selectedPages.includes(i) ? "selected" : ""}`}
-            onClick={() => {
-              togglePage(i);
-              setnNumSelectedPages(prev =>
-                selectedPages.includes(i) ? prev - 1 : prev + 1
-              );
-            }}
-          >
-            <div className="pdfPageLabel">
-              {page.name} - Page {page.pageNumber}
-            </div>
-            <div
-            className="lazyThumb"
-            data-index={i}
-            ref={(el) => {
-              if (!el) return;
-
-              const observer = new IntersectionObserver(
-                (entries) => {
-                  entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                      renderPage(pdfPages[i], i);
-                      observer.disconnect();
-                    }
-                  });
-                },
-                { rootMargin: "200px" } // load slightly before visible
-              );
-
-              observer.observe(el);
-              el._observer = observer;
-
-            }}
-          >
-            {page.src === "error" ? (
-            <div className="pdfPlaceholder" style={{ color: "red" }}>
-              Failed to load
-            </div>
-          ) : page.src ? (
-            <img src={page.src} alt={`${page.name} - Page ${page.pageNumber}`} />
-          ) : (
-            <div className="pdfPlaceholder">Loading…</div>
-          )}
-          </div>
-          </div>
-        ))}
-      </div>
-        
-      <div className="selectButtonsContainer">
-        <button className="selectButtons" onClick={() => { clearPDF(); setnNumSelectedPages(0); }}>
-          Close
-        </button>
-        
-        <button
-          className="selectButtons"
-          style={{ display: selectedPages.length > 0 ? "flex" : "none" }}
-          onClick={() => {
-            addSelectedPagesToFiles();
-            setnNumSelectedPages(0);
-          }}
-        >
-          Select Pages
-        </button>
-      </div>
-    </div>
-
     </>
   );
-  
 }
