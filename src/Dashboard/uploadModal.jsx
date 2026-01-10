@@ -35,6 +35,8 @@ export default function UploadModal({ isOpen, close, activeTab, userProfile, set
     function handleEscape(event) {
       if (event.key === "Escape") {
         close();
+        clearPDF(); 
+        setnNumSelectedPages(0);
       }
     }
 

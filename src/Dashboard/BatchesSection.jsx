@@ -147,7 +147,7 @@ export default function BatchesSection({
         setRecents(updatedRecents);
         
         // Update recents in localStorage with user-specific key
-        const recentsKey = userEmail ? `recentBatches_${userEmail}` : 'recentBatches';
+        const recentsKey = userEmail ? `crammi_recents_${userEmail}` : 'crammi_recents';
         localStorage.setItem(recentsKey, JSON.stringify(updatedRecents));
     
         try {
@@ -192,7 +192,7 @@ export default function BatchesSection({
             setBatches(prevBatches => [...prevBatches, batchToDelete]);
             // Restore recents if delete failed
             setRecents(recents);
-            const recentsKey = userEmail ? `recentBatches_${userEmail}` : 'recentBatches';
+            const recentsKey = userEmail ? `crammi_recents_${userEmail}` : 'crammi_recents';
             localStorage.setItem(recentsKey, JSON.stringify(recents));
         }
     };

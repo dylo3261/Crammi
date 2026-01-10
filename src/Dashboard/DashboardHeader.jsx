@@ -205,16 +205,16 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
     const batchName = recent.name;
     const batchID = recent.id;
     if(recent.type === 'Exams'){
-      navigate(`/Exam/${batchID}`, {state: {batchName}});
+      navigate(`/Exam/${batchID}`, {state: {batchName, userProfile}});
     }
     else if(recent.type === 'Quizzes'){
-        navigate(`/Quiz/${batchID}`, {state: {batchName}});
+      navigate(`/Quiz/${batchID}`, {state: {batchName, userProfile}});
     }
     else if(recent.type === 'Flashcards'){
-        navigate(`/Flashcards/${batchID}`, {state: {batchName}});
+      navigate(`/Flashcards/${batchID}`, {state: {batchName, userProfile}});
     }
     else if(recent.type === 'Files'){
-        navigate(`/File/${batchID}`, {state: {batchName}});
+      navigate(`/File/${batchID}`, {state: {batchName, userProfile}});
     }
   };
 
