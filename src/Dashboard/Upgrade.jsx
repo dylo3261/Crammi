@@ -97,10 +97,9 @@ export default function Upgrade() {
       
       // If action is 'modified', show success and refresh
       if (data.action === 'modified') {
-        alert(data.message);
         setShowConfirmation(false);
         // Refresh to get updated user profile
-        window.location.reload();
+        navigate(`/Success?plan=${confirmationDetails.planId}`);
         return;
       }
 

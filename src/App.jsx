@@ -10,6 +10,7 @@ import ForgotPassword from "./Auth/forgotPassword.jsx";
 import LoadingAnimation from "./Dashboard/LoadingScreen.jsx";
 import AccountPage from "./Dashboard/AccountPage.jsx";
 import Upgrade from "./Dashboard/Upgrade.jsx";
+import Success from "./Dashboard/Success.jsx";
 
 import Exam from "./ViewBatches/Exam.jsx"
 import Quiz from "./ViewBatches/Quiz.jsx"
@@ -133,6 +134,12 @@ function AppContent() {
         path='/Upgrade' 
         element={
           isAuthenticated ? <Upgrade/> : <Navigate to="/" replace />
+        }
+        />
+        <Route 
+        path='/Success' 
+        element={
+          isAuthenticated ? <Success/> : <Navigate to="/" replace />
         }
         />
     </Routes>

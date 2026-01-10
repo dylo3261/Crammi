@@ -1,11 +1,16 @@
 // LimitReached.jsx
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './limitReached.css';
 
-export default function LimitReached({ isLimitReached, setIsLimitReached, limitReachedMessage }) {
+export default function LimitReached({ isLimitReached, setIsLimitReached, limitReachedMessage, userProfile }) {
   const [isClosing, setIsClosing] = React.useState(false);
-
+  const [userTier,setUserTier]=useState('Weekly');
+  useEffect(()=>{
+    if(userProfile?.accountTier==='pro'||userProfile?.accountTier==='plus'){
+      setUserTier('Monthly')
+    }
+  },[userProfile]);
   useEffect(() => {
     if (isLimitReached) {
       const timer = setTimeout(() => {
@@ -38,7 +43,7 @@ export default function LimitReached({ isLimitReached, setIsLimitReached, limitR
         <div className="errorTextWrapper">
           <h3 className="errorTitle">Upload Failed</h3>
           <p className="errorMessage">
-            Weekly Upload limit reached. Please upgrade your account plan or {limitReachedMessage || "try again later"}.
+            {userTier} Upload limit reached. Please upgrade your account plan or {limitReachedMessage || "try again later"}.
           </p>
         </div>
         <button 

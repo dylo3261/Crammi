@@ -566,6 +566,8 @@ export default function BatchesSection({
                     isLimitReached={isLimitReached}
                     setIsLimitReached={setIsLimitReached}
                     limitReachedMessage={limitReachedMessage}
+                    userProfile={userProfile}
+                    
                 />            
                 </div>
             <div className="suchEmptiness" style={{display: sortedBatches.length === 0 && !isLoading ? 'flex': 'none'}}>
