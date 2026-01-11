@@ -1,8 +1,8 @@
 import { createRoot } from 'react-dom/client'
-import './LandingPage/Header.css'
+import './LandingPage/LandingPage.css'
 import './index.css'
-import './LandingPage/sectionOne.css'
-import './LandingPage/sectionTwo.css'
+
+import LandingPage from './LandingPage/LandingPage'
 //Dashboard
 import './Dashboard/DashboardHeader.css'
 import './Dashboard/uploadModal.css'
