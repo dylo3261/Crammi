@@ -7,12 +7,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: url('../public/tempLoadingBackground.jpg') center/cover no-repeat;
+    background: url('/loadingBackground.png') center/cover no-repeat;
     background-color: white;
     padding: 20px;
     position: relative;
     font-family: applethin,Arial, Helvetica, sans-serif;
-
   }
   
   .auth-wrapper::before {
