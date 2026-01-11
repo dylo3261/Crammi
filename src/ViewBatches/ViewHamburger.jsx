@@ -3,7 +3,6 @@ import "./ViewHamburger.css";
 
 export default function ViewHamburger({ 
   userName, 
-  userEmail, 
   userPFP, 
   handleSignOut, 
   onNavigateDashboard,

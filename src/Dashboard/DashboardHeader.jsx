@@ -331,7 +331,7 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
                   <span>Upgrade Plan</span>
                 </button>
               </div>
-              <button className='bottomDashboardSideButtons'>
+              <button className='bottomDashboardSideButtons' onClick={() => navigate('/Support')} >
                 <img className='sidebarIcon' src='https://uxwing.com/wp-content/themes/uxwing/download/computers-mobile-hardware/headphone-headset-icon.png' alt='Support icon'/>
                 <span>Support</span>
               </button>

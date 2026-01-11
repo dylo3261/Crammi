@@ -11,6 +11,7 @@ import LoadingAnimation from "./Dashboard/LoadingScreen.jsx";
 import AccountPage from "./Dashboard/AccountPage.jsx";
 import Upgrade from "./Dashboard/Upgrade.jsx";
 import Success from "./Dashboard/Success.jsx";
+import Support from "./LandingPage/Support.jsx";
 
 import Exam from "./ViewBatches/Exam.jsx"
 import Quiz from "./ViewBatches/Quiz.jsx"
@@ -99,6 +100,10 @@ function AppContent() {
        <Route 
         path="/ForgotPassword" 
         element={<ForgotPassword />}
+      />
+      <Route 
+        path="/Support" 
+        element={<Support />}
       />
       <Route 
         path='/Dashboard' 
