@@ -311,9 +311,9 @@ export default function LandingPage() {
       <section className="special-instructions">
         <div className="special-instructions-content">
             <div className="special-instructions-text">
-            <h2 className="section-title-special">Customize Everything with Special Instructions ✨</h2>
+            <h2 className="section-title-special">Customize with Special Instructions ✨</h2>
             <p className="section-subtitle">
-                Take full control of your study materials. Special instructions allow you to provide context or specific requirements for your batch. Specify topics to focus on, whether to use only your notes or create new content, formatting preferences like true/false, or the number of questions within your account limits.
+                Take full control of your study materials. Special instructions allow you to provide context or specific requirements for your uploads. Specify topics to focus on, whether to use only your notes or create new content, formatting preferences like true/false, or the number of questions within your account limits.
             </p>
             <div className="instruction-examples">
                 <div className="example-item">
@@ -440,26 +440,29 @@ export default function LandingPage() {
         <div className="footer-content">
           <div className="footer-brand">
             <div className="logo">
-              <span className="logo-icon">📚</span>
-              <span className="logo-text">Crammi</span>
+             <img className='landingPageLogo'src='/CrammiFinalUppercase.png'/>
             </div>
             <p className="footer-tagline">Study smarter, not harder</p>
           </div>
           <div className="footer-links">
             <div className="footer-column">
               <h4 className="footer-heading">Product</h4>
-              <a href="#" className="footer-link">Features</a>
-              <a href="#" className="footer-link">Pricing</a>
-              <a href="#" className="footer-link">FAQ</a>
+              <a href="#how-it-works" className="footer-link">Features</a>
+              <a href="#pricing" className="footer-link">Pricing</a>
             </div>
             <div className="footer-column">
               <h4 className="footer-heading">Company</h4>
-              <a href="#" className="footer-link">Blog</a>
-              <a href="#" className="footer-link">Contact</a>
-            </div>
+              <a 
+                className="footer-link" 
+                style={{ cursor: 'pointer' }} 
+                onClick={() => navigate('/Support')}
+                >
+            Contact
+            </a>           
+             </div>
             <div className="footer-column">
               <h4 className="footer-heading">Legal</h4>
-              <a href="#" className="footer-link">Privacy</a>
+              <a style={{ cursor: 'pointer' }} onClick={() => navigate('/PrivacyPolicy')} className="footer-link">Privacy</a>
               <a href="#" className="footer-link">Terms</a>
             </div>
           </div>

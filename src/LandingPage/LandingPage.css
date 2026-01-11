@@ -9,7 +9,6 @@
     scroll-behavior: smooth;
   }
 
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
   
   .landing-page {
     font-family: 'apple', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -312,7 +311,7 @@
   }
   
   .sectionOneTitle {
-    font-family: 'Inter', sans-serif;
+    font-family: 'apple', sans-serif;
     font-size: clamp(4rem, 8vw, 4rem);
     text-align: left;
     margin-bottom: 2.5rem;
@@ -482,7 +481,7 @@
   }
   .section-title-special {
     font-family: 'applemedium', sans-serif;
-    font-size: 3rem;
+    font-size: 4em;
     color: #0f172a;
     margin-bottom: 1rem;
     opacity: 0;

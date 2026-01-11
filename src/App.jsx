@@ -16,6 +16,8 @@ import Support from "./LandingPage/Support.jsx";
 import Exam from "./ViewBatches/Exam.jsx"
 import Quiz from "./ViewBatches/Quiz.jsx"
 import Flashcards from "./ViewBatches/Flashcards.jsx"
+import PrivacyPolicy from "./LandingPage/PrivacyPolicy.jsx";
+import TermsOfService from "./LandingPage/Terms.jsx";
 
 function AppContent() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -104,6 +106,14 @@ function AppContent() {
       <Route 
         path="/Support" 
         element={<Support />}
+      />
+      <Route 
+        path="/PrivacyPolicy" 
+        element={<PrivacyPolicy />}
+      />
+       <Route 
+        path="/TermsOfService" 
+        element={<TermsOfService/>}
       />
       <Route 
         path='/Dashboard' 
