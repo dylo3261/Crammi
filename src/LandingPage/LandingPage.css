@@ -346,7 +346,7 @@
     align-items: center;
   }
   
-  .signUpButton,
+  .landingSignUpButton,
   .googleSignUp {
     flex: 0 1 auto;
     min-width: 140px;
@@ -364,23 +364,23 @@
     margin-top: 1rem;
   }
   
-  .signUpButton {
+  .landingSignUpButton {
     background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
     color: white;
     border: 0.0px solid black;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
   }
   
-  .signUpButton span.arrow {
+  .landingSignUpButton span.arrow {
     display: inline-block;
     transition: transform 0.3s ease;
   }
   
-  .signUpButton:hover span.arrow {
+  .landingSignUpButton:hover span.arrow {
     transform: translateX(10px);
   }
   
-  .signUpButton:hover {
+  .landingSignUpButton:hover {
     background-color: #a393fc;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transform: translateY(-1px);
@@ -1220,7 +1220,7 @@
     animation-delay: 0.3s;
   }
   
-  .primary-button {
+  .landingPrimary-button {
     background: white;
     color: #6366f1;
     border: none;
@@ -1235,12 +1235,12 @@
     transition: transform 0.2s ease, box-shadow 0.3s ease;
   }
   
-  .primary-button:hover {
+  .landingPrimary-button:hover {
     transform: translateY(-2px);
     box-shadow: 0 10px 30px rgba(255, 255, 255, 0.3);
   }
   
-  .primary-button.large {
+  .landingPrimary-button.large {
     font-size: 1.125rem;
     padding: 1rem 2rem;
   }
@@ -1250,7 +1250,7 @@
     transition: transform 0.3s ease;
   }
   
-  .primary-button:hover .arrow {
+  .landingPrimary-button:hover .arrow {
     transform: translateX(4px);
   }
   
@@ -1411,7 +1411,7 @@
       align-items: stretch;
     }
   
-    .signUpButton,
+    .landingSignUpButton,
     .googleSignUp {
       flex: 1 1 100% !important;
       max-width: 100% !important;
@@ -1452,7 +1452,7 @@
       margin-bottom: 1.2rem;
     }
   
-    .signUpButton,
+    .landingSignUpButton,
     .googleSignUp {
       font-size: 15px;
     }

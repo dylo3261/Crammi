@@ -14,6 +14,8 @@ export default function LandingPage() {
   const hamburgerRef = useRef(null);
   const [activeInstruction, setActiveInstruction] = useState(1);
 
+  
+
   useEffect(() => {
     const handleScroll = () => {
       setScrollY(window.scrollY);
@@ -214,7 +216,7 @@ export default function LandingPage() {
             materials instantly ready as quizzes, flashcards, and exams. 🚀
           </h2>
           <div className="buttonGroup">
-            <button className="signUpButton" onClick={handleEmailSignUp}>
+            <button className="landingSignUpButton" onClick={handleEmailSignUp}>
               <span className="useCrammi">Sign Up,</span> It's Free <span className="arrow">→</span>
             </button>
             <button className="googleSignUp" onClick={handleGoogleSignUp}>
@@ -424,7 +426,7 @@ export default function LandingPage() {
           <h2 className="cta-title">Ready to transform your study game? 🚀</h2>
           <p className="cta-description">Join thousands of students who are already studying smarter with Crammi</p>
           <div className="cta-buttons">
-            <button className="primary-button large" onClick={handleEmailSignUp}>
+            <button className="landingPrimary-button large" onClick={handleEmailSignUp}>
               <span>Get Started for Free</span>
               <span className="arrow">→</span>
             </button>
