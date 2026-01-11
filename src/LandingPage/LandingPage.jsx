@@ -9,23 +9,9 @@ export default function LandingPage() {
   const [scrollY, setScrollY] = useState(0);
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [billingCycle, setBillingCycle] = useState('annual'); // 'monthly' or 'annual'
+  const [billingCycle, setBillingCycle] = useState('monthly'); // 'monthly' or 'annual'
   const dropdownRef = useRef(null);
   const [activeInstruction, setActiveInstruction] = useState(1);
-
-    // Add useEffect to cycle through instructions with pauses
-    useEffect(() => {
-    const interval = setInterval(() => {
-        setActiveInstruction((prev) => (prev + 1) % specialInstructions.length);
-    }, 1500); // Change every 1.5 seconds (snappy!)
-
-    return () => clearInterval(interval);
-    }, []);
-
-  // Mock user tier - replace with actual user data
-  const userTier = 'free'; // 'free', 'plus', or 'pro'
-  const isPlus = userTier === 'plus';
-  const isPro = userTier === 'pro';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -114,14 +100,14 @@ export default function LandingPage() {
   ];
 
   const specialInstructions = [
-    "Give me 30 questions",
+    "Give me exactly 30 questions",
     "Focus on Chapter 3",
     "Make it true or false",
     "Only use my notes",
     "Create practice problems",
-    "Include diagrams",
+    "Make the difficulty easy",
     "Focus on key concepts",
-    "Make it multiple choice",
+    "Give me exactly 50 cards",
     "Add detailed explanations"
   ];
 
@@ -139,8 +125,6 @@ export default function LandingPage() {
         '10 exam questions',
         '8 quiz questions',
       ],
-      buttonText: 'Current Plan',
-      buttonStyle: 'disabled'
     },
     {
       id: 'plus',
@@ -155,8 +139,6 @@ export default function LandingPage() {
         '25 exam questions',
         '15 quiz questions',
       ],
-      buttonText: isPlus ? 'Current Plan' : (isPro ? 'Current Plan' : 'Upgrade to Plus'),
-      buttonStyle: isPlus ? 'disabled' : (isPro ? 'disabled' : 'primary'),
       popular: true
     },
     {
@@ -172,8 +154,7 @@ export default function LandingPage() {
         '60 exam questions',
         '30 quiz questions',
       ],
-      buttonText: isPro ? 'Current Plan' : 'Upgrade to Pro',
-      buttonStyle: isPro ? 'disabled' : 'secondary',
+    
     }
   ];
 
@@ -322,59 +303,62 @@ export default function LandingPage() {
       </section>
 
       {/* Special Instructions Section */}
-      <section className="special-instructions">
-  <div className="special-instructions-content">
-    <div className="special-instructions-text">
-      <h2 className="section-title">Customize Everything with Special Instructions ✨</h2>
-      <p className="section-subtitle">
-        Take full control of your study materials. Special instructions allow you to provide context or specific requirements for your batch. Specify topics to focus on, whether to use only your notes or create new content, formatting preferences like true/false, or the number of questions within your account limits.
-      </p>
-      <div className="instruction-examples">
-        <div className="example-item">
-          <span className="example-icon">🎯</span>
-          <span className="example-text">Focus on specific topics</span>
+            <section className="special-instructions">
+        <div className="special-instructions-content">
+            <div className="special-instructions-text">
+            <h2 className="section-title-special">Customize Everything with Special Instructions ✨</h2>
+            <p className="section-subtitle">
+                Take full control of your study materials. Special instructions allow you to provide context or specific requirements for your batch. Specify topics to focus on, whether to use only your notes or create new content, formatting preferences like true/false, or the number of questions within your account limits.
+            </p>
+            <div className="instruction-examples">
+                <div className="example-item">
+                <span className="example-icon">🎯</span>
+                <span className="example-text">Focus on specific topics</span>
+                </div>
+                <div className="example-item">
+                <span className="example-icon">📝</span>
+                <span className="example-text">Choose question formats</span>
+                </div>
+                <div className="example-item">
+                <span className="example-icon">⚙️</span>
+                <span className="example-text">Set custom preferences</span>
+                </div>
+            </div>
+            </div>
+            <div className="special-instructions-visual">
+            <div className="instruction-box-container">
+                <div className="instruction-carousel">
+                <div className="instruction-set">
+                    {/* Repeat the instructions 3 times for smooth infinite scroll */}
+                    {[...Array(3)].map((_, setIndex) => (
+                    <React.Fragment key={setIndex}>
+                        {specialInstructions.map((instruction, index) => {
+                        // Calculate which item should be active based on animation timing
+                        // Middle item (index 1) of first set is active initially
+                        const isActive = setIndex === 0 && index === 1;
+                        return (
+                            <div 
+                            key={`set${setIndex}-${index}`} 
+                            className={`instruction-item ${isActive ? 'active' : ''}`}
+                            style={{
+                                animationDelay: `${index * 1.5}s`
+                            }}
+                            >
+                            {instruction}
+                            </div>
+                        );
+                        })}
+                    </React.Fragment>
+                    ))}
+                </div>
+                </div>
+                <div className="instruction-input-box">
+                <span className="input-placeholder">Special Instructions</span>
+                </div>
+            </div>
+            </div>
         </div>
-        <div className="example-item">
-          <span className="example-icon">📝</span>
-          <span className="example-text">Choose question formats</span>
-        </div>
-        <div className="example-item">
-          <span className="example-icon">⚙️</span>
-          <span className="example-text">Set custom preferences</span>
-        </div>
-      </div>
-    </div>
-    <div className="special-instructions-visual">
-      <div className="instruction-box-container">
-        <div className="instruction-carousel">
-          <div className="instruction-set">
-            {/* First set */}
-            {specialInstructions.map((instruction, index) => (
-              <div 
-                key={`set1-${index}`} 
-                className={`instruction-item ${index === activeInstruction ? 'active' : ''}`}
-              >
-                {instruction}
-              </div>
-            ))}
-            {/* Duplicate set for seamless loop */}
-            {specialInstructions.map((instruction, index) => (
-              <div 
-                key={`set2-${index}`} 
-                className={`instruction-item ${index === activeInstruction ? 'active' : ''}`}
-              >
-                {instruction}
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="instruction-input-box">
-          <span className="input-placeholder">Special Instructions</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+        </section>
 
       {/* Pricing Section */}
       <section className="pricing">

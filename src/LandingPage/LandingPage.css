@@ -195,16 +195,16 @@
     padding: 2rem;
     justify-content: center;
     margin: 0 auto;
-    max-width: 1400px;
-    margin-top: 80px; /* Account for fixed header */
+    max-width: 1500px;
     padding-top: 2rem;
+    margin-top: 3vh;
   }
   
   .box {
     flex: 1 1 48%;
-    min-width: 280px;
-    max-width: 650px;
-    padding: clamp(1rem, 2vw, 2rem);
+    min-width: 400px;
+    max-width: 700px;
+    padding: clamp(1rem, 1w, 2rem);
     background-color: #f8f9fa;
     border: 1px solid #f8f9fa;
     border-radius: 6px;
@@ -221,7 +221,7 @@
   
   .sectionOneTitle {
     font-family: applebold, Arial, sans-serif;
-    font-size: clamp(3.5rem, 5vw, 3.5rem);
+    font-size: clamp(4rem, 8vw, 4rem);
     text-align: left;
     margin-bottom: 2.5rem;
     margin-top: 2.2rem;
@@ -347,8 +347,8 @@
   }
   
   .card-text {
-    font-family: 'applemedium', sans-serif;
-    font-size: 0.95rem;
+    font-family: 'applethin', sans-serif;
+    font-size: 1.5rem;
     color: #0f172a;
   }
   
@@ -378,8 +378,14 @@
   
   .section-title {
     font-family: 'applemedium', sans-serif;
-    font-size: 2.25rem;
+    font-size: 4rem;
     font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 1rem;
+  }
+  .section-title-special {
+    font-family: 'applemedium', sans-serif;
+    font-size: 3rem;
     color: #0f172a;
     margin-bottom: 1rem;
   }
@@ -623,10 +629,11 @@
   /* ========================= */
   
   .special-instructions {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
     padding: 6rem 2rem;
     background: #f8f9fa;
+    margin-top: -5vh;
   }
   
   .special-instructions-content {
@@ -764,12 +771,40 @@
     color: #94a3b8;
   }
   
+
   @keyframes slideUpInfinite {
     0% {
       transform: translateY(0);
     }
     100% {
-      transform: translateY(-50%);
+      transform: translateY(-33.33%);
+    }
+  }
+  
+  @keyframes highlightCycle {
+    0%, 100% {
+      opacity: 0.6;
+      transform: scale(0.95);
+      border-color: #e2e8f0;
+      background: white;
+      box-shadow: none;
+      color: #64748b;
+    }
+    7.4%, 14.8% {
+      opacity: 1;
+      transform: scale(1);
+      border-color: #ab9ff2;
+      background: linear-gradient(135deg, rgba(171, 159, 242, 0.05) 0%, rgba(99, 102, 241, 0.05) 100%);
+      box-shadow: 0 10px 30px rgba(171, 159, 242, 0.2);
+      color: #6366f1;
+    }
+    22.2% {
+      opacity: 0.6;
+      transform: scale(0.95);
+      border-color: #e2e8f0;
+      background: white;
+      box-shadow: none;
+      color: #64748b;
     }
   }
   
@@ -783,6 +818,7 @@
     margin: 0 auto;
     padding: 6rem 2rem;
     background: #f8f9fa;
+    margin-top: -10vh;
   }
   
   .pricing-header {
@@ -1232,7 +1268,13 @@
     .section-one {
       margin-top: 100px;
     }
-  
+    .card-text {
+        font-size: .95rem;
+        
+      }
+    .floating-card{
+        margin-top: -40px;
+    }
     .box {
       padding: 0rem;
     }
