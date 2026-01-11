@@ -11,6 +11,7 @@ export default function LandingPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [billingCycle, setBillingCycle] = useState('monthly'); // 'monthly' or 'annual'
   const dropdownRef = useRef(null);
+  const hamburgerRef = useRef(null);
   const [activeInstruction, setActiveInstruction] = useState(1);
 
   useEffect(() => {
@@ -25,7 +26,13 @@ export default function LandingPage() {
   // Close dropdown if click outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target) && menuOpen) {
+      if (
+        dropdownRef.current && 
+        !dropdownRef.current.contains(event.target) && 
+        hamburgerRef.current && 
+        !hamburgerRef.current.contains(event.target) &&
+        menuOpen
+      ) {
         setMenuOpen(false);
       }
     };
@@ -169,14 +176,12 @@ export default function LandingPage() {
 
         {/* Center Links */}
         <div className="header-box center-box">
-          <a className="centerBoxButtons">Product</a>
-          <a className="centerBoxButtons">About</a>
-          <a className="centerBoxButtons">Pricing</a>
+          <a href="#how-it-works" className="centerBoxButtons">Product</a>
+          <a href="#pricing" className="centerBoxButtons">Pricing</a>
         </div>
 
         {/* Right Buttons */}
         <div className="header-box right-box">
-          <a className="header-btn headerButton">Contact Sales</a>
           <button className="header-btn headerButton" onClick={handleEmailSignIn}>Log In</button>
           <button onClick={handleEmailSignUp} className="header-btn outline">
             <span className='useCrammi'>Use Crammi, </span> It's Free
@@ -184,7 +189,7 @@ export default function LandingPage() {
         </div>
 
         {/* Hamburger */}
-        <div className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
+        <div ref={hamburgerRef} className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
           <div></div>
           <div></div>
           <div></div>
@@ -192,10 +197,8 @@ export default function LandingPage() {
 
         {/* Dropdown */}
         <div ref={dropdownRef} className={`dropdown ${menuOpen ? "show" : ""}`}>
-          <a>Product</a>
-          <a>About</a>
-          <a>Pricing</a>
-          <a>Contact Sales</a>
+          <a href="#how-it-works">Product</a>
+          <a href="#pricing">Pricing</a>
           <a onClick={handleEmailSignIn}>Log In</a>
         </div>
       </header>
@@ -273,7 +276,7 @@ export default function LandingPage() {
       </section>
 
       {/* How It Works */}
-      <section className="how-it-works">
+      <section id="how-it-works" className="how-it-works">
         <div className="how-it-works-header">
           <h2 className="section-title">How Crammi Works ⚙️</h2>
           <p className="section-subtitle">Three simple steps to transform your study routine</p>
@@ -303,7 +306,7 @@ export default function LandingPage() {
       </section>
 
       {/* Special Instructions Section */}
-            <section className="special-instructions">
+      <section className="special-instructions">
         <div className="special-instructions-content">
             <div className="special-instructions-text">
             <h2 className="section-title-special">Customize Everything with Special Instructions ✨</h2>
@@ -358,10 +361,10 @@ export default function LandingPage() {
             </div>
             </div>
         </div>
-        </section>
+      </section>
 
       {/* Pricing Section */}
-      <section className="pricing">
+      <section id="pricing" className="pricing">
         <div className="pricing-header">
           <h2 className="section-title">Choose Your Plan 💎</h2>
           <p className="section-subtitle">Flexible pricing for students at every level</p>
@@ -449,7 +452,6 @@ export default function LandingPage() {
             </div>
             <div className="footer-column">
               <h4 className="footer-heading">Company</h4>
-              <a href="#" className="footer-link">About</a>
               <a href="#" className="footer-link">Blog</a>
               <a href="#" className="footer-link">Contact</a>
             </div>
