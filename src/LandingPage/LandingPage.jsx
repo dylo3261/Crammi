@@ -111,9 +111,9 @@ export default function LandingPage() {
     "Focus on Chapter 3",
     "Make it true or false",
     "Only use my notes",
-    "Create practice problems",
+    "Make the flashcards hard",
     "Make the difficulty easy",
-    "Focus on key concepts",
+    "Focus on page 67's concepts",
     "Give me exactly 50 cards",
     "Add detailed explanations"
   ];
@@ -356,7 +356,7 @@ export default function LandingPage() {
                 </div>
                 </div>
                 <div className="instruction-input-box">
-                <span className="input-placeholder">Special Instructions</span>
+                <span className="input-placeholder">Special Instructions...</span>
                 </div>
             </div>
             </div>
