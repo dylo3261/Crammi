@@ -463,7 +463,7 @@ export default function LandingPage() {
             <div className="footer-column">
               <h4 className="footer-heading">Legal</h4>
               <a style={{ cursor: 'pointer' }} onClick={() => navigate('/PrivacyPolicy')} className="footer-link">Privacy</a>
-              <a href="#" className="footer-link">Terms</a>
+              <a style={{ cursor: 'pointer' }} onClick={() => navigate('/TermsOfService')} className="footer-link">Terms of Service</a>
             </div>
           </div>
         </div>

@@ -36,7 +36,7 @@ export default function AccountPage(){
       
       setFullName(attributes.name || attributes.email || '');
       setUserEmail(attributes.email || '');
-      setUserPFP(attributes.picture || 'crammipink.png');
+      setUserPFP(attributes.picture || '/crammipink.png');
       
       // Check if user is federated (signed in with Google)
       const identities = attributes.identities;
@@ -254,7 +254,7 @@ export default function AccountPage(){
       )}
 
       <div className="account-settings-sidebar">
-        <img className='settingsLogo' src="crammiLogo.png" alt="Crammi Logo"/>
+        <img className='settingsLogo' src="/crammiLogo.png" alt="Crammi Logo"/>
         <h1 className="settings-title">Settings</h1>
         <nav className="settings-nav">
           <button 

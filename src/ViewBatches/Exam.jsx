@@ -274,7 +274,7 @@ function ExamInterface({ examData, timeLimit, onExamEnd,userName,userEmail,userP
                                     className={`examQuestionFlag ${isFlagged ? 'flagged' : ''}`}
                                     title={isFlagged ? "Remove flag" : "Flag question"}
                                 >
-                                    <img className='examBookmarkIcon'src={isFlagged? 'https://uxwing.com/wp-content/themes/uxwing/download/e-commerce-currency-shopping/saved-bookmark-icon.png':'https://uxwing.com/wp-content/themes/uxwing/download/user-interface/saved-icon.png'}/>
+                                    <img className='examBookmarkIcon'src={isFlagged? '/bookmarkIconOne.png':'/bookmarkIconTwo.png'}/>
                                 </button>
                             </div>
                         );
@@ -945,7 +945,7 @@ export default function Exam() {
                             >
                                 <img 
                                     className='homeButtonIcon' 
-                                    src='https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../releases/preview/2012/png/iconmonstr-home-3.png&r=0&g=0&b=0' 
+                                    src='/homeIcon.png' 
                                     alt='quiz icon'
                                 />
                             </button>
@@ -975,7 +975,7 @@ export default function Exam() {
                                 >
                                     <img 
                                         className='collapsedSidebarIcon' 
-                                        src='https://uxwing.com/wp-content/themes/uxwing/download/signs-and-symbols/exclamation-icon.png' 
+                                        src='/ignoredIcon.png' 
                                         alt='ignored instructions icon'
                                     />
                                 </button>
@@ -1035,11 +1035,11 @@ export default function Exam() {
                                             </button>
                                         </div>
                                         <button className='bottomDashboardSideButtons'>
-                                            <img className='sidebarIcon' src='https://uxwing.com/wp-content/themes/uxwing/download/computers-mobile-hardware/headphone-headset-icon.png' alt='Support icon'/>
+                                            <img className='sidebarIcon' src='/supportIcon.png' alt='Support icon'/>
                                             <span>Support</span>
                                         </button>
                                         <button className='bottomDashboardSideButtons' onClick={handleSignOut}>
-                                            <img className='sidebarIcon' src='https://uxwing.com/wp-content/themes/uxwing/download/web-app-development/log-in-icon.png' alt='Logout icon'/>
+                                            <img className='sidebarIcon' src='/signOutIcon.png' alt='Logout icon'/>
                                             <span>Sign Out</span>
                                         </button>
                                     </div>
@@ -1157,7 +1157,7 @@ export default function Exam() {
                             >
                                 <img 
                                     className='homeButtonIcon' 
-                                    src='https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../releases/preview/2012/png/iconmonstr-home-3.png&r=0&g=0&b=0' 
+                                    src='/homeIcon.png' 
                                     alt='quiz icon'
                                 />
                             </button>
@@ -1187,7 +1187,7 @@ export default function Exam() {
                                 >
                                     <img 
                                         className='collapsedSidebarIcon' 
-                                        src='https://uxwing.com/wp-content/themes/uxwing/download/signs-and-symbols/exclamation-icon.png' 
+                                        src='/ignoredIcon.png' 
                                         alt='ignored instructions icon'
                                     />
                                 </button>
@@ -1210,7 +1210,7 @@ export default function Exam() {
                                         src={userPFP} 
                                         alt='profile picture'
                                         onError={(e) => {
-                                            e.target.src = "https://askthescientists.com/wp-content/uploads/2021/04/AdobeStock_240042551-scaled.jpeg";
+                                            e.target.src = "/crammipink.png";
                                         }}
                                     />
                                 </button>
@@ -1228,7 +1228,7 @@ export default function Exam() {
                                                     src={userPFP} 
                                                     alt='profile picture'
                                                     onError={(e) => {
-                                                        e.target.src = "https://askthescientists.com/wp-content/uploads/2021/04/AdobeStock_240042551-scaled.jpeg";
+                                                        e.target.src = "/crammipink.png";
                                                     }}
                                                 />
                                                 <div>
@@ -1247,11 +1247,11 @@ export default function Exam() {
                                             </button>
                                         </div>
                                         <button className='bottomDashboardSideButtons'>
-                                            <img className='sidebarIcon' src='https://uxwing.com/wp-content/themes/uxwing/download/computers-mobile-hardware/headphone-headset-icon.png' alt='Support icon'/>
+                                            <img className='sidebarIcon' src='/supportIcon.png' alt='Support icon'/>
                                             <span>Support</span>
                                         </button>
                                         <button className='bottomDashboardSideButtons' onClick={handleSignOut}>
-                                            <img className='sidebarIcon' src='https://uxwing.com/wp-content/themes/uxwing/download/web-app-development/log-in-icon.png' alt='Logout icon'/>
+                                            <img className='sidebarIcon' src='/signOutIcon.png' alt='Logout icon'/>
                                             <span>Sign Out</span>
                                         </button>
                                     </div>
@@ -1298,7 +1298,7 @@ export default function Exam() {
                             >
                                 <img 
                                     className='homeButtonIcon' 
-                                    src='https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../releases/preview/2012/png/iconmonstr-home-3.png&r=0&g=0&b=0' 
+                                    src='/homeIcon.png' 
                                     alt='quiz icon'
                                 />
                             </button>
@@ -1327,7 +1327,7 @@ export default function Exam() {
                                 >
                                     <img 
                                         className='collapsedSidebarIcon' 
-                                        src='https://uxwing.com/wp-content/themes/uxwing/download/signs-and-symbols/exclamation-icon.png' 
+                                        src='/ignoredIcon.png' 
                                         alt='ignored instructions icon'
                                     />
                                 </button>
@@ -1350,7 +1350,7 @@ export default function Exam() {
                                         src={userPFP} 
                                         alt='profile picture'
                                         onError={(e) => {
-                                            e.target.src = "https://askthescientists.com/wp-content/uploads/2021/04/AdobeStock_240042551-scaled.jpeg";
+                                            e.target.src = "/crammipink.png";
                                         }}
                                     />
                                 </button>
@@ -1368,7 +1368,7 @@ export default function Exam() {
                                                     src={userPFP} 
                                                     alt='profile picture'
                                                     onError={(e) => {
-                                                        e.target.src = "https://askthescientists.com/wp-content/uploads/2021/04/AdobeStock_240042551-scaled.jpeg";
+                                                        e.target.src = "/crammipink.png";
                                                     }}
                                                 />
                                                 <div>
@@ -1387,11 +1387,11 @@ export default function Exam() {
                                             </button>
                                         </div>
                                         <button className='bottomDashboardSideButtons'>
-                                            <img className='sidebarIcon' src='https://uxwing.com/wp-content/themes/uxwing/download/computers-mobile-hardware/headphone-headset-icon.png' alt='Support icon'/>
+                                            <img className='sidebarIcon' src='supportIcon.png' alt='Support icon'/>
                                             <span>Support</span>
                                         </button>
                                         <button className='bottomDashboardSideButtons' onClick={handleSignOut}>
-                                            <img className='sidebarIcon' src='https://uxwing.com/wp-content/themes/uxwing/download/web-app-development/log-in-icon.png' alt='Logout icon'/>
+                                            <img className='sidebarIcon' src='signOutIcon.png' alt='Logout icon'/>
                                             <span>Sign Out</span>
                                         </button>
                                     </div>

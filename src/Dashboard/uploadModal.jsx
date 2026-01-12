@@ -517,7 +517,7 @@ export default function UploadModal({ isOpen, close, activeTab, userProfile, set
               <div className="tooltipWrapper">
                 <img
                   className="infoIcon"
-                  src="https://uxwing.com/wp-content/themes/uxwing/download/signs-and-symbols/info-circle-icon.png"
+                  src="/infoIcon.png"
                   alt="info about remaining files"
                 />
                 <span className="tooltipBox">
@@ -586,7 +586,7 @@ export default function UploadModal({ isOpen, close, activeTab, userProfile, set
           >
             <img
               className="uploadModalIcon"
-              src="https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../releases/preview/2017/png/iconmonstr-upload-21.png&r=0&g=0&b=0"
+              src="/uploadIcon.png"
               alt="Upload Icon"
             />
             <p className="uploadBoxDescription">Drag & drop or click to upload</p>

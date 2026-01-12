@@ -127,7 +127,7 @@ export default function UploadExistingModal({isOpen, close, activeTab, batches, 
                 {/* Search Bar */}
                 <div className="existingSearchContainer">
                     <img
-                        src="https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../releases/preview/2018/png/iconmonstr-search-thin.png&r=0&g=0&b=0"
+                        src="/searchIcon.png"
                         alt="search icon"
                         className="existingSearchIcon"
                     />

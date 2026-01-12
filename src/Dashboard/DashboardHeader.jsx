@@ -22,7 +22,7 @@ function UploadBar({activeTab, openUpload, openUploadExisting, searchQuery, setS
             <button onClick={openUploadExisting} className="bodySecondUploadButton">
               <img
                 className="uploadExistingIcon"
-                src="https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../releases/preview/2018/png/iconmonstr-cloud-upload-thin.png&r=0&g=0&b=0"
+                src="/uploadExistingIcon.png"
                 alt="upload existing icon"
               />
               <span className="dashboardHeaderTextUpload">Upload existing</span>
@@ -182,7 +182,7 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
     try {
       const session = await fetchAuthSession();
       const attributes = await fetchUserAttributes();
-      setUserPFP(attributes.picture || "crammipink.png");
+      setUserPFP(attributes.picture || "/crammipink.png");
     } catch (error) {
       console.error('Error:', error);
     }
@@ -315,7 +315,7 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
                   src={userPFP} 
                   alt='profile picture'
                   onError={(e) => {
-                    e.target.src = "crammipink.png";
+                    e.target.src = "/crammipink.png";
                   }}
                 />
                 <div>
@@ -332,11 +332,11 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
                 </button>
               </div>
               <button className='bottomDashboardSideButtons' onClick={() => navigate('/Support')} >
-                <img className='sidebarIcon' src='https://uxwing.com/wp-content/themes/uxwing/download/computers-mobile-hardware/headphone-headset-icon.png' alt='Support icon'/>
+                <img className='sidebarIcon' src='/supportIcon.png' alt='Support icon'/>
                 <span>Support</span>
               </button>
               <button className='bottomDashboardSideButtons' onClick={handleSignOut}>
-                <img className='sidebarIcon' src='https://uxwing.com/wp-content/themes/uxwing/download/web-app-development/log-in-icon.png' alt='Logout icon'/>
+                <img className='sidebarIcon' src='/signOutIcon.png' alt='Logout icon'/>
                 <span>Sign Out</span>
               </button>
             </div>
@@ -355,7 +355,7 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
               src={userPFP} 
               alt='profile picture'
               onError={(e) => {
-                e.target.src = "crammipink.png";
+                e.target.src = "/crammipink.png";
               }}
             />
             <div>

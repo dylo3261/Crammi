@@ -591,7 +591,7 @@ export default function Quiz() {
     async function getUserPFP() {
         try {
             const attributes = await fetchUserAttributes();
-            setUserPFP(attributes.picture || "https://askthescientists.com/wp-content/uploads/2021/04/AdobeStock_240042551-scaled.jpeg");
+            setUserPFP(attributes.picture || "/crammipink.png");
         } catch (error) {
             console.error('Error:', error);
         }
@@ -853,7 +853,7 @@ export default function Quiz() {
                     >
                         <img 
                             className='homeButtonIcon' 
-                            src='https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../releases/preview/2012/png/iconmonstr-home-3.png&r=0&g=0&b=0' 
+                            src='/homeIcon.png' 
                             alt='home icon'
                         />
                     </button>
@@ -883,7 +883,7 @@ export default function Quiz() {
                         >
                             <img 
                                 className='collapsedSidebarIcon' 
-                                src='https://uxwing.com/wp-content/themes/uxwing/download/signs-and-symbols/exclamation-icon.png' 
+                                src='/ignoredIcon.png' 
                                 alt='warning icon'
                             />
                         </button>
@@ -906,7 +906,7 @@ export default function Quiz() {
                                 src={userPFP} 
                                 alt='profile'
                                 onError={(e) => {
-                                    e.target.src = "https://askthescientists.com/wp-content/uploads/2021/04/AdobeStock_240042551-scaled.jpeg";
+                                    e.target.src = "/crammipink.png";
                                 }}
                             />
                         </button>
@@ -924,7 +924,7 @@ export default function Quiz() {
                                             src={userPFP} 
                                             alt='profile'
                                             onError={(e) => {
-                                                e.target.src = "https://askthescientists.com/wp-content/uploads/2021/04/AdobeStock_240042551-scaled.jpeg";
+                                                e.target.src = "/crammipink.png";
                                             }}
                                         />
                                         <div>
@@ -944,11 +944,11 @@ export default function Quiz() {
                                     </button>
                                 </div>
                                 <button className='bottomDashboardSideButtons'>
-                                    <img className='sidebarIcon' src='https://uxwing.com/wp-content/themes/uxwing/download/computers-mobile-hardware/headphone-headset-icon.png' alt='support'/>
+                                    <img className='sidebarIcon' src='/supportIcon.png' alt='support'/>
                                     <span>Support</span>
                                 </button>
                                 <button className='bottomDashboardSideButtons' onClick={handleSignOut}>
-                                    <img className='sidebarIcon' src='https://uxwing.com/wp-content/themes/uxwing/download/web-app-development/log-in-icon.png' alt='logout'/>
+                                    <img className='sidebarIcon' src='/signOutIcon.png' alt='logout'/>
                                     <span>Sign Out</span>
                                 </button>
                             </div>

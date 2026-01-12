@@ -15,7 +15,7 @@ export default function Hamburger({ userName, userEmail, userPFP, handleSignOut,
       >
         <img
           className="hamburgerIcon"
-          src="https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../releases/preview/7.4.0/png/iconmonstr-menu-left-lined.png&r=0&g=0&b=0"
+          src="/leftHamburgerIcon.png"
           alt="menu"
           onContextMenu={(e) => e.preventDefault()}
         />
@@ -77,12 +77,12 @@ export default function Hamburger({ userName, userEmail, userPFP, handleSignOut,
          
           
           <button className='dropdownItem'>
-            <img className='sidebarIcon' src='https://uxwing.com/wp-content/themes/uxwing/download/computers-mobile-hardware/headphone-headset-icon.png' alt='Support icon'/>
+            <img className='sidebarIcon' src='/supportIcon.png' alt='Support icon'/>
             <span>Support</span>
           </button>
           
           <button className='dropdownItem' onClick={handleSignOut}>
-            <img className='sidebarIcon' src='https://uxwing.com/wp-content/themes/uxwing/download/web-app-development/log-in-icon.png' alt='Logout icon'/>
+            <img className='sidebarIcon' src='/signOutIcon.png' alt='Logout icon'/>
             <span>Sign Out</span>
           </button>
         </div>
@@ -96,7 +96,7 @@ export default function Hamburger({ userName, userEmail, userPFP, handleSignOut,
                 src={userPFP} 
                 alt='profile picture'
                 onError={(e) => {
-                  e.target.src = "https://askthescientists.com/wp-content/uploads/2021/04/AdobeStock_240042551-scaled.jpeg";
+                  e.target.src = "/crammipink.png";
                 }}
               />
               <div>

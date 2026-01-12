@@ -31,7 +31,7 @@ export default function ViewHamburger({
       >
         <img
           className="viewHamburgerIcon"
-          src="https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../releases/preview/7.4.0/png/iconmonstr-menu-left-lined.png&r=0&g=0&b=0"
+          src="/leftHamburgerIcon.png"
           alt="menu"
           onContextMenu={(e) => e.preventDefault()}
         />
@@ -50,7 +50,7 @@ export default function ViewHamburger({
         >
           <img 
             className="viewSidebarIcon" 
-            src="https://iconmonstr.com/wp-content/g/gd/makefg.php?i=../releases/preview/2012/png/iconmonstr-home-3.png&r=0&g=0&b=0" 
+            src="/homeIcon.png" 
             alt="home icon"
           />
           Dashboard
@@ -78,7 +78,7 @@ export default function ViewHamburger({
           >
             <img 
               className="viewSidebarIcon" 
-              src="https://uxwing.com/wp-content/themes/uxwing/download/signs-and-symbols/exclamation-icon.png" 
+              src="/ignoredIcon.png" 
               alt="ignored instructions icon"
             />
             Ignored Instructions
@@ -96,7 +96,7 @@ export default function ViewHamburger({
           >
             <img 
               className='viewSidebarIcon' 
-              src='https://uxwing.com/wp-content/themes/uxwing/download/computers-mobile-hardware/headphone-headset-icon.png' 
+              src='/supportIcon.png' 
               alt='Support icon'
             />
             <span>Support</span>
@@ -105,7 +105,7 @@ export default function ViewHamburger({
           <button className='viewDropdownItem' onClick={handleSignOut}>
             <img 
               className='viewSidebarIcon' 
-              src='https://uxwing.com/wp-content/themes/uxwing/download/web-app-development/log-in-icon.png' 
+              src='logOutIcon.png' 
               alt='Logout icon'
             />
             <span>Sign Out</span>
@@ -121,7 +121,7 @@ export default function ViewHamburger({
                 src={userPFP} 
                 alt='profile picture'
                 onError={(e) => {
-                  e.target.src = "https://askthescientists.com/wp-content/uploads/2021/04/AdobeStock_240042551-scaled.jpeg";
+                  e.target.src = "/crammipink.png";
                 }}
               />
               <div>
