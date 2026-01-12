@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import * as pdfjsLib from "pdfjs-dist/build/pdf.mjs";
 import { fetchAuthSession } from 'aws-amplify/auth';
 import LimitReached from "./limitReached";
-pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdf.worker.mjs";
-
+import pdfjsWorker from "pdfjs-dist/build/pdf.worker.mjs?url";
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 import "./uploadModal.css";
 import StudyLoader from "./StudyLoader";
 
