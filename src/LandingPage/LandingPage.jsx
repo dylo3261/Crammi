@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './LandingPage.css';
-import googleLogo from '../../public/GoogleLogo.png';
+import googleLogo from '/GoogleLogo.png';
 import { signInWithRedirect } from 'aws-amplify/auth';
 import { useNavigate } from 'react-router-dom';
 
