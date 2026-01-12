@@ -673,7 +673,7 @@ export default function Exam() {
     async function getUserPFP() {
         try {
             const attributes = await fetchUserAttributes();
-            setUserPFP(attributes.picture || "https://askthescientists.com/wp-content/uploads/2021/04/AdobeStock_240042551-scaled.jpeg");
+            setUserPFP(attributes.picture || "/crammipink.png");
         } catch (error) {
             console.error('Error:', error);
         }
@@ -998,7 +998,7 @@ export default function Exam() {
                                         src={userPFP} 
                                         alt='profile picture'
                                         onError={(e) => {
-                                            e.target.src = "https://askthescientists.com/wp-content/uploads/2021/04/AdobeStock_240042551-scaled.jpeg";
+                                            e.target.src = "/crammipink.png";
                                         }}
                                     />
                                 </button>
@@ -1016,7 +1016,7 @@ export default function Exam() {
                                                     src={userPFP} 
                                                     alt='profile picture'
                                                     onError={(e) => {
-                                                        e.target.src = "https://askthescientists.com/wp-content/uploads/2021/04/AdobeStock_240042551-scaled.jpeg";
+                                                        e.target.src = "/crammipink.png";
                                                     }}
                                                 />
                                                 <div>
