@@ -188,7 +188,26 @@
   .headerButton {
     color: #64748b;
   }
+  .headerButton {
+    color: #64748b;
+    position: relative; /* Add this - needed for ::after positioning */
+    padding-bottom: 0.25rem; /* Add this - spacing for underline */
+  }
   
+  .headerButton::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #ab9ff2;
+    transition: width 0.3s ease;
+  }
+  
+  .headerButton:hover::after {
+    width: 100%;
+  }
   .headerButton:hover {
     color: #0f172a;
     background: #f8f9fa;
@@ -1456,7 +1475,61 @@
       font-size: 15px;
     }
   }
-  
+  /* iPhone SE and similar small devices (375px - 390px) */
+  @media (max-width: 390px) {
+    .section-one {
+      padding: 0;
+      margin: 1.5rem 0.75rem;
+      margin-top: 90px;
+      gap: 1rem;
+    }
+    
+    .box {
+      min-width: 0; /* Remove the 400px minimum */
+      max-width: 100%;
+      padding: 0.75rem;
+      flex: 1 1 100%;
+    }
+    
+    .sectionOneTitle {
+      font-size: clamp(2.25rem, 8vw, 3rem);
+      margin-bottom: 1.25rem;
+      margin-top: 0;
+      line-height: 1.2;
+    }
+    
+    .description {
+      font-size: clamp(0.95rem, 4vw, 1.1rem);
+      margin-bottom: 1rem;
+    }
+    
+    .buttonGroup {
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    .landingSignUpButton,
+    .googleSignUp {
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      padding: 1rem;
+      font-size: 0.9rem;
+    }
+    
+    .hero-visual-box {
+      min-height: 300px;
+    }
+    
+    .floating-card {
+      padding: 1rem;
+      margin-top: -20px;
+    }
+    
+    .card-text {
+      font-size: 0.85rem;
+    }
+  }
   @media (min-width: 1600px) {
     .box {
       flex: 1 1 48%;
