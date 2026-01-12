@@ -1387,11 +1387,11 @@ export default function Exam() {
                                             </button>
                                         </div>
                                         <button className='bottomDashboardSideButtons'>
-                                            <img className='sidebarIcon' src='supportIcon.png' alt='Support icon'/>
+                                            <img className='sidebarIcon' src='/supportIcon.png' alt='Support icon'/>
                                             <span>Support</span>
                                         </button>
                                         <button className='bottomDashboardSideButtons' onClick={handleSignOut}>
-                                            <img className='sidebarIcon' src='signOutIcon.png' alt='Logout icon'/>
+                                            <img className='sidebarIcon' src='/signOutIcon.png' alt='Logout icon'/>
                                             <span>Sign Out</span>
                                         </button>
                                     </div>

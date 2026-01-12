@@ -151,12 +151,8 @@ function AppContent() {
           isAuthenticated ? <Upgrade/> : <Navigate to="/" replace />
         }
         />
-        <Route 
-        path='/Success' 
-        element={
-          isAuthenticated ? <Success/> : <Navigate to="/" replace />
-        }
-        />
+       <Route path="/Success/plus" element={<Success />} />
+       <Route path="/Success/pro" element={<Success />} />
     </Routes>
   );
 }

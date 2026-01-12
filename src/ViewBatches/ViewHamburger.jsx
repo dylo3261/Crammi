@@ -105,7 +105,7 @@ export default function ViewHamburger({
           <button className='viewDropdownItem' onClick={handleSignOut}>
             <img 
               className='viewSidebarIcon' 
-              src='logOutIcon.png' 
+              src='/logOutIcon.png' 
               alt='Logout icon'
             />
             <span>Sign Out</span>

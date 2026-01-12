@@ -294,7 +294,7 @@ export default function AccountPage(){
         {activeSection === 'General' && (
           <>
             <section className="settings-section">
-              <h2 className="section-title">Profile</h2>
+              <h2 className="section-title2">Profile</h2>
               
               <div className="profile-card">
                 <div className="profile-picture-section">
@@ -337,7 +337,7 @@ export default function AccountPage(){
 
             {isFederatedUser && (
               <section className="settings-section">
-                <h2 className="section-title">Linked Accounts</h2>
+                <h2 className="section-title2">Linked Accounts</h2>
                 <div className="linked-accounts-card">
                   <div className="linked-account-item">
                     <div className="linked-account-info">
@@ -359,7 +359,7 @@ export default function AccountPage(){
 
             {!isFederatedUser && (
               <section className="settings-section">
-                <h2 className="section-title">Password</h2>
+                <h2 className="section-title2">Password</h2>
                 <div className="password-card">
                   <div className="password-item">
                     <div className="password-field">
@@ -384,7 +384,7 @@ export default function AccountPage(){
         {activeSection === 'Account' && (
           <>
             <section className="settings-section">
-              <h2 className="section-title">Account Information</h2>
+              <h2 className="section-title2">Account Information</h2>
               <div className="info-card">
                 <div className="info-item">
                   <span className="info-label">Email:</span>
@@ -398,7 +398,7 @@ export default function AccountPage(){
             </section>
 
             <section className="settings-section">
-              <h2 className="section-title danger-title">Danger Zone</h2>
+              <h2 className="section-title2 danger-title">Danger Zone</h2>
               <div className="danger-card">
                 <div className="danger-content">
                   <div className="danger-text">
@@ -418,7 +418,7 @@ export default function AccountPage(){
 
         {activeSection === 'Billing' && (
           <section className="settings-section">
-            <h2 className="section-title">Billing & Subscription</h2>
+            <h2 className="section-title2">Billing & Subscription</h2>
             <div className="info-card">
               <div className="info-item">
                 <span className="info-label">Current Plan:</span>

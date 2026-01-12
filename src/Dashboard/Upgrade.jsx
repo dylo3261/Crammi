@@ -94,25 +94,30 @@ export default function Upgrade() {
       }
 
       const data = await response.json();
+      console.log('Lambda response:', data); // Add this to debug
       
       // If action is 'modified', show success and refresh
       if (data.action === 'modified') {
         setShowConfirmation(false);
-        // Refresh to get updated user profile
-        navigate(`/Success?plan=${confirmationDetails.planId}`);
+        navigate(`/Success/${data.newPlan}`);
         return;
       }
-
+      
       // Otherwise redirect to checkout
-      console.log('Received session ID:', data.sessionId);
-      const stripe = await loadStripe();
-      const { error } = await stripe.redirectToCheckout({
-        sessionId: data.sessionId
-      });
-
-      if (error) {
-        console.error('Stripe redirect error:', error);
-        alert('Failed to redirect to checkout. Please try again.');
+      if (data.action === 'checkout' && data.sessionId) {
+        console.log('Received session ID:', data.sessionId);
+        const stripe = await loadStripe();
+        const { error } = await stripe.redirectToCheckout({
+          sessionId: data.sessionId
+        });
+      
+        if (error) {
+          console.error('Stripe redirect error:', error);
+          alert('Failed to redirect to checkout. Please try again.');
+        }
+      } else {
+        console.error('Unexpected response format:', data);
+        alert('Unexpected response from server');
       }
 
     } catch (error) {

@@ -69,7 +69,7 @@ export default function SignUp() {
           await getCurrentUser();
           navigate('/Dashboard');
         } catch {
-          setError('An account with this email already exists. Please sign in with your email and password.');
+          setError('An account with this email already exists or was deleted recently. Please sign in with your email and password. If your account was recently deleted, please wait 7 days from the deletion date.');
         }
       }
     };

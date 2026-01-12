@@ -220,10 +220,11 @@ export default function BatchesSection({
             setEditingBatchId(null);
             return;
         }
-
+    
         const oldBatch = batches.find(b => b.batchID === batchID);
         const oldName = oldBatch?.batchName;
-
+    
+        // Update batches state
         setBatches(prevBatches => 
             prevBatches.map(batch => 
                 batch.batchID === batchID 
@@ -231,10 +232,22 @@ export default function BatchesSection({
                     : batch
             )
         );
-
+    
+        // Update recents state and localStorage
+        const updatedRecents = recents.map(recent => 
+            recent.id === batchID 
+                ? { ...recent, name: editingName }
+                : recent
+        );
+        setRecents(updatedRecents);
+        
+        // Save to localStorage with user-specific key
+        const recentsKey = userEmail ? `crammi_recents_${userEmail}` : 'crammi_recents';
+        localStorage.setItem(recentsKey, JSON.stringify(updatedRecents));
+    
         setEditingBatchId(null);
         setEditingName('');
-
+    
         try {
             const session = await fetchAuthSession();
             const token = session.tokens?.idToken?.toString();
@@ -261,6 +274,7 @@ export default function BatchesSection({
                     <>Failed to rename <span className="notification-name">{batchType}</span></>,
                     'error'
                 );
+                // Rollback batches
                 setBatches(prevBatches => 
                     prevBatches.map(batch => 
                         batch.batchID === batchID 
@@ -268,6 +282,9 @@ export default function BatchesSection({
                             : batch
                     )
                 );
+                // Rollback recents
+                setRecents(recents);
+                localStorage.setItem(recentsKey, JSON.stringify(recents));
             }
         } catch (err) {
             console.error('Error renaming batch:', err);
@@ -275,6 +292,7 @@ export default function BatchesSection({
                 <>Failed to rename <span className="notification-name">{batchType}</span></>,
                 'error'
             );
+            // Rollback batches
             setBatches(prevBatches => 
                 prevBatches.map(batch => 
                     batch.batchID === batchID 
@@ -282,6 +300,9 @@ export default function BatchesSection({
                         : batch
                 )
             );
+            // Rollback recents
+            setRecents(recents);
+            localStorage.setItem(recentsKey, JSON.stringify(recents));
         }
     };
 
