@@ -295,16 +295,18 @@
     padding: 2rem;
     justify-content: center;
     margin: 0 auto;
-    max-width: 1400px;
-    padding-top: 2rem;
-    margin-top: 3vh;
+    max-width: 1500px;
+    padding-top: calc(80px + 2rem); /* Fixed header height + spacing */
+    margin-top: -6vh; /* Remove vh units */
+    margin-top: -6dvh;
+
   }
   
   .box {
     flex: 1 1 48%;
-    min-width: 400px;
-    max-width: 700px;
-    padding: clamp(1rem, 1w, 2rem);
+    min-width: 300px; /* Reduced from 400px for better mobile support */
+    max-width: 1300px;
+    padding: clamp(1rem, 2vw, 2rem);
     background-color: #f8f9fa;
     border: 1px solid #f8f9fa;
     border-radius: 6px;
@@ -314,6 +316,8 @@
     justify-content: center;
     opacity: 0;
     animation: fadeInUp 0.8s ease-out forwards;
+    width: 100%; /* Add explicit width for Safari */
+    
   }
 
   .box:first-child {
@@ -1365,11 +1369,12 @@
       display: flex;
     }
   
-    .section-one {
-      padding: 1rem;
-      margin: 2rem 1rem;
-      margin-top: 80px;
-    }
+  .section-one {
+    padding: 1rem;
+    margin: 0 1rem;
+    padding-top: calc(70px + 2rem); /* Consistent with header height */
+  }
+
     .section-title-special{
       margin-top: -4rem;
     }
@@ -1424,9 +1429,9 @@
   
   @media (max-width: 600px) {
     .section-one {
-      padding: 0rem;
-      margin: 2rem 1rem;
-      margin-top: 80px;
+      padding: 1rem;
+      margin: 0 1rem;
+      padding-top: calc(70px + 1.5rem);
     }
   
     .buttonGroup {
@@ -1450,9 +1455,11 @@
   }
   
   @media (max-width: 480px) {
-    .section-one {
-      margin-top: 100px;
-    }
+      .section-one {
+        padding-top: calc(70px + 1rem);
+        margin: 0 0.75rem;
+      }
+    
     .landingPageLogo{
         margin-left:-1.5rem;
     }
@@ -1550,3 +1557,14 @@
       max-width: 700px;
     }
   }
+  /* Safari-specific fixes */
+@supports (-webkit-touch-callout: none) {
+  .section-one {
+    padding-top: calc(70px + 3rem); /* Slightly different for Safari */
+  }
+  
+  .header {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+}

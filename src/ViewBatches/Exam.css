@@ -4,6 +4,7 @@
     align-items: center;
     justify-content: center;
     min-height: 100vh;
+    min-height: 100dvh;
     padding: 20px;
     margin-left: 60px;
     
@@ -245,6 +246,7 @@
 .examInterfaceContainer {
     display: flex;
     height: 100vh;
+    height: 100dvh;
     margin-left: 60px;
 }
 
@@ -679,6 +681,7 @@
 
 .exam-score-page {
     min-height: 100vh;
+    min-height: 100dvh;
     background: linear-gradient(
         135deg,
         #eff6ff 0%,    /* very light start */
@@ -689,6 +692,7 @@
       
     padding: 1rem;
     height: 100vh;
+    height: 100dvh;
     overflow-y: auto;
   }
   

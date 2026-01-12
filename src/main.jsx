@@ -14,23 +14,35 @@ import { Amplify } from 'aws-amplify';
 
 // Configure Amplify with Cognito
 // main.jsx
-Amplify.configure({
-  Auth: {
-    Cognito: {
-      userPoolId: import.meta.env.VITE_COGNITO_USER_POOL_ID,
-      userPoolClientId: import.meta.env.VITE_COGNITO_CLIENT_ID,
-      loginWith: {
-        oauth: {
-          domain: `${import.meta.env.VITE_COGNITO_DOMAIN}.auth.${import.meta.env.VITE_COGNITO_REGION}.amazoncognito.com`,
-          scopes: ['openid', 'email', 'phone','profile','aws.cognito.signin.user.admin'],
-          redirectSignIn: [import.meta.env.VITE_REDIRECT_URI],
-          redirectSignOut: [import.meta.env.VITE_LOGOUT_URI],
-          responseType: 'code',
+const isLocalhost = Boolean(
+  window.location.hostname === 'localhost' ||
+  window.location.hostname === '[::1]' ||
+  window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
+);
+const redirectUri = isLocalhost 
+  ? 'http://localhost:5173/Dashboard' 
+  : `${window.location.origin}/Dashboard`;
+
+const logoutUri = isLocalhost 
+  ? 'http://localhost:5173/' 
+  : `${window.location.origin}/`;
+  Amplify.configure({
+    Auth: {
+      Cognito: {
+        userPoolId: import.meta.env.VITE_COGNITO_USER_POOL_ID,
+        userPoolClientId: import.meta.env.VITE_COGNITO_CLIENT_ID,
+        loginWith: {
+          oauth: {
+            domain: 'auth.crammi.com', 
+            scopes: ['openid', 'email', 'phone', 'profile', 'aws.cognito.signin.user.admin'],
+            redirectSignIn: [redirectUri], 
+            redirectSignOut: [logoutUri],
+            responseType: 'code',
+          },
         },
       },
     },
-  },
-});
+  });
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
