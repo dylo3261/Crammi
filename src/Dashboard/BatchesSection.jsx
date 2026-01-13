@@ -98,7 +98,7 @@ export default function BatchesSection({
     };
 
     const fetchBatches = useCallback(async () => {
-        console.log('🔄 Polling batches...', new Date().toLocaleTimeString());
+        // console.log('🔄 Polling batches...', new Date().toLocaleTimeString());
         try {
           const session = await fetchAuthSession();
           const token = session.tokens?.idToken?.toString();
@@ -117,7 +117,7 @@ export default function BatchesSection({
           }
       
           const data = await response.json();
-          console.log('✅ Poll complete:', data.batches?.length, 'batches');
+        //   console.log('✅ Poll complete:', data.batches?.length, 'batches');
           setBatches(data.batches || []);
           setIsLoading(false);
         } catch (err) {
@@ -128,7 +128,7 @@ export default function BatchesSection({
     }, [setBatches]);
 
     const startPolling = useCallback(() => {
-        console.log('🚀 Manually starting polling');
+        // console.log('🚀 Manually starting polling');
         pollCountRef.current = 0;
         fetchBatches();
     }, [fetchBatches]);
@@ -350,7 +350,7 @@ export default function BatchesSection({
 
     useEffect(() => {
         const handleBatchUploaded = () => {
-            console.log('🚀 Upload detected, starting polling');
+            // console.log('🚀 Upload detected, starting polling');
             startPolling();
         };
 
@@ -365,25 +365,25 @@ export default function BatchesSection({
         const hasPending = batches.some(batch => batch.status === 'PENDING');
         const isPolling = pollIntervalRef.current !== null;
         
-        console.log('🔍 Polling check:', { 
-            hasPending, 
-            isPolling, 
-            pollCount: pollCountRef.current,
-            batchCount: batches.length 
-        });
+        // console.log('🔍 Polling check:', { 
+        //     hasPending, 
+        //     isPolling, 
+        //     pollCount: pollCountRef.current,
+        //     batchCount: batches.length 
+        // });
         
         if (hasPending && !isPolling) {
-            console.log('▶️ Starting polling - pending batches detected');
+            // console.log('▶️ Starting polling - pending batches detected');
             pollCountRef.current = 0;
             pollIntervalRef.current = setInterval(() => {
                 pollCountRef.current++;
-                console.log(`📊 Poll count: ${pollCountRef.current}/${MAX_POLLS}`);
+                // console.log(`📊 Poll count: ${pollCountRef.current}/${MAX_POLLS}`);
                 
                 if (pollCountRef.current >= MAX_POLLS) {
                     clearInterval(pollIntervalRef.current);
                     pollIntervalRef.current = null;
                     pollCountRef.current = 0;
-                    console.log('⏹️ Stopping polling - max polls reached');
+                    // console.log('⏹️ Stopping polling - max polls reached');
                     
                     // Mark any still-pending batches as "stuck"
                     const stillPending = batches
@@ -397,7 +397,7 @@ export default function BatchesSection({
                 fetchBatches();
             }, 10000);
         } else if (!hasPending && isPolling) {
-            console.log('⏹️ Stopping polling - no pending batches');
+            // console.log('⏹️ Stopping polling - no pending batches');
             clearInterval(pollIntervalRef.current);
             pollIntervalRef.current = null;
             pollCountRef.current = 0;

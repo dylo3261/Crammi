@@ -29,6 +29,8 @@
   
     width: 50vw;
     height: calc(100vh - 6vh);
+    height: calc(100dvh - 6vh); /* Add dynamic viewport height */
+    padding-bottom: env(safe-area-inset-bottom, 0px); /* Add safe area padding */
   
     background: rgb(246, 246, 246);
     display: flex;
@@ -64,6 +66,7 @@
     position: absolute;
     bottom: 0;
     left: 0;
+    padding-bottom: env(safe-area-inset-bottom, 10px); /* Add safe area padding */
   }
   
   /* Ensure PFPWrapper in dropdown doesn't overflow */
@@ -192,7 +195,8 @@
     background: rgb(246, 246, 246);
     width: 100%;
     padding-top: 5px;
-    padding-bottom: 80px;
+    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)); /* Add safe area to existing padding */
+    
   }
   
   /* Ignored Instructions Popup */

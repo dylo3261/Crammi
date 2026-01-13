@@ -1010,7 +1010,7 @@ export default function Exam() {
                                 <div className="logoutPopup" ref={logoutPopupRef}>
                                     <div className='viewLogoutPopupPFP'>
                                         <div className='PFPWrapper'>
-                                            <button className='PFPButtonPopup'>
+                                            <button className='PFPButtonPopup' onClick={() => navigate('/Settings')}>
                                                 <img 
                                                     className='userPFPPopup' 
                                                     src={userPFP} 
@@ -1222,7 +1222,7 @@ export default function Exam() {
                                 <div className="logoutPopup" ref={logoutPopupRef}>
                                     <div className='logoutPopupPFP'>
                                         <div className='PFPWrapper'>
-                                            <button className='PFPButtonPopup'>
+                                            <button className='PFPButtonPopup' onClick={() => navigate('/Settings')}>
                                                 <img 
                                                     className='userPFPPopup' 
                                                     src={userPFP} 
@@ -1362,7 +1362,7 @@ export default function Exam() {
                                 <div className="logoutPopup" ref={logoutPopupRef}>
                                     <div className='logoutPopupPFP'>
                                         <div className='PFPWrapper'>
-                                            <button className='PFPButtonPopup'>
+                                            <button className='PFPButtonPopup'onClick={() => navigate('/Settings')}>
                                                 <img 
                                                     className='userPFPPopup' 
                                                     src={userPFP} 

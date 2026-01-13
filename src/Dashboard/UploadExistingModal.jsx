@@ -58,8 +58,8 @@ export default function UploadExistingModal({isOpen, close, activeTab, batches, 
                 }
                 
 
-            console.log('Selected batch:', selectedBatch);
-            console.log('Upload instructions:', uploadInstructions);
+            // console.log('Selected batch:', selectedBatch);
+            // console.log('Upload instructions:', uploadInstructions);
 
             const existingPayload = {
                 batch_ID: selectedBatch,
@@ -78,7 +78,7 @@ export default function UploadExistingModal({isOpen, close, activeTab, batches, 
             window.dispatchEvent(new Event('batchUploaded')); //start polling
 
               
-            console.log('Response status:', response.status);
+            // console.log('Response status:', response.status);
             if (!response.ok) {
             const errorData = await response.json();
             // console.error('Upload failed:', errorData);

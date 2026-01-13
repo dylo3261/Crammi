@@ -1,784 +1,960 @@
 /* Account Settings Container */
-.account-settings-container {
-    display: flex;
-    min-height: 100vh;
-    min-height: 100dvh;
-    background-color: #ffffff;
-    color: #0f172a;
-    font-family: 'apple', -apple-system, sans-serif;
-  }
-  /* Cancel Subscription Button */
-.cancel-subscription-button {
-    width: 100%;
-    padding: 0.75rem 1.5rem;
-    border-radius: 10px;
-    border: 1px solid #ef4444;
-    background-color: white;
-    color: #ef4444;
-    font-size: 0.95rem;
-    font-weight: 600;
-    font-family: 'apple', -apple-system, sans-serif;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    margin-top: 1.5rem;
-  }
-  
-  .cancel-subscription-button:hover {
-    background-color: #ef4444;
-    color: white;
-  }
-  
-  .cancel-subscription-button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-  /* Sidebar */
-  .account-settings-sidebar {
-    width: 280px;
-    background-color: #ffffff;
-    padding: 2rem 1.5rem;
-    border-right: 1px solid #e2e8f0;
-    position: fixed;
-    height: 100vh;
-    height: 100dvh;
-    overflow-y: auto;
-  }
-  
-  /* Settings Logo */
-  .settingsLogo {
-    width: 45px;
-    height: 45px;
-    margin-bottom: 1rem;
-  }
-  
-  .settings-title {
-    font-size: 2rem;
-    font-weight: 800;
-    color: #0f172a;
-    margin: 0 0 2rem 0;
-    font-family: 'apple', -apple-system, sans-serif;
-  }
-  
-  .settings-nav {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-  /* Danger Zone */
-.danger-title {
-    padding-top: 40vh;
-  }
-  
-  .danger-card {
-    border-radius: 10px;
-    padding: 1.5rem;
-  }
-  
-  .danger-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 2rem;
-  }
-  
-  .danger-text {
-    flex: 1;
-  }
-  
-  .danger-card-title {
-    font-size: 1rem;
-    font-weight: 600;
-    margin: 0 0 0.5rem 0;
-    font-family: 'apple', -apple-system, sans-serif;
-  }
-  
-  .danger-card-description {
-    font-size: 0.9rem;
-    margin: 0;
-    line-height: 1.5;
-    font-family: 'applethin', -apple-system, sans-serif;
-  }
-  
-  .delete-account-button {
-    padding: 0.75rem 1.5rem;
-    border-radius: 10px;
-    background-color: white;
-    font-size: 0.95rem;
-    font-weight: 600;
-    font-family: 'applemedium', -apple-system, sans-serif;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    white-space: nowrap;
-  }
-  
-  .delete-account-button:hover {
-    background-color: #dc2626;
-    color: white;
-  }
-  
-  /* Delete Confirmation Modal */
-  .delete-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-  }
-  
-  .delete-modal {
-    background-color: white;
-    border-radius: 12px;
-    padding: 2rem;
-    max-width: 500px;
-    width: 90%;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  }
-  
-  .delete-modal-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin: 0 0 1rem 0;
-    font-family: 'apple', -apple-system, sans-serif;
-  }
-  
-  .delete-modal-text {
-    font-size: 0.95rem;
-    color: #64748b;
-    line-height: 1.6;
-    margin: 0 0 2rem 0;
-    font-family: 'applemedium', -apple-system, sans-serif;
-  }
-  
-  .delete-modal-buttons {
-    display: flex;
-    gap: 1rem;
-    justify-content: flex-end;
-  }
-  
-  .delete-cancel-button {
-    padding: 0.75rem 1.5rem;
-    border-radius: 10px;
-    border: 1px solid #e2e8f0;
-    background-color: white;
-    color: #0f172a;
-    font-size: 0.95rem;
-    font-weight: 600;
-    font-family: 'applemedium', -apple-system, sans-serif;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  
-  .delete-cancel-button:hover {
-    background-color: #f8f9fa;
-  }
-  
-  .delete-confirm-button {
-    padding: 0.75rem 1.5rem;
-    border-radius: 10px;
-    border: none;
-    background-color: #dc2626;
-    color: white;
-    font-size: 0.95rem;
-    font-weight: 600;
-    font-family: 'apple', -apple-system, sans-serif;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  
-  .delete-confirm-button:hover {
-    background-color: #b91c1c;
-  }
-  
-  @media (max-width: 768px) {
-    .danger-content {
-      flex-direction: column;
-      align-items: stretch;
-    }
-  
-    .delete-account-button {
-      width: 100%;
-    }
-  
-    .delete-modal-buttons {
-      flex-direction: column;
-    }
-  
-    .delete-cancel-button,
-    .delete-confirm-button {
-      width: 100%;
-    }
-  }
-  .settings-nav-item {
-    display: flex;
-    align-items: center;
-    border-radius: 10px;
-    width: 100%;
-    height: 44px;
-    padding: 0 1rem;
-    border: none;
-    cursor: pointer;
-    font-size: 0.95rem;
-    text-align: left;
-    font-family: 'applemedium', -apple-system, sans-serif;
-    background-color: transparent;
-    color: #64748b;
-    transition: all 0.2s ease;
-  }
-  
-  .settings-nav-item:hover {
-    background-color: #f8f9fa;
-    color: #0f172a;
-  }
-  
-  .settings-nav-item.active {
-    background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
-    color: white;
-    font-weight: 600;
-    box-shadow: 0 4px 15px rgba(171, 159, 242, 0.3);
-  }
-  
-  /* Sign Out Button */
-  .sign-out-button {
-    margin-top: auto;
-    color: #ef4444 !important;
-    border-top: 1px solid #e2e8f0;
-    padding-top: 1rem;
-    margin-top: 2rem;
-  }
-  
-  .sign-out-button:hover {
-    background-color: #fee2e2 !important;
-    color: #dc2626 !important;
-  }
-  
-  /* Content Area */
-  .account-settings-content {
-    margin-left: 280px;
-    flex: 1;
-    padding: 3rem 4rem;
-    max-width: 1400px;
-    background-color: #f8f9fa;
-  }
-  
-  /* Section */
-  .settings-section {
-    margin-bottom: 4rem;
-  }
-  
-  .section-title2 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #0f172a;
-    margin: 0 0 2rem 0;
-    font-family: 'apple', -apple-system, sans-serif;
-  }
-  
-  /* Profile Card */
-  .profile-card {
-    background-color: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 2rem;
-    margin-bottom: 2rem;
-  }
-  
-  .profile-picture-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-  }
-  
-  .profile-picture-large {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid #f1f5f9;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-  
-  .avatar-circle-large {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 3rem;
-    font-weight: 700;
-    color: white;
-    border: 4px solid #f1f5f9;
-    box-shadow: 0 4px 12px rgba(171, 159, 242, 0.3);
-  }
-  
-  .profile-info-centered {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.25rem;
-    text-align: center;
-  }
-  
-  .profile-name {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #0f172a;
-    margin: 0;
-    font-family: 'apple', -apple-system, sans-serif;
-  }
-  
-  .profile-email {
-    font-size: 0.95rem;
-    color: #64748b;
-    margin: 0;
-    font-family: 'applethin', -apple-system, sans-serif;
-  }
-  
-  /* Form Elements */
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
-  }
-  
-  .form-group {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .form-group.full-width {
-    grid-column: 1 / -1;
-    margin-bottom: 1.5rem;
-  }
-  
-  .form-label {
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: #0f172a;
-    margin-bottom: 0.75rem;
-    font-family: 'applemedium', -apple-system, sans-serif;
-  }
-  
-  .form-description {
-    font-size: 0.85rem;
-    color: #64748b;
-    margin: -0.5rem 0 0.75rem 0;
-    font-family: 'applethin', -apple-system, sans-serif;
-  }
-  
-  .form-input,
-  .form-select,
-  .form-textarea {
-    background-color: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 0.75rem 1rem;
-    font-size: 0.95rem;
-    color: #0f172a;
-    font-family: 'applemedium', -apple-system, sans-serif;
-    transition: all 0.2s ease;
-    outline: none;
-  }
-  
-  .form-input:focus,
-  .form-select:focus,
-  .form-textarea:focus {
-    border-color: #ab9ff2;
-    box-shadow: 0 0 0 3px rgba(171, 159, 242, 0.15);
-  }
-  
-  .form-input:disabled {
-    background-color: #f1f5f9;
-    color: #94a3b8;
-    cursor: not-allowed;
-  }
-  
-  .form-select {
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%2364748b' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 1rem center;
-    padding-right: 2.5rem;
-    cursor: pointer;
-  }
-  
-  .form-textarea {
-    resize: vertical;
-    min-height: 100px;
-    font-family: 'applemedium', -apple-system, sans-serif;
-    line-height: 1.6;
-  }
-  
-  /* Input with Avatar */
-  .input-with-avatar {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    background-color: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 0.5rem 1rem;
-    transition: all 0.2s ease;
-  }
-  
-  .input-with-avatar:focus-within {
-    border-color: #ab9ff2;
-    box-shadow: 0 0 0 3px rgba(171, 159, 242, 0.15);
-  }
-  
-  .input-with-avatar .form-input {
-    background: transparent;
-    border: none;
-    padding: 0.25rem 0;
-    box-shadow: none;
-  }
-  
-  .input-with-avatar .form-input:focus {
-    box-shadow: none;
-  }
-  
-  .avatar-circle {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: white;
-    flex-shrink: 0;
-  }
-  
-  /* Notifications */
-  .notification-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1.5rem;
-    background-color: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    gap: 2rem;
-  }
-  
-  .notification-text {
-    flex: 1;
-  }
-  
-  .notification-title {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #0f172a;
-    margin: 0 0 0.5rem 0;
-    font-family: 'apple', -apple-system, sans-serif;
-  }
-  
-  .notification-description {
-    font-size: 0.9rem;
-    color: #64748b;
-    margin: 0;
-    line-height: 1.5;
-    font-family: 'applethin', -apple-system, sans-serif;
-  }
-  
-  /* Toggle Switch */
-  .toggle-switch {
+.crammi-account-settings-container {
+  display: flex;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background-color: #ffffff;
+  color: #0f172a;
+  font-family: 'apple', -apple-system, sans-serif;
+}
+
+/* --------------------------- */
+/* MOBILE HEADER - ONLY MOBILE */
+/* --------------------------- */
+
+.crammi-settings-mobile-header {
+  display: none;
+}
+
+.crammi-settings-hamburger-button {
+  border: none;
+  padding: 0;
+  margin: 0;
+  background: none;
+  outline: none;
+  cursor: pointer;
+  z-index: 10000;
+}
+
+.crammi-settings-hamburger-icon {
+  width: 30px;
+  height: 30px;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.crammi-settings-mobile-logo {
+  height: 32px;
+  width: auto;
+}
+
+.crammi-settings-mobile-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+  font-family: 'apple', -apple-system, sans-serif;
+}
+
+.crammi-mobile-menu-overlay {
+  display: none;
+  position: fixed;
+  top: 6vh;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9997;
+}
+
+/* --------------------------- */
+/* MOBILE RESPONSIVE           */
+/* --------------------------- */
+@media (max-width: 768px) {
+  .crammi-account-settings-container {
     position: relative;
-    display: inline-block;
-    width: 52px;
-    height: 28px;
-    flex-shrink: 0;
+    overflow-x: hidden;
   }
-  
-  .toggle-switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
-  
-  .toggle-slider {
-    position: absolute;
-    cursor: pointer;
+
+  .crammi-settings-mobile-header {
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    background: white;
+    border-bottom: 1px solid #e2e8f0;
+    justify-content: space-between;
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    bottom: 0;
-    background-color: #e2e8f0;
-    border-radius: 28px;
-    transition: all 0.3s ease;
+    z-index: 9998;
+    height: 6vh;
   }
-  
-  .toggle-slider:before {
-    position: absolute;
-    content: "";
-    height: 20px;
-    width: 20px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    border-radius: 50%;
-    transition: all 0.3s ease;
+
+  .crammi-settings-mobile-logo {
+    order: 1;
+    margin-left: 10px;
   }
-  
-  .toggle-switch input:checked + .toggle-slider {
-    background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
+
+  .crammi-settings-mobile-title {
+    margin-right: 1rem;
+    order: 2;  /* <-- HERE */
+    margin-left: auto;
+    margin-right: 0;
   }
-  
-  .toggle-switch input:checked + .toggle-slider:before {
-    transform: translateX(24px);
+  .crammi-settings-hamburger-button{
+    order: 0;
   }
-  
-  .toggle-switch:hover .toggle-slider {
-    box-shadow: 0 0 8px rgba(171, 159, 242, 0.3);
+
+  .crammi-mobile-menu-overlay.crammi-active {
+    display: block;
   }
-  
-  /* Avatar Image */
-  .avatar-image {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-    flex-shrink: 0;
+
+  /* HIDE the desktop sidebar completely */
+  .crammi-account-settings-sidebar {
+    display: none !important;
   }
-  
-  /* Save Button */
-  .save-button {
-    padding: 0.75rem 1.5rem;
-    border-radius: 10px;
-    border: none;
-    background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
-    color: white;
-    font-size: 0.95rem;
-    font-weight: 600;
-    font-family: 'apple', -apple-system, sans-serif;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(171, 159, 242, 0.3);
-    margin-top: 1rem;
+
+  /* CREATE a new mobile-specific sidebar that slides in */
+  .crammi-account-settings-sidebar.crammi-mobile-open {
+    display: block !important;
+    position: fixed !important;
+    left: 0 !important;
+    top: 6vh !important;
+    height: calc(100vh - 6vh) !important;
+    height: calc(100dvh - 6vh) !important;
+    width: 80vw !important;
+    max-width: 320px !important;
+    background: white !important;
+    z-index: 9999 !important;
+    overflow-y: auto !important;
+    box-shadow: 4px 0px 12px rgba(0,0,0,0.15) !important;
+    border-right: none !important;
+    padding: 2rem 1.5rem !important;
+    border-left: none !important;
   }
-  
-  .save-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(171, 159, 242, 0.4);
+
+  .crammi-account-settings-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+    padding-top: calc(6vh + 1.5rem) !important;
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
   }
-  
-  /* Info Card */
-  .info-card {
-    background-color: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 1.5rem;
+
+  .crammi-account-settings-sidebar .crammi-settingsLogo,
+  .crammi-account-settings-sidebar .crammi-settings-title {
+    display: none !important;
   }
-  
-  .info-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 0;
-    border-bottom: 1px solid #f1f5f9;
+}
+
+@media (min-width: 769px) {
+  .crammi-settings-mobile-header {
+    display: none !important;
   }
-  
-  .info-item:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
+
+  .crammi-settings-hamburger-button {
+    display: none !important;
   }
-  
-  .info-item:first-child {
-    padding-top: 0;
-  }
-  
-  .info-label {
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: #0f172a;
-    font-family: 'applemedium', -apple-system, sans-serif;
-  }
-  
-  .info-value {
-    font-size: 0.95rem;
-    color: #64748b;
-    font-family: 'applethin', -apple-system, sans-serif;
-  }
-  
-  .section-description {
-    font-size: 0.95rem;
-    color: #64748b;
-    margin-bottom: 1.5rem;
-    font-family: 'applethin', -apple-system, sans-serif;
-  }
-  
-  /* Upgrade Button Large */
-  .upgrade-button-large {
-    width: 100%;
-    padding: 0.75rem 1.5rem;
-    border-radius: 10px;
-    border: none;
-    background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
-    color: white;
-    font-size: 0.95rem;
-    font-weight: 600;
-    font-family: 'apple', -apple-system, sans-serif;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(171, 159, 242, 0.3);
-    margin-top: 1.5rem;
-  }
-  
-  .upgrade-button-large:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(171, 159, 242, 0.4);
-  }
-  
-  /* Linked Accounts */
-  .linked-accounts-card {
-    background-color: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 1.5rem;
-  }
-  
-  .linked-account-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .linked-account-info {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-  
-  .provider-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 6px;
-  }
-  
-  .linked-account-details {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-  
-  .linked-account-name {
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: #0f172a;
-    font-family: 'applemedium', -apple-system, sans-serif;
-  }
-  
-  .linked-account-email {
+}
+
+@media (max-height: 600px) and (max-width: 768px) {
+  .crammi-settings-nav-item {
+    height: 36px;
     font-size: 0.85rem;
-    color: #64748b;
-    font-family: 'applethin', -apple-system, sans-serif;
   }
-  
-  .linked-badge {
-    padding: 0.375rem 0.75rem;
-    border-radius: 6px;
-    background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
-    color: white;
-    font-size: 0.85rem;
-    font-weight: 600;
-    font-family: 'apple', -apple-system, sans-serif;
-  }
-  
-  /* Password Section */
-  .password-card {
-    background-color: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 1.5rem;
-  }
-  
-  .password-item {
-    display: flex;
-    align-items: flex-end;
-    gap: 1rem;
-  }
-  
-  .password-field {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .reset-password-button {
-    padding: 0.75rem 1.5rem;
-    border-radius: 10px;
-    border: 1px solid #e2e8f0;
-    background-color: white;
-    color: #0f172a;
-    font-size: 0.95rem;
-    font-weight: 600;
-    font-family: 'applemedium', -apple-system, sans-serif;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    white-space: nowrap;
-    height: fit-content;
-  }
-  
-  .reset-password-button:hover {
-    background-color: #f8f9fa;
-    border-color: #ab9ff2;
-  }
-  
-  /* Loading State */
-  .loading-state {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    min-height: 100dvh;
-    font-size: 1.2rem;
-    color: #64748b;
-    font-family: 'apple', -apple-system, sans-serif;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 1100px) {
-    .account-settings-content {
-      padding: 2rem 2rem;
-    }
-  
-    .form-row {
-      grid-template-columns: 1fr;
-    }
-  }
-  
+}
+
+@supports not (height: 100dvh) {
   @media (max-width: 768px) {
-    .account-settings-sidebar {
-      display: none;
-    }
-  
-    .account-settings-content {
-      margin-left: 0;
-      padding: 1.5rem;
-    }
-  
-    .notification-item {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 1rem;
-    }
-  
-    .password-item {
-      flex-direction: column;
-      align-items: stretch;
+    .crammi-account-settings-sidebar {
+      height: calc(100vh - 6vh);
     }
     
-    .reset-password-button {
-      width: 100%;
+    @supports (-webkit-touch-callout: none) {
+      .crammi-account-settings-sidebar {
+        height: calc(100vh - 6vh - 50px);
+      }
     }
   }
+}
+
+.crammi-cancel-subscription-button {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  border: 1px solid #ef4444;
+  background-color: white;
+  color: #ef4444;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: 'apple', -apple-system, sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 1.5rem;
+}
+
+.crammi-cancel-subscription-button:hover {
+  background-color: #ef4444;
+  color: white;
+}
+
+.crammi-cancel-subscription-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.crammi-account-settings-sidebar {
+  width: 280px;
+  background-color: #ffffff;
+  padding: 2rem 1.5rem;
+  border-right: 1px solid #e2e8f0;
+  position: fixed;
+  height: 100vh;
+  height: 100dvh;
+  overflow-y: auto;
+  left: 0;
+  top: 0;
+}
+
+.crammi-settingsLogo {
+  width: 45px;
+  height: 45px;
+  margin-bottom: 1rem;
+}
+
+.crammi-settings-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 2rem 0;
+  font-family: 'apple', -apple-system, sans-serif;
+}
+
+.crammi-settings-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.crammi-danger-title {
+  padding-top: 40vh;
+}
+
+.crammi-danger-card {
+  border-radius: 10px;
+  padding: 1.5rem;
+}
+
+.crammi-danger-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+.crammi-danger-text {
+  flex: 1;
+}
+
+.crammi-danger-card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  font-family: 'apple', -apple-system, sans-serif;
+}
+
+.crammi-danger-card-description {
+  font-size: 0.9rem;
+  margin: 0;
+  line-height: 1.5;
+  font-family: 'applethin', -apple-system, sans-serif;
+}
+
+.crammi-delete-account-button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  background-color: white;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: 'applemedium', -apple-system, sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  border: 1px solid #dc2626;
+  color: #dc2626;
+}
+
+.crammi-delete-account-button:hover {
+  background-color: #dc2626;
+  color: white;
+}
+
+.crammi-delete-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10001;
+}
+
+.crammi-delete-modal {
+  background-color: white;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.crammi-delete-modal-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+  font-family: 'apple', -apple-system, sans-serif;
+}
+
+.crammi-delete-modal-text {
+  font-size: 0.95rem;
+  color: #64748b;
+  line-height: 1.6;
+  margin: 0 0 2rem 0;
+  font-family: 'applemedium', -apple-system, sans-serif;
+}
+
+.crammi-delete-modal-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.crammi-delete-cancel-button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  background-color: white;
+  color: #0f172a;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: 'applemedium', -apple-system, sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.crammi-delete-cancel-button:hover {
+  background-color: #f8f9fa;
+}
+
+.crammi-delete-confirm-button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  border: none;
+  background-color: #dc2626;
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: 'apple', -apple-system, sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.crammi-delete-confirm-button:hover {
+  background-color: #b91c1c;
+}
+
+.crammi-settings-nav-item {
+  display: flex;
+  align-items: center;
+  border-radius: 10px;
+  width: 100%;
+  height: 44px;
+  padding: 0 1rem;
+  border: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+  text-align: left;
+  font-family: 'applemedium', -apple-system, sans-serif;
+  background-color: transparent;
+  color: #64748b;
+  transition: all 0.2s ease;
+}
+
+.crammi-settings-nav-item:hover {
+  background-color: #f8f9fa;
+  color: #0f172a;
+}
+
+.crammi-settings-nav-item.crammi-active {
+  background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(171, 159, 242, 0.3);
+}
+
+.crammi-sign-out-button {
+  margin-top: auto;
+  color: #ef4444 !important;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 1rem;
+  margin-top: 2rem;
+}
+
+.crammi-sign-out-button:hover {
+  background-color: #fee2e2 !important;
+  color: #dc2626 !important;
+}
+
+.crammi-account-settings-content {
+  margin-left: 280px;
+  flex: 1;
+  padding: 3rem 4rem;
+  max-width: 1400px;
+  background-color: #f8f9fa;
+}
+
+.crammi-settings-section {
+  margin-bottom: 4rem;
+}
+
+.crammi-section-title2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 2rem 0;
+  font-family: 'apple', -apple-system, sans-serif;
+}
+
+.crammi-profile-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.crammi-profile-picture-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.crammi-profile-picture-large {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #f1f5f9;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.crammi-avatar-circle-large {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  font-weight: 700;
+  color: white;
+  border: 4px solid #f1f5f9;
+  box-shadow: 0 4px 12px rgba(171, 159, 242, 0.3);
+}
+
+.crammi-profile-info-centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  text-align: center;
+}
+
+.crammi-profile-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  font-family: 'apple', -apple-system, sans-serif;
+}
+
+.crammi-profile-email {
+  font-size: 0.95rem;
+  color: #64748b;
+  margin: 0;
+  font-family: 'applethin', -apple-system, sans-serif;
+}
+
+.crammi-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.crammi-form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.crammi-form-group.crammi-full-width {
+  grid-column: 1 / -1;
+  margin-bottom: 1.5rem;
+}
+
+.crammi-form-label {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #0f172a;
+  margin-bottom: 0.75rem;
+  font-family: 'applemedium', -apple-system, sans-serif;
+}
+
+.crammi-form-description {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: -0.5rem 0 0.75rem 0;
+  font-family: 'applethin', -apple-system, sans-serif;
+}
+
+.crammi-form-input,
+.crammi-form-select,
+.crammi-form-textarea {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  color: #0f172a;
+  font-family: 'applemedium', -apple-system, sans-serif;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.crammi-form-input:focus,
+.crammi-form-select:focus,
+.crammi-form-textarea:focus {
+  border-color: #ab9ff2;
+  box-shadow: 0 0 0 3px rgba(171, 159, 242, 0.15);
+}
+
+.crammi-form-input:disabled {
+  background-color: #f1f5f9;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.crammi-form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%2364748b' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+  cursor: pointer;
+}
+
+.crammi-form-textarea {
+  resize: vertical;
+  min-height: 100px;
+  font-family: 'applemedium', -apple-system, sans-serif;
+  line-height: 1.6;
+}
+
+.crammi-input-with-avatar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 0.5rem 1rem;
+  transition: all 0.2s ease;
+}
+
+.crammi-input-with-avatar:focus-within {
+  border-color: #ab9ff2;
+  box-shadow: 0 0 0 3px rgba(171, 159, 242, 0.15);
+}
+
+.crammi-input-with-avatar .crammi-form-input {
+  background: transparent;
+  border: none;
+  padding: 0.25rem 0;
+  box-shadow: none;
+}
+
+.crammi-input-with-avatar .crammi-form-input:focus {
+  box-shadow: none;
+}
+
+.crammi-avatar-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: white;
+  flex-shrink: 0;
+}
+
+.crammi-notification-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  gap: 2rem;
+}
+
+.crammi-notification-text {
+  flex: 1;
+}
+
+.crammi-notification-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0 0 0.5rem 0;
+  font-family: 'apple', -apple-system, sans-serif;
+}
+
+.crammi-notification-description {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.5;
+  font-family: 'applethin', -apple-system, sans-serif;
+}
+
+.crammi-toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 52px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+.crammi-toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.crammi-toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #e2e8f0;
+  border-radius: 28px;
+  transition: all 0.3s ease;
+}
+
+.crammi-toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.crammi-toggle-switch input:checked + .crammi-toggle-slider {
+  background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
+}
+
+.crammi-toggle-switch input:checked + .crammi-toggle-slider:before {
+  transform: translateX(24px);
+}
+
+.crammi-toggle-switch:hover .crammi-toggle-slider {
+  box-shadow: 0 0 8px rgba(171, 159, 242, 0.3);
+}
+
+.crammi-avatar-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.crammi-save-button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: 'apple', -apple-system, sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(171, 159, 242, 0.3);
+  margin-top: 1rem;
+}
+
+.crammi-save-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(171, 159, 242, 0.4);
+}
+
+.crammi-info-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 1.5rem;
+}
+
+.crammi-info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.crammi-info-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.crammi-info-item:first-child {
+  padding-top: 0;
+}
+
+.crammi-info-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #0f172a;
+  font-family: 'applemedium', -apple-system, sans-serif;
+}
+
+.crammi-info-value {
+  font-size: 0.95rem;
+  color: #64748b;
+  font-family: 'applethin', -apple-system, sans-serif;
+}
+
+.crammi-section-description {
+  font-size: 0.95rem;
+  color: #64748b;
+  margin-bottom: 1.5rem;
+  font-family: 'applethin', -apple-system, sans-serif;
+}
+
+.crammi-upgrade-button-large {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: 'apple', -apple-system, sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(171, 159, 242, 0.3);
+  margin-top: 1.5rem;
+}
+
+.crammi-upgrade-button-large:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(171, 159, 242, 0.4);
+}
+
+.crammi-manage-billing-button {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  background-color: white;
+  color: #0f172a;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: 'applemedium', -apple-system, sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 1rem;
+}
+
+.crammi-manage-billing-button:hover {
+  background-color: #f8f9fa;
+  border-color: #ab9ff2;
+}
+
+.crammi-manage-billing-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.crammi-billing-description {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin-top: 1rem;
+  line-height: 1.5;
+  font-family: 'applethin', -apple-system, sans-serif;
+}
+
+.crammi-linked-accounts-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 1.5rem;
+}
+
+.crammi-linked-account-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.crammi-linked-account-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.crammi-provider-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+}
+
+.crammi-linked-account-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.crammi-linked-account-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #0f172a;
+  font-family: 'applemedium', -apple-system, sans-serif;
+}
+
+.crammi-linked-account-email {
+  font-size: 0.85rem;
+  color: #64748b;
+  font-family: 'applethin', -apple-system, sans-serif;
+}
+
+.crammi-linked-badge {
+  padding: 0.375rem 0.75rem;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: 'apple', -apple-system, sans-serif;
+}
+
+.crammi-password-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 1.5rem;
+}
+
+.crammi-password-item {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
+.crammi-password-field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.crammi-reset-password-button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  background-color: white;
+  color: #0f172a;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: 'applemedium', -apple-system, sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  height: fit-content;
+}
+
+.crammi-reset-password-button:hover {
+  background-color: #f8f9fa;
+  border-color: #ab9ff2;
+}
+
+.crammi-loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  font-size: 1.2rem;
+  color: #64748b;
+  font-family: 'apple', -apple-system, sans-serif;
+}
+
+@media (max-width: 1100px) {
+  .crammi-account-settings-content {
+    padding: 2rem 2rem;
+  }
+
+  .crammi-form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .crammi-account-settings-sidebar {
+    display: none;
+  }
+
+  .crammi-notification-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .crammi-password-item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .crammi-reset-password-button {
+    width: 100%;
+  }
+
+  .crammi-danger-content {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .crammi-delete-account-button {
+    width: 100%;
+  }
+
+  .crammi-delete-modal-buttons {
+    flex-direction: column;
+  }
+
+  .crammi-delete-cancel-button,
+  .crammi-delete-confirm-button {
+    width: 100%;
+  }
+}

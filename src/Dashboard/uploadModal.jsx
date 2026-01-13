@@ -125,8 +125,7 @@ export default function UploadModal({ isOpen, close, activeTab, userProfile, set
           batchType: activeTab
         };
         
-        console.log('Sending payload:', signPayload);
-        console.log('Using token:', token.substring(0, 20) + '...');
+   
         
         const response = await fetch('https://ul9ffsljla.execute-api.us-west-2.amazonaws.com/prod/sign', {
           method: 'POST',
@@ -137,7 +136,6 @@ export default function UploadModal({ isOpen, close, activeTab, userProfile, set
           body: JSON.stringify(signPayload)
         });
         
-        console.log('Response status:', response.status);
         
         if (!response.ok) {
           const errorData = await response.json();
@@ -149,11 +147,9 @@ export default function UploadModal({ isOpen, close, activeTab, userProfile, set
         }
         
         const data = await response.json();
-        console.log('Response data:', data);
         
         const { batchID, uploads } = data;
-        console.log('Batch ID:', batchID);
-        console.log('Uploads:', uploads);
+       
 
         window.dispatchEvent(new Event('batchUploaded'));
 
@@ -180,8 +176,7 @@ export default function UploadModal({ isOpen, close, activeTab, userProfile, set
       batch_ID: batchID,
       special_instructions: specialInstructions
     }
-    console.log('Triggering worker for batch', batchID);
-    console.log('Requested Cram:', activeTab);
+   
 
     const response = await fetch('https://ul9ffsljla.execute-api.us-west-2.amazonaws.com/prod/get-json', {
       method: 'POST',
@@ -192,7 +187,6 @@ export default function UploadModal({ isOpen, close, activeTab, userProfile, set
       body: JSON.stringify(batchInfo)
     });
 
-    console.log('Response status:', response.status);
         
     if (!response.ok) {
       const errorData = await response.json();

@@ -8,12 +8,12 @@ import './Upgrade.css';
 const loadStripe = () => {
   return new Promise((resolve) => {
     if (window.Stripe) {
-      resolve(window.Stripe('pk_test_51SnVDiDEl8B4hsVI0V402n0bktZCwtvKdTtGkV41sw9NEb1VeqOHnGDorkE3bxQuNo2ZYm30HJhFsfZXwyce1KrV00ZtZHzGla'));
+      resolve(window.Stripe('pk_live_51SnVDcDj4TJhWvNPdgvvODiTfOIBQNTILVkwZLGAlVYEjGs2ddpuKEYl7NZTg2sjUqQyxT5aWYQn09ciNobISO3100gMAWUYZc'));
     } else {
       const script = document.createElement('script');
       script.src = 'https://js.stripe.com/v3/';
       script.onload = () => {
-        resolve(window.Stripe('pk_test_51SnVDiDEl8B4hsVI0V402n0bktZCwtvKdTtGkV41sw9NEb1VeqOHnGDorkE3bxQuNo2ZYm30HJhFsfZXwyce1KrV00ZtZHzGla'));
+        resolve(window.Stripe('pk_live_51SnVDcDj4TJhWvNPdgvvODiTfOIBQNTILVkwZLGAlVYEjGs2ddpuKEYl7NZTg2sjUqQyxT5aWYQn09ciNobISO3100gMAWUYZc'));
       };
       document.body.appendChild(script);
     }
@@ -239,7 +239,7 @@ export default function Upgrade() {
         </div>
       )}
 
-      <button className="back-button" onClick={() => navigate(-1)}>
+      <button className="back-button" onClick={() => navigate('/Dashboard')}>
         ← 
       </button>
       

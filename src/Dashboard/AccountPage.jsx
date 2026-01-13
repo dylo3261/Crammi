@@ -10,7 +10,6 @@ export default function AccountPage(){
   const [userProfile, setUserProfile] = useState(null);
   const navigate = useNavigate();
 
-  // Form state
   const [fullName, setFullName] = useState('');
   const [preferredName, setPreferredName] = useState('');
   const [userEmail, setUserEmail] = useState('');
@@ -21,6 +20,7 @@ export default function AccountPage(){
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [portalLoading, setPortalLoading] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     fetchUserData();
@@ -30,7 +30,6 @@ export default function AccountPage(){
     try {
       setLoading(true);
       
-      // Fetch user attributes
       const attributes = await fetchUserAttributes();
       const session = await fetchAuthSession();
       
@@ -38,7 +37,6 @@ export default function AccountPage(){
       setUserEmail(attributes.email || '');
       setUserPFP(attributes.picture || '/crammipink.png');
       
-      // Check if user is federated (signed in with Google)
       const identities = attributes.identities;
       if (identities) {
         try {
@@ -48,7 +46,6 @@ export default function AccountPage(){
             setIdentityProvider(identitiesArray[0].providerName || 'Google');
           }
         } catch (e) {
-          // If identities is not JSON, check if picture URL indicates Google
           if (attributes.picture && attributes.picture.includes('googleusercontent')) {
             setIsFederatedUser(true);
             setIdentityProvider('Google');
@@ -56,19 +53,15 @@ export default function AccountPage(){
         }
       }
       
-      // Load preferred name from localStorage
       const savedPreferredName = localStorage.getItem('preferredName') || attributes.name || attributes.email || '';
       setPreferredName(savedPreferredName);
 
-      // Fetch user profile from API
       const token = session.tokens?.idToken?.toString();
       const response = await fetch('https://gwq0u2sdai.execute-api.us-west-2.amazonaws.com/prod/profile', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await response.json();
       setUserProfile(data);
-      console.log('User Profile Data:', data);
-      console.log('Subscription:', data?.accountTier);
     } catch (error) {
       console.error('Error fetching user data:', error);
     } finally {
@@ -99,7 +92,6 @@ export default function AccountPage(){
       const session = await fetchAuthSession();
       const token = session.tokens?.idToken?.toString();
       
-      // Get current URL for return after billing portal
       const returnUrl = window.location.origin + '/Settings';
       
       const response = await fetch('https://js065tswp1.execute-api.us-west-2.amazonaws.com/billing', {
@@ -114,7 +106,6 @@ export default function AccountPage(){
       const data = await response.json();
 
       if (response.ok && data.url) {
-        // Redirect to Stripe Customer Portal
         window.location.href = data.url;
       } else {
         alert(data.error || 'Failed to open billing portal. Please try again.');
@@ -129,7 +120,6 @@ export default function AccountPage(){
 
   const handleSavePreferences = async () => {
     try {
-      // Validate input length
       if (preferredName.trim().length === 0) {
         alert('Please enter a name.');
         return;
@@ -140,17 +130,14 @@ export default function AccountPage(){
         return;
       }
       
-      // Save to Cognito User Pool
       await updateUserAttributes({
         userAttributes: {
           name: preferredName.trim(),
         }
       });
       
-      // Also save to localStorage as backup
       localStorage.setItem('preferredName', preferredName.trim());
       
-      // Update local state
       setFullName(preferredName.trim());
       
       alert('Settings saved successfully!');
@@ -181,7 +168,6 @@ export default function AccountPage(){
       const session = await fetchAuthSession();
       const token = session.tokens?.idToken?.toString();
       
-      // Call your delete account API endpoint
       const response = await fetch('https://plbscwf6pk.execute-api.us-west-2.amazonaws.com/delAcc', {
         method: 'DELETE',
         headers: { 
@@ -191,11 +177,9 @@ export default function AccountPage(){
       });
 
       if (response.ok) {
-        // Clear localStorage
         localStorage.clear();
         sessionStorage.clear();
         
-        // Sign out and redirect
         await signOut({ global: true });
         alert('Your account has been successfully deleted.');
         setTimeout(() => navigate('/'), 0);
@@ -216,6 +200,11 @@ export default function AccountPage(){
     return 'U';
   };
 
+  const handleSectionChange = (section) => {
+    setActiveSection(section);
+    setMobileMenuOpen(false);
+  };
+
   if (loading) {
     return <LoadingAnimation/>;
   }
@@ -223,26 +212,46 @@ export default function AccountPage(){
   const isSubscribed = userProfile?.accountTier && userProfile.accountTier.toLowerCase() !== 'free';
 
   return (
-    <div className="account-settings-container">
-      {/* Delete Account Modal */}
+    <div className="crammi-account-settings-container">
+      <div className="crammi-settings-mobile-header">
+        <button
+          className="crammi-settings-hamburger-button"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        >
+          <img
+            className="crammi-settings-hamburger-icon"
+            src="/leftHamburgerIcon.png"
+            alt="menu"
+            onContextMenu={(e) => e.preventDefault()}
+          />
+        </button>
+        <img className='crammi-settings-mobile-logo' src="/crammiLogo.png" alt="Crammi Logo"/>
+        <h1 className="crammi-settings-mobile-title">Settings</h1>
+      </div>
+
+      <div 
+        className={`crammi-mobile-menu-overlay ${mobileMenuOpen ? 'crammi-active' : ''}`}
+        onClick={() => setMobileMenuOpen(false)}
+      />
+
       {showDeleteConfirm && (
-        <div className="delete-modal-overlay" onClick={() => !deleteLoading && setShowDeleteConfirm(false)}>
-          <div className="delete-modal" onClick={(e) => e.stopPropagation()}>
-            <h2 className="delete-modal-title">Delete Account</h2>
-            <p className="delete-modal-text">
+        <div className="crammi-delete-modal-overlay" onClick={() => !deleteLoading && setShowDeleteConfirm(false)}>
+          <div className="crammi-delete-modal" onClick={(e) => e.stopPropagation()}>
+            <h2 className="crammi-delete-modal-title">Delete Account</h2>
+            <p className="crammi-delete-modal-text">
               Are you sure you want to delete your account? This action cannot be undone. 
               All your data, including exams, quizzes, and flashcards will be permanently deleted. Any active subscriptions will be canceled.
             </p>
-            <div className="delete-modal-buttons">
+            <div className="crammi-delete-modal-buttons">
               <button 
-                className="delete-cancel-button" 
+                className="crammi-delete-cancel-button" 
                 onClick={() => setShowDeleteConfirm(false)}
                 disabled={deleteLoading}
               >
                 Cancel
               </button>
               <button 
-                className="delete-confirm-button" 
+                className="crammi-delete-confirm-button" 
                 onClick={handleDeleteAccount}
                 disabled={deleteLoading}
               >
@@ -253,36 +262,39 @@ export default function AccountPage(){
         </div>
       )}
 
-      <div className="account-settings-sidebar">
-        <img className='settingsLogo' src="/crammiLogo.png" alt="Crammi Logo"/>
-        <h1 className="settings-title">Settings</h1>
-        <nav className="settings-nav">
+      <div className={`crammi-account-settings-sidebar ${mobileMenuOpen ? 'crammi-mobile-open' : ''}`}>
+        <img className='crammi-settingsLogo' src="/crammiLogo.png" alt="Crammi Logo"/>
+        <h1 className="crammi-settings-title">Settings</h1>
+        <nav className="crammi-settings-nav">
           <button 
-            className={activeSection === 'General' ? 'settings-nav-item active' : 'settings-nav-item'}
-            onClick={() => setActiveSection('General')}
+            className={activeSection === 'General' ? 'crammi-settings-nav-item crammi-active' : 'crammi-settings-nav-item'}
+            onClick={() => handleSectionChange('General')}
           >
             ⚙️ General
           </button>
           <button 
-            className={activeSection === 'Account' ? 'settings-nav-item active' : 'settings-nav-item'}
-            onClick={() => setActiveSection('Account')}
+            className={activeSection === 'Account' ? 'crammi-settings-nav-item crammi-active' : 'crammi-settings-nav-item'}
+            onClick={() => handleSectionChange('Account')}
           >
             👤 Account
           </button>
           <button 
-            className={activeSection === 'Billing' ? 'settings-nav-item active' : 'settings-nav-item'}
-            onClick={() => setActiveSection('Billing')}
+            className={activeSection === 'Billing' ? 'crammi-settings-nav-item crammi-active' : 'crammi-settings-nav-item'}
+            onClick={() => handleSectionChange('Billing')}
           >
             💸 Billing
           </button>
           <button 
-            className="settings-nav-item"
-            onClick={()=>navigate('/Dashboard')}
+            className="crammi-settings-nav-item"
+            onClick={()=>{
+              setMobileMenuOpen(false);
+              navigate('/Dashboard');
+            }}
           >
             ← Back to Dashboard
           </button>
           <button 
-            className="settings-nav-item sign-out-button"
+            className="crammi-settings-nav-item crammi-sign-out-button"
             onClick={handleSignOut}
           >
             Sign Out
@@ -290,88 +302,88 @@ export default function AccountPage(){
         </nav>
       </div>
 
-      <div className="account-settings-content">
+      <div className="crammi-account-settings-content">
         {activeSection === 'General' && (
           <>
-            <section className="settings-section">
-              <h2 className="section-title2">Profile</h2>
+            <section className="crammi-settings-section">
+              <h2 className="crammi-section-title2">Profile</h2>
               
-              <div className="profile-card">
-                <div className="profile-picture-section">
+              <div className="crammi-profile-card">
+                <div className="crammi-profile-picture-section">
                   {userPFP ? (
                     <img 
                       src={userPFP} 
                       alt="Profile" 
-                      className="profile-picture-large"
+                      className="crammi-profile-picture-large"
                       onError={(e) => {
                         e.target.style.display = 'none';
                         e.target.nextSibling.style.display = 'flex';
                       }}
                     />
                   ) : null}
-                  <div className="profile-picture-large avatar-circle-large" style={{ display: userPFP ? 'none' : 'flex' }}>
+                  <div className="crammi-profile-picture-large crammi-avatar-circle-large" style={{ display: userPFP ? 'none' : 'flex' }}>
                     {getInitial()}
                   </div>
-                  <div className="profile-info-centered">
-                    <h3 className="profile-name">{fullName}</h3>
-                    <p className="profile-email">{userEmail}</p>
+                  <div className="crammi-profile-info-centered">
+                    <h3 className="crammi-profile-name">{fullName}</h3>
+                    <p className="crammi-profile-email">{userEmail}</p>
                   </div>
                 </div>
               </div>
 
-              <div className="form-group full-width">
-                <label className="form-label">What should Crammi call you?</label>
+              <div className="crammi-form-group crammi-full-width">
+                <label className="crammi-form-label">What should Crammi call you?</label>
                 <input
                   type="text"
-                  className="form-input"
+                  className="crammi-form-input"
                   value={preferredName}
                   onChange={(e) => setPreferredName(e.target.value)}
                   placeholder="Enter your preferred name"
                 />
               </div>
 
-              <button className="save-button" onClick={handleSavePreferences}>
+              <button className="crammi-save-button" onClick={handleSavePreferences}>
                 Save Changes
               </button>
             </section>
 
             {isFederatedUser && (
-              <section className="settings-section">
-                <h2 className="section-title2">Linked Accounts</h2>
-                <div className="linked-accounts-card">
-                  <div className="linked-account-item">
-                    <div className="linked-account-info">
+              <section className="crammi-settings-section">
+                <h2 className="crammi-section-title2">Linked Accounts</h2>
+                <div className="crammi-linked-accounts-card">
+                  <div className="crammi-linked-account-item">
+                    <div className="crammi-linked-account-info">
                       <img 
                         src="https://www.google.com/favicon.ico" 
                         alt="Google" 
-                        className="provider-icon"
+                        className="crammi-provider-icon"
                       />
-                      <div className="linked-account-details">
-                        <span className="linked-account-name">{identityProvider}</span>
-                        <span className="linked-account-email">{userEmail}</span>
+                      <div className="crammi-linked-account-details">
+                        <span className="crammi-linked-account-name">{identityProvider}</span>
+                        <span className="crammi-linked-account-email">{userEmail}</span>
                       </div>
                     </div>
-                    <span className="linked-badge">Connected</span>
+                    <span className="crammi-linked-badge">Connected</span>
                   </div>
                 </div>
               </section>
             )}
 
             {!isFederatedUser && (
-              <section className="settings-section">
-                <h2 className="section-title2">Password</h2>
-                <div className="password-card">
-                  <div className="password-item">
-                    <div className="password-field">
-                      <label className="form-label">Current Password</label>
+              <section className="crammi-settings-section">
+                <h2 className="crammi-section-title2">Password</h2>
+                <div className="crammi-password-card">
+                  <div className="crammi-password-item">
+                    <div className="crammi-password-field">
+                      <label className="crammi-form-label">Current Password</label>
                       <input
                         type="password"
-                        className="form-input"
+                        className="crammi-form-input"
                         value="••••••••••••"
                         disabled
                       />
                     </div>
-                    <button className="reset-password-button" onClick={handleResetPassword}>
+                    <button className="crammi-reset-password-button" onClick={handleResetPassword}>
                       Reset Password
                     </button>
                   </div>
@@ -383,31 +395,31 @@ export default function AccountPage(){
 
         {activeSection === 'Account' && (
           <>
-            <section className="settings-section">
-              <h2 className="section-title2">Account Information</h2>
-              <div className="info-card">
-                <div className="info-item">
-                  <span className="info-label">Email:</span>
-                  <span className="info-value">{userEmail}</span>
+            <section className="crammi-settings-section">
+              <h2 className="crammi-section-title2">Account Information</h2>
+              <div className="crammi-info-card">
+                <div className="crammi-info-item">
+                  <span className="crammi-info-label">Email:</span>
+                  <span className="crammi-info-value">{userEmail}</span>
                 </div>
-                <div className="info-item">
-                  <span className="info-label">Account Type:</span>
-                  <span className="info-value">{getUserPlanDisplay()}</span>
+                <div className="crammi-info-item">
+                  <span className="crammi-info-label">Account Type:</span>
+                  <span className="crammi-info-value">{getUserPlanDisplay()}</span>
                 </div>
               </div>
             </section>
 
-            <section className="settings-section">
-              <h2 className="section-title2 danger-title">Danger Zone</h2>
-              <div className="danger-card">
-                <div className="danger-content">
-                  <div className="danger-text">
-                    <h3 className="danger-card-title">Delete Account</h3>
-                    <p className="danger-card-description">
+            <section className="crammi-settings-section">
+              <h2 className="crammi-section-title2 crammi-danger-title">Danger Zone</h2>
+              <div className="crammi-danger-card">
+                <div className="crammi-danger-content">
+                  <div className="crammi-danger-text">
+                    <h3 className="crammi-danger-card-title">Delete Account</h3>
+                    <p className="crammi-danger-card-description">
                       Permanently delete your account and all associated data. This action cannot be undone.
                     </p>
                   </div>
-                  <button className="delete-account-button" onClick={() => setShowDeleteConfirm(true)}>
+                  <button className="crammi-delete-account-button" onClick={() => setShowDeleteConfirm(true)}>
                     Delete Account
                   </button>
                 </div>
@@ -417,32 +429,32 @@ export default function AccountPage(){
         )}
 
         {activeSection === 'Billing' && (
-          <section className="settings-section">
-            <h2 className="section-title2">Billing & Subscription</h2>
-            <div className="info-card">
-              <div className="info-item">
-                <span className="info-label">Current Plan:</span>
-                <span className="info-value">{getUserPlanDisplay()}</span>
+          <section className="crammi-settings-section">
+            <h2 className="crammi-section-title2">Billing & Subscription</h2>
+            <div className="crammi-info-card">
+              <div className="crammi-info-item">
+                <span className="crammi-info-label">Current Plan:</span>
+                <span className="crammi-info-value">{getUserPlanDisplay()}</span>
               </div>
               
               {isSubscribed ? (
                 <>
                   {userProfile?.accountTier?.toLowerCase() === 'plus' && (
                     <button 
-                      className="upgrade-button-large"
+                      className="crammi-upgrade-button-large"
                       onClick={() => navigate('/Upgrade', { state: { userProfile: userProfile } })}
-                      >
+                    >
                       ⭐ Upgrade to Pro
                     </button>
                   )}
                   <button 
-                    className="manage-billing-button" 
+                    className="crammi-manage-billing-button" 
                     onClick={handleManageBilling}
                     disabled={portalLoading}
                   >
                     {portalLoading ? 'Opening Portal...' : '⚙️ Manage Billing & Subscription'}
                   </button>
-                  <p className="billing-description">
+                  <p className="crammi-billing-description">
                     {userProfile?.accountTier?.toLowerCase() === 'plus' 
                       ? 'Upgrade to Pro for more features, or manage your current subscription'
                       : 'Update payment method, view invoices, and manage your subscription'
@@ -451,9 +463,9 @@ export default function AccountPage(){
                 </>
               ) : (
                 <button 
-                  className="upgrade-button-large"
+                  className="crammi-upgrade-button-large"
                   onClick={() => navigate('/Upgrade', { state: { userProfile: userProfile } })}               
-                   >
+                >
                   ⭐ Upgrade to Pro
                 </button>
               )}

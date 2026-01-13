@@ -918,7 +918,7 @@ export default function Quiz() {
                         <div className="logoutPopup" ref={logoutPopupRef}>
                             <div className='viewLogoutPopupPFP'>
                                 <div className='PFPWrapper'>
-                                    <button className='PFPButtonPopup'>
+                                    <button className='PFPButtonPopup' onClick={() => navigate('/Settings')}>
                                         <img 
                                             className='userPFPPopup' 
                                             src={userPFP} 

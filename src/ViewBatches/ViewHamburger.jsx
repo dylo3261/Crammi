@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./ViewHamburger.css";
 
 export default function ViewHamburger({ 
@@ -14,7 +15,7 @@ export default function ViewHamburger({
 }) { 
   const [isOpen, setIsOpen] = useState(false);
   const [isIgnoredPopup, setIsIgnoredPopup] = useState(false);
-
+  const navigate=useNavigate();
   const handleIgnoredClick = (e) => {
     e.stopPropagation();
     setIsIgnoredPopup(!isIgnoredPopup);
@@ -115,7 +116,7 @@ export default function ViewHamburger({
         {/* User Profile Section at Bottom */}
         <div className='viewDropdownProfileSection'>
           <div className='viewPFPWrapper'>
-            <button className='viewPFPButton'>
+            <button className='viewPFPButton' onClick={() => navigate('/Settings')}>
               <img 
                 className='viewUserPFP' 
                 src={userPFP} 

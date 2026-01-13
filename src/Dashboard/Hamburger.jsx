@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import "./Hamburger.css";
 import { useNavigate } from "react-router-dom";
-
 export default function Hamburger({ userName, userEmail, userPFP, handleSignOut, changeActiveTab, activeTab, recents, onRecentClick, RecentsSection, userProfile }) { 
   const [isOpen, setIsopen] = useState(false);
   const navigate = useNavigate(); 
@@ -90,7 +89,7 @@ export default function Hamburger({ userName, userEmail, userPFP, handleSignOut,
         {/* User Profile Section at Bottom */}
         <div className='dropdownProfileSection'>
           <div className='PFPWrapper'>
-            <button className='PFPButton'>
+            <button className='PFPButton' onClick={() => navigate('/Settings')} >
               <img 
                 className='userPFP' 
                 src={userPFP} 
