@@ -38,7 +38,7 @@ export default function Success() {
   const getPlanFeatures = () => {
     if (plan === 'Plus') {
       return [
-        '30 uploads per month',
+        '50 uploads per month',
         '20 photo batches',
         'Limit 25 question exams',
         'Limit 15 quiz questions',

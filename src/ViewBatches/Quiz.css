@@ -139,7 +139,7 @@ html, body {
     font-size: 1.5rem;
     color: black;
     margin-bottom: 2rem;
-    font-family: applethin;
+    font-family: applethin,arial !important;
     line-height: 1.6;
 }
 

@@ -28,7 +28,7 @@ html, body {
 .dashboardLogoSidebar{
   height: 45px;
   width: auto;
-  margin-bottom: 3rem;
+  margin-bottom: 50px;
 }
 
 .dashboardLogoMobile{
@@ -150,7 +150,6 @@ html, body {
   flex: 1;
   padding: 0;
   overflow-y: auto;
-  margin-top: 2rem;
 }
 
 .recentsSectionHeader {
@@ -626,7 +625,12 @@ html, body {
     flex-direction: column;
     gap: 1rem;
   }
-
+  .recentsSection {
+    margin-top: 0;
+  }
+  .recentsSectionTitle{
+    position: fixed;
+  }
   .bodyUploadButton,
   .bodySecondUploadButton,
   .searchBarContainer {

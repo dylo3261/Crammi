@@ -3,7 +3,7 @@
   display: flex;
   min-height: 100vh;
   min-height: 100dvh;
-  background-color: #ffffff;
+  background-color: #f8f9fa;
   color: #0f172a;
   font-family: 'apple', -apple-system, sans-serif;
 }

@@ -196,7 +196,7 @@ export default function UploadModal({ isOpen, close, activeTab, userProfile, set
   }
 
   const maxNumFiles = userProfile?.accountTier === 'pro' ? 50 : userProfile?.accountTier === 'plus' ? 20 : 5;
-  const maxFileSize = userProfile?.accountTier === 'pro' ? 50 * 1024 * 1024 : userProfile?.accountTier === 'plus' ? 20 * 1024 * 1024 : 5 * 1024 * 1024;
+  const maxFileSize = userProfile?.accountTier === 'pro' ? 125 * 1024 * 1024 : userProfile?.accountTier === 'plus' ? 50 * 1024 * 1024 : 15 * 1024 * 1024;
 
   const [fileSizeRemaining, changeFileSizeRemaining] = useState(maxFileSize);
   const [remainingFiles, setRemainingFiles] = useState(maxNumFiles);
@@ -205,7 +205,7 @@ export default function UploadModal({ isOpen, close, activeTab, userProfile, set
   useEffect(() => { 
     if (isOpen && userProfile) {
       const maxFiles = userProfile.accountTier === 'pro' ? 50 : userProfile?.accountTier === 'plus' ? 20 : 5;
-      const maxSize = userProfile.accountTier === 'pro' ? 50 * 1024 * 1024 : userProfile?.accountTier === 'plus' ? 20 * 1024 * 1024 : 5 * 1024 * 1024;
+      const maxSize = userProfile.accountTier === 'pro' ? 125 * 1024 * 1024 : userProfile?.accountTier === 'plus' ? 50 * 1024 * 1024 : 15 * 1024 * 1024;
       
       setRemainingFiles(maxFiles);
       changeFileSizeRemaining(maxSize);

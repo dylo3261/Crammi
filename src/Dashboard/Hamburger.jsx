@@ -50,7 +50,7 @@ export default function Hamburger({ userName, userEmail, userPFP, handleSignOut,
         </button>
 
         <button 
-          data-emoji="🗂️"
+          data-emoji="🃏"
           className={activeTab === "Flashcards" ? "activeDropdownItem" : "dropdownItem"} 
           onClick={() => {
             changeActiveTab("Flashcards");
@@ -61,7 +61,7 @@ export default function Hamburger({ userName, userEmail, userPFP, handleSignOut,
         </button>
 
         <button 
-          data-emoji="📁"
+          data-emoji="🗂️"
           className={activeTab === "Files" ? "activeDropdownItem" : "dropdownItem"} 
           onClick={() => {
             changeActiveTab("Files");
@@ -75,7 +75,7 @@ export default function Hamburger({ userName, userEmail, userPFP, handleSignOut,
         <div className='dropdownLogOutSection'>
          
           
-          <button className='dropdownItem'>
+          <button className='dropdownItem' onClick={() => navigate('/Support')}>
             <img className='sidebarIcon' src='/supportIcon.png' alt='Support icon'/>
             <span>Support</span>
           </button>

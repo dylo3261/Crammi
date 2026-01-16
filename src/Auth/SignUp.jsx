@@ -294,6 +294,24 @@ export default function SignUp() {
         <button className="primary-button" onClick={handleSignUp} disabled={loading}>
           {loading ? 'Creating Account...' : 'Sign up'}
         </button>
+        <p className='bySigningUp'>
+            By signing up, you agree to our{' '}
+            <span 
+              className='bySigningUpSpan' 
+              onClick={() => navigate('/TermsOfService')}
+              style={{ cursor: 'pointer' }}
+            >
+              Terms of service
+            </span>
+            {' '}and{' '}
+            <span 
+              className='bySigningUpSpan'
+              onClick={() => navigate('/PrivacyPolicy')}
+              style={{ cursor: 'pointer' }}
+            >
+              Privacy Policy.
+            </span>
+          </p>        
           
         <div className="auth-footer-text">
           Have an account?{' '}

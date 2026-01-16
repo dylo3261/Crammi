@@ -44,8 +44,8 @@ const Support = ({ onBack }) => {
     },
     {
       emoji: "⚙️",
-      question: "What happens to processing batches?",
-      answer: "Batches in 'processing' state are being generated. This usually takes a few minutes depending on the file size. You'll see a shimmer animation while processing.",
+      question: "What happens to processing uploads?",
+      answer: "Uploads in 'processing' state are being generated. This usually takes a few minutes depending on the file size. You'll see a shimmer animation while processing.",
       tags: ["processing", "waiting", "status"]
     },
     {
@@ -136,7 +136,7 @@ const Support = ({ onBack }) => {
         </div>
         <div className="quick-link-card" onClick={() => setSearchQuery('batch')}>
           <div className="quick-link-icon">📦</div>
-          <h3>Managing Batches</h3>
+          <h3>Managing Uploads</h3>
           <p>Create and organize</p>
         </div>
         <div className="quick-link-card" onClick={() => setSearchQuery('upgrade')}>

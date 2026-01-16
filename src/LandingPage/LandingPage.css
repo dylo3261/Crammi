@@ -301,7 +301,7 @@
     margin-top: -6dvh;
 
   }
-  
+
   .box {
     flex: 1 1 48%;
     min-width: 300px; /* Reduced from 400px for better mobile support */
@@ -358,8 +358,20 @@
     font-weight: lighter;
     margin-bottom: 1.5rem;
   }
-  
-  .buttonGroup {
+  .bySigningUp{
+    font-family: applethin, Arial, sans-serif;
+    font-size: clamp(0.8rem, 1vw, 0.8rem);
+    color: rgb(101, 101, 101);
+    font-weight: lighter;
+  }
+  .bySigningUpSpan{
+    color: #AB9FF2;
+  }
+  .bySigningUpSpan:hover{
+    color: #9f8ff9;
+    text-decoration: underline;
+  }
+    .buttonGroup {
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
@@ -504,7 +516,7 @@
   }
   .section-title-special {
     font-family: 'applemedium', sans-serif;
-    font-size: 4rem;
+    font-size: 3rem;
     color: #0f172a;
     margin-bottom: 1rem;
     opacity: 0;
@@ -1359,7 +1371,11 @@
   /* ========================= */
   /* Responsive Design */
   /* ========================= */
-  
+  @media (max-width: 1800px) {
+    .section-title-special{
+      font-size: 4.0rem;
+    }
+  }
   @media (max-width: 1100px) {
     .center-box {
       display: none;
@@ -1372,7 +1388,7 @@
   .section-one {
     padding: 1rem;
     margin: 0 1rem;
-    padding-top: calc(70px + 2rem); /* Consistent with header height */
+    padding-top: calc(30px + 2rem); /* Consistent with header height */
   }
 
     .section-title-special{
@@ -1431,7 +1447,7 @@
     .section-one {
       padding: 1rem;
       margin: 0 1rem;
-      padding-top: calc(70px + 1.5rem);
+      padding-top: calc(30px + 1.5rem);
     }
   
     .buttonGroup {
@@ -1453,10 +1469,14 @@
       font-size: large;
     }
   }
-  
+  @media (max-width: 549px) {
+  .sectionOneTitle{
+    font-size: clamp(2.25rem, 8vw, 3rem);
+  }
+  }
   @media (max-width: 480px) {
       .section-one {
-        padding-top: calc(70px + 1rem);
+        padding-top: calc(70px + 2rem);
         margin: 0 0.75rem;
       }
     
@@ -1478,7 +1498,7 @@
       margin-top: -3rem;
     }
     .sectionOneTitle {
-      font-size: clamp(3rem, 6vw, 5rem);
+      font-size: clamp(2.25rem, 8vw, 3rem);
       margin-bottom: 1rem;
       margin-top: -1rem;
     }
@@ -1487,7 +1507,6 @@
       font-size: clamp(1rem, 4vw, 1.2rem);
       margin-bottom: 1.2rem;
     }
-  
     .landingSignUpButton,
     .googleSignUp {
       font-size: 15px;
@@ -1498,7 +1517,7 @@
     .section-one {
       padding: 0;
       margin: 1.5rem 0.75rem;
-      margin-top: 90px;
+      margin-top: 70px;
       gap: 1rem;
     }
     .section-title-special{
@@ -1513,7 +1532,7 @@
     }
     
     .sectionOneTitle {
-      font-size: clamp(2.25rem, 8vw, 3rem);
+      font-size: clamp(2.5rem, 5vw, 3.0rem);
       margin-bottom: 1.25rem;
       margin-top: 0;
       line-height: 1.2;

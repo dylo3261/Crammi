@@ -50,16 +50,17 @@ function RecentsSection({recents, onRecentClick}) {
     switch(type) {
       case 'Exams': return '📝';
       case 'Quizzes': return '📋';
-      case 'Flashcards': return '🗂️';
-      default: return '📁';
+      case 'Flashcards': return '🃏';
+      default: return '🗂️';
     }
   };
 
   return (
-    <div className="recentsSection">
-      <div className="recentsSectionHeader">
+    <>
+     <div className="recentsSectionHeader">
         <span className="recentsSectionTitle">RECENT</span>
       </div>
+    <div className="recentsSection">
       <div className="recentsList">
         {recents.slice(0, 5).map((recent, index) => (
           <button 
@@ -74,6 +75,7 @@ function RecentsSection({recents, onRecentClick}) {
         ))}
       </div>
     </div>
+    </>
   );
 }
 
@@ -260,14 +262,14 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
             <span>Quizzes</span>
           </button>
           <button 
-            data-emoji="🗂️"
+            data-emoji="🃏"
             onClick={() => changeActiveTab("Flashcards")} 
             className={activeTab === "Flashcards" ? 'activeDashboardSideButtons' : 'dashboardSideButtons'}
           >
             <span>Flashcards</span>
           </button>
           <button 
-            data-emoji="📁"
+            data-emoji="🗂️"
             onClick={() => changeActiveTab("Files")} 
             className={activeTab === "Files" ? 'activeDashboardSideButtons' : 'dashboardSideButtons'}
           >

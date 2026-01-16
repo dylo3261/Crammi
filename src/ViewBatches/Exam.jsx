@@ -928,7 +928,7 @@ export default function Exam() {
                             handleSignOut={handleSignOut}
                             onNavigateDashboard={() => navigate('/Dashboard')}
                             onUpgradePlan={() => {navigate('/Upgrade', { state: { userProfile: userProfile } })}}
-                            onSupport={() => {/* Add support logic */}}
+                            onSupport={() => navigate('/Support')}
                             showIgnoredButton={!!isIgnoredRequest}
                             isIgnoredRequest={isIgnoredRequest}
                         />
@@ -1280,8 +1280,8 @@ export default function Exam() {
                     userPFP={userPFP}
                     handleSignOut={handleSignOut}
                     onNavigateDashboard={() => navigate('/Dashboard')}
-                    onUpgradePlan={() => {/* Add upgrade logic */}}
-                    onSupport={() => {/* Add support logic */}}
+                    onUpgradePlan={() => {navigate('/Upgrade', { state: { userProfile: userProfile } })}}
+                    onSupport={() => {navigate('/Support')}}
                     showIgnoredButton={!!isIgnoredRequest}
                     isIgnoredRequest={isIgnoredRequest}
                     />
@@ -1418,8 +1418,8 @@ export default function Exam() {
                             userPFP={userPFP}
                             handleSignOut={handleSignOut}
                             onNavigateDashboard={() => navigate('/Dashboard')}
-                            onUpgradePlan={() => {/* Add upgrade logic */}}
-                            onSupport={() => {/* Add support logic */}}
+                            onUpgradePlan={() => {navigate('/Upgrade', { state: { userProfile: userProfile } })}}
+                            onSupport={() => navigate('/Dashboard')}
                             showIgnoredButton={!!isIgnoredRequest}
                             isIgnoredRequest={isIgnoredRequest}
                         />

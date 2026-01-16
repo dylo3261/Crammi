@@ -434,7 +434,7 @@ export default function Flashcards() {
             handleSignOut={handleSignOut}
             onNavigateDashboard={() => navigate('/Dashboard')}
             onUpgradePlan={() => {navigate('/Upgrade', { state: { userProfile: userProfile } })}}
-            onSupport={() => {}}
+            onSupport={() => {navigate('/Support')}}
             showIgnoredButton={!!isIgnoredRequest}
             isIgnoredRequest={isIgnoredRequest}
           />

@@ -128,25 +128,25 @@ export default function LandingPage() {
       price: { monthly: 0, annual: 0 },
       description: 'Perfect for trying out Crammi',
       features: [
-        '3 uploads per week',
+        '5 uploads per week',
         'Up to 5 photos per upload',
-        '15 flashcards per set',
-        '10 exam questions',
-        '8 quiz questions',
+        'Max 15 flashcards per set',
+        'Max 10 exam questions',
+        'Max 8 quiz questions',
       ],
     },
     {
       id: 'plus',
       name: 'Plus',
       emoji: '⚡',
-      price: { monthly: 5, annual: 49 },
+      price: { monthly: 3.99, annual: 39.99 },
       description: 'Great for regular students',
       features: [
-        '30 uploads per month',
+        '50 uploads per month',
         'Up to 20 photos per upload',
-        '50 flashcards per set',
-        '25 exam questions',
-        '15 quiz questions',
+        'Max 50 flashcards per set',
+        'Max 25 exam questions',
+        'Max 15 quiz questions',
       ],
       popular: true
     },
@@ -154,14 +154,14 @@ export default function LandingPage() {
       id: 'pro',
       name: 'Pro',
       emoji: '🚀',
-      price: { monthly: 20, annual: 179 },
+      price: { monthly: 7.99, annual: 79.99 },
       description: 'For serious students who need unlimited power',
       features: [
         '100 uploads per month',
         'Up to 50 photos per upload',
-        '100 flashcards per set',
-        '60 exam questions',
-        '30 quiz questions',
+        'Max 100 flashcards per set',
+        'Max 60 exam questions',
+        'Max 30 quiz questions',
       ],
     
     }
@@ -224,7 +224,25 @@ export default function LandingPage() {
               Sign Up with Google
             </button>
           </div>
-        </div>
+            <p className='bySigningUp'>
+            By signing up, you agree to our{' '}
+            <span 
+              className='bySigningUpSpan' 
+              onClick={() => navigate('/TermsOfService')}
+              style={{ cursor: 'pointer' }}
+            >
+              Terms of service
+            </span>
+            {' '}and{' '}
+            <span 
+              className='bySigningUpSpan'
+              onClick={() => navigate('/PrivacyPolicy')}
+              style={{ cursor: 'pointer' }}
+            >
+              Privacy Policy.
+            </span>
+          </p>        
+      </div>
         <div className="box hero-visual-box">
           <div className="floating-card card-1">
             <div className="card-icon">📝</div>

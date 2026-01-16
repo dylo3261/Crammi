@@ -160,11 +160,11 @@ export default function Upgrade() {
       price: { monthly: 0, annual: 0 },
       description: 'Perfect for trying out Crammi',
       features: [
-        '3 uploads per week',
+        '5 uploads per week',
         'Up to 5 photos per upload',
-        '15 flashcards per set',
-        '10 exam questions',
-        '8 quiz questions',
+        'Max 15 flashcards per set',
+        'Max 10 exam questions',
+        'Max 8 quiz questions',
       ],
       buttonText: 'Current Plan',
       buttonStyle: 'disabled'
@@ -173,14 +173,14 @@ export default function Upgrade() {
       id: 'plus',
       name: 'Plus',
       emoji: '⚡',
-      price: { monthly: 5, annual: 49 },
+      price: { monthly: 3.99, annual: 39.99 },
       description: 'Great for regular students',
       features: [
-        '30 uploads per month',
+        '50 uploads per month',
         'Up to 20 photos per upload',
-        '50 flashcards per set',
-        '25 exam questions',
-        '15 quiz questions',
+        'Max 50 flashcards per set',
+        'Max 25 exam questions',
+        'Max 15 quiz questions',
       ],
       buttonText: isPlus ? 'Current Plan' : (isPro ? 'Current Plan' : 'Upgrade to Plus'),
       buttonStyle: isPlus ? 'disabled' : (isPro ? 'disabled' : 'primary'),
@@ -190,14 +190,14 @@ export default function Upgrade() {
       id: 'pro',
       name: 'Pro',
       emoji: '🚀',
-      price: { monthly: 20, annual: 179 },
+      price: { monthly: 7.99, annual: 79.99 },
       description: 'For serious students who need unlimited power',
       features: [
         '100 uploads per month',
         'Up to 50 photos per upload',
-        '100 flashcards per set',
-        '60 exam questions',
-        '30 quiz questions',
+        'Max 100 flashcards per set',
+        'Max 60 exam questions',
+        'Max 30 quiz questions',
       ],
       buttonText: isPro ? 'Current Plan' : 'Upgrade to Pro',
       buttonStyle: isPro ? 'disabled' : 'secondary',
@@ -291,7 +291,7 @@ export default function Upgrade() {
               
               {billingCycle === 'annual' && plan.price.annual > 0 && (
                 <div className="annual-savings">
-                  Save ${(plan.price.monthly * 12) - plan.price.annual} per year
+                  Save ${Math.round(((plan.price.monthly * 12) - plan.price.annual) * 100) / 100} per year
                 </div>
               )}
             </div>
