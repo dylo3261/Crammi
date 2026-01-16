@@ -26,6 +26,8 @@ const redirectUri = isLocalhost
 const logoutUri = isLocalhost 
   ? 'http://localhost:5173/' 
   : `${window.location.origin}/`;
+
+if (typeof window !== 'undefined') {
   Amplify.configure({
     Auth: {
       Cognito: {
@@ -42,7 +44,7 @@ const logoutUri = isLocalhost
         },
       },
     },
-  });
+  });}
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 

@@ -5,7 +5,7 @@ import { signInWithRedirect } from 'aws-amplify/auth';
 import { useNavigate } from 'react-router-dom';
 
 export default function LandingPage() {
-  const navigate = useNavigate();
+  const navigate = typeof window !== 'undefined' ? useNavigate() : () => {};
   const [scrollY, setScrollY] = useState(0);
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -14,7 +14,17 @@ export default function LandingPage() {
   const hamburgerRef = useRef(null);
   const [activeInstruction, setActiveInstruction] = useState(1);
 
-  
+  useEffect(() => {
+    // Small delay ensures smooth animation start
+    const timer = setTimeout(() => {
+      document.documentElement.classList.add('hydrated');
+    }, 50);
+    
+    return () => {
+      clearTimeout(timer);
+      document.documentElement.classList.remove('hydrated');
+    };
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -43,14 +53,20 @@ export default function LandingPage() {
   }, [menuOpen]);
 
   const handleEmailSignUp = () => {
-    navigate('/signup');
+    if (typeof window !== 'undefined') {
+      navigate('/signup');
+    }
   };
 
   const handleEmailSignIn = () => {
-    navigate('/signin');
+    if (typeof window !== 'undefined') {
+      navigate('/signin');
+    }
   };
 
   const handleGoogleSignUp = async () => {
+    if (typeof window === 'undefined') return;
+    
     try {
       sessionStorage.setItem('oauth_source', '/signup');
       await signInWithRedirect({
@@ -228,7 +244,11 @@ export default function LandingPage() {
             By signing up, you agree to our{' '}
             <span 
               className='bySigningUpSpan' 
-              onClick={() => navigate('/TermsOfService')}
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  navigate('/TermsOfService');
+                }
+              }}
               style={{ cursor: 'pointer' }}
             >
               Terms of service
@@ -236,7 +256,11 @@ export default function LandingPage() {
             {' '}and{' '}
             <span 
               className='bySigningUpSpan'
-              onClick={() => navigate('/PrivacyPolicy')}
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  navigate('/PrivacyPolicy');
+                }
+              }}
               style={{ cursor: 'pointer' }}
             >
               Privacy Policy.
@@ -473,15 +497,27 @@ export default function LandingPage() {
               <a 
                 className="footer-link" 
                 style={{ cursor: 'pointer' }} 
-                onClick={() => navigate('/Support')}
+                onClick={() => {
+                  if (typeof window !== 'undefined') {
+                    navigate('/Support');
+                  }
+                }}
                 >
             Contact
             </a>           
              </div>
             <div className="footer-column">
               <h4 className="footer-heading">Legal</h4>
-              <a style={{ cursor: 'pointer' }} onClick={() => navigate('/PrivacyPolicy')} className="footer-link">Privacy</a>
-              <a style={{ cursor: 'pointer' }} onClick={() => navigate('/TermsOfService')} className="footer-link">Terms of Service</a>
+              <a style={{ cursor: 'pointer' }} onClick={() => {
+                if (typeof window !== 'undefined') {
+                  navigate('/PrivacyPolicy');
+                }
+              }} className="footer-link">Privacy</a>
+              <a style={{ cursor: 'pointer' }} onClick={() => {
+                if (typeof window !== 'undefined') {
+                  navigate('/TermsOfService');
+                }
+              }} className="footer-link">Terms of Service</a>
             </div>
           </div>
         </div>

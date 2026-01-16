@@ -29,6 +29,8 @@ function AppContent() {
     checkAuth();
 
     // Listen for auth events
+    if (typeof window !== 'undefined') {
+
     const hubListener = Hub.listen('auth', ({ payload }) => {
       if (payload.event === 'signedIn') {
         checkAuth();
@@ -38,9 +40,15 @@ function AppContent() {
     });
 
     return () => hubListener();
+  }
   }, []);
 
   async function checkAuth() {
+    if (typeof window === 'undefined') {
+      setIsLoading(false);
+      return;
+    }
+
     try {
       await getCurrentUser();
       setIsAuthenticated(true);

@@ -14,10 +14,11 @@
     "oidc-client-ts": "^3.4.1",
     "pdfjs-dist": "^5.4.530",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1",
+    "react-dom": "^19.2.3",
     "react-oidc-context": "^3.3.0",
     "react-pdf": "^10.2.0",
-    "react-router-dom": "^7.9.4"
+    "react-router-dom": "^7.9.4",
+    "vite-prerender-plugin": "^0.5.12"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",

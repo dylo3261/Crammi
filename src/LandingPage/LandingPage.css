@@ -15,7 +15,48 @@
     background: #f8f9fa;
     overflow-x: hidden;
   }
+/* ========================= */
+/* Prerender Animation Control */
+/* ========================= */
 
+/* Prevent animations during SSR/prerender */
+html:not(.hydrated) .box,
+html:not(.hydrated) .feature-card,
+html:not(.hydrated) .step,
+html:not(.hydrated) .pricing-card,
+html:not(.hydrated) .section-title,
+html:not(.hydrated) .section-subtitle,
+html:not(.hydrated) .section-title-special,
+html:not(.hydrated) .subjects-title,
+html:not(.hydrated) .subjects-subtitle,
+html:not(.hydrated) .cta-title,
+html:not(.hydrated) .cta-description,
+html:not(.hydrated) .cta-buttons,
+html:not(.hydrated) .cta-subtext,
+html:not(.hydrated) .header,
+html:not(.hydrated) .floating-card {
+  animation: none !important;
+  opacity: 0;
+}
+
+/* Allow animations after hydration */
+html.hydrated .box,
+html.hydrated .feature-card,
+html.hydrated .step,
+html.hydrated .pricing-card,
+html.hydrated .section-title,
+html.hydrated .section-subtitle,
+html.hydrated .section-title-special,
+html.hydrated .subjects-title,
+html.hydrated .subjects-subtitle,
+html.hydrated .cta-title,
+html.hydrated .cta-description,
+html.hydrated .cta-buttons,
+html.hydrated .cta-subtext,
+html.hydrated .header,
+html.hydrated .floating-card {
+  animation-play-state: running;
+}
   /* ========================= */
   /* Page Load Animations */
   /* ========================= */

@@ -275,13 +275,17 @@ export default function Flashcards() {
     
     setIsNavigating(true);
     setIsFlipped(false);
-    setSlideDirection('slide-left');
     
+    // Small delay to ensure flip animation completes before slide
     setTimeout(() => {
-      setCurrentIndex(prev => Math.min(prev + 1, batchJSON.length - 1));
-      setSlideDirection('');
-      setIsNavigating(false);
-    }, 150);
+      setSlideDirection('slide-left');
+      
+      setTimeout(() => {
+        setCurrentIndex(prev => Math.min(prev + 1, batchJSON.length - 1));
+        setSlideDirection('');
+        setIsNavigating(false);
+      }, 150);
+    }, 50);
   }, [batchJSON, currentIndex, isNavigating]);
 
   const goToPrevious = useCallback(() => {
@@ -289,13 +293,17 @@ export default function Flashcards() {
     
     setIsNavigating(true);
     setIsFlipped(false);
-    setSlideDirection('slide-right');
     
+    // Small delay to ensure flip animation completes before slide
     setTimeout(() => {
-      setCurrentIndex(prev => Math.max(prev - 1, 0));
-      setSlideDirection('');
-      setIsNavigating(false);
-    }, 150);
+      setSlideDirection('slide-right');
+      
+      setTimeout(() => {
+        setCurrentIndex(prev => Math.max(prev - 1, 0));
+        setSlideDirection('');
+        setIsNavigating(false);
+      }, 150);
+    }, 50);
   }, [batchJSON, currentIndex, isNavigating]);
 
   const handleCardClick = useCallback(() => {
