@@ -46,7 +46,7 @@ export default function Success() {
       ];
     } else {
       return [
-        '100 uploads per month',
+        'Unlimited uploads',
         '50 photo batches',
         'Limit 60 question exams',
         'Limit 30 quiz questions',
