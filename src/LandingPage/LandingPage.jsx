@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './LandingPage.css';
-import googleLogo from '/GoogleLogo.png';
 import { signInWithRedirect } from 'aws-amplify/auth';
 import { useNavigate } from 'react-router-dom';
 
@@ -236,7 +235,7 @@ export default function LandingPage() {
               <span className="useCrammi">Sign Up,</span> It's Free <span className="arrow">→</span>
             </button>
             <button className="googleSignUp" onClick={handleGoogleSignUp}>
-              <img src={googleLogo} alt="Google logo" className="google-logo-img" />
+              <img src={'/GoogleLogo.png'} alt="Google logo" className="google-logo-img" />
               Sign Up with Google
             </button>
           </div>
