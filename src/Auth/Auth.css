@@ -184,7 +184,7 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
-    background: #AB9FF2;
+    background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
     color: #ffffff;
     box-sizing: border-box;
     font-family: applethin,Arial, Helvetica, sans-serif;
@@ -192,7 +192,7 @@
   }
   
   .primary-button:hover {
-    background: #a393fc;
+    background: linear-gradient(135deg, #9d8df5 0%, #6366f1 100%);
   }
   
   .primary-button:active {

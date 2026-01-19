@@ -143,7 +143,7 @@ export default function LandingPage() {
       price: { monthly: 0, annual: 0 },
       description: 'Perfect for trying out Crammi',
       features: [
-        '5 uploads per week',
+        '5 uploads per month',
         'Up to 5 photos per upload',
         'Max 15 flashcards per set',
         'Max 10 exam questions',
@@ -172,7 +172,7 @@ export default function LandingPage() {
       price: { monthly: 7.99, annual: 79.99 },
       description: 'For serious students who need unlimited power',
       features: [
-        '100 uploads per month',
+        'Unlimited uploads',
         'Up to 50 photos per upload',
         'Max 100 flashcards per set',
         'Max 60 exam questions',
