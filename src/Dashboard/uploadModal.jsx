@@ -20,7 +20,8 @@ export default function UploadModal({ isOpen, close, activeTab, userProfile, set
   const [numSelectedPages, setnNumSelectedPages] = useState(0);
   const [specialInstructions, setSpecialInstructions] = useState(""); 
   const [isUploadingPhotos, setIsUploadingPhotos] = useState(false);
-  
+  const [isUploading, setIsUploading] = useState(false);
+  const uploadInProgress = useRef(false);
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [pagesPerView] = useState(10);
@@ -658,19 +659,47 @@ export default function UploadModal({ isOpen, close, activeTab, userProfile, set
             </button>
 
             {selectedFiles.length > 0 && (
-              <button className="closeUploadModal" onClick={() => {
-                handleUploadSign(selectedFiles, activeTab);
-                close();
-                clearFiles();
-                setIsUploadingPhotos(true);
-                setSpecialInstructions("");
-                setWarning(false);
-                setWarning2(false);
-                setWarning3(false);
-                changeFileSizeRemaining(maxFileSize); 
-                setRemainingFiles(maxNumFiles);
-              }}>
-                Upload
+              <button 
+                className="closeUploadModal" 
+                disabled={isUploading}
+                style={{
+                  opacity: isUploading ? 0.6 : 1,
+                  cursor: isUploading ? 'not-allowed' : 'pointer'
+                }}
+                onClick={() => {
+                  // Prevent double-clicks
+                  if (uploadInProgress.current || isUploading) {
+                    console.log("Upload already in progress");
+                    return;
+                  }
+                  
+                  uploadInProgress.current = true;
+                  setIsUploading(true);
+                  
+                  // Show loading screen and close modal immediately
+                  setIsUploadingPhotos(true);
+                  close();
+                  clearFiles();
+                  setSpecialInstructions("");
+                  setWarning(false);
+                  setWarning2(false);
+                  setWarning3(false);
+                  changeFileSizeRemaining(maxFileSize); 
+                  setRemainingFiles(maxNumFiles);
+                  
+                  // Fire and forget the upload
+                  handleUploadSign(selectedFiles, activeTab)
+                    .catch((error) => {
+                      console.error("Upload failed:", error);
+                      setIsUploadingPhotos(false); // Hide loading on error
+                    })
+                    .finally(() => {
+                      uploadInProgress.current = false;
+                      setIsUploading(false);
+                    });
+                }}
+              >
+                {isUploading ? "Uploading..." : "Upload"}
               </button>
             )}
           </div>

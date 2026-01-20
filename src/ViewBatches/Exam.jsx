@@ -926,9 +926,9 @@ export default function Exam() {
                             userEmail={userEmail}
                             userPFP={userPFP}
                             handleSignOut={handleSignOut}
-                            onNavigateDashboard={() => navigate('/Dashboard')}
-                            onUpgradePlan={() => {navigate('/Upgrade', { state: { userProfile: userProfile } })}}
-                            onSupport={() => navigate('/Support')}
+                            onNavigateDashboard={() => navigate('/dashboard')}
+                            onUpgradePlan={() => {navigate('/upgrade', { state: { userProfile: userProfile } })}}
+                            onSupport={() => navigate('/support')}
                             showIgnoredButton={!!isIgnoredRequest}
                             isIgnoredRequest={isIgnoredRequest}
                         />
@@ -941,7 +941,7 @@ export default function Exam() {
                             <button 
                                 className='homeButton'
                                 title="Dashboard"
-                                onClick={() => navigate('/Dashboard')}
+                                onClick={() => navigate('/dashboard')}
                             >
                                 <img 
                                     className='homeButtonIcon' 
@@ -953,7 +953,7 @@ export default function Exam() {
                             <button 
                                 className='collapsedSideButton'
                                 title="Upgrade Plan"
-                                onClick={()=>navigate('/Upgrade', { state: { userProfile: userProfile } })}
+                                onClick={()=>navigate('/upgrade', { state: { userProfile: userProfile } })}
                                 style={{display: userProfile.accountTier==='pro'? 'none' : 'flex'}}
                             >
                                 <img 
@@ -1010,7 +1010,7 @@ export default function Exam() {
                                 <div className="logoutPopup" ref={logoutPopupRef}>
                                     <div className='viewLogoutPopupPFP'>
                                         <div className='PFPWrapper'>
-                                            <button className='PFPButtonPopup' onClick={() => navigate('/Settings')}>
+                                            <button className='PFPButtonPopup' onClick={() => navigate('/settings')}>
                                                 <img 
                                                     className='userPFPPopup' 
                                                     src={userPFP} 
@@ -1029,7 +1029,7 @@ export default function Exam() {
                                 
                                     <div className='logoutPopupContent'>
                                         <div className='popupUpgradePlan'>
-                                            <button className='bottomDashboardSideButtons' style={{display: userProfile.accountTier==='pro'? 'none' : 'flex'}} onClick={()=>navigate('/Upgrade', { state: { userProfile: userProfile } })}>
+                                            <button className='bottomDashboardSideButtons' style={{display: userProfile.accountTier==='pro'? 'none' : 'flex'}} onClick={()=>navigate('/upgrade', { state: { userProfile: userProfile } })}>
                                                 <img className='sidebarIcon' src='/starIcon.png' alt='Support icon'/>
                                                 <span>Upgrade Plan</span>
                                             </button>
@@ -1153,7 +1153,7 @@ export default function Exam() {
                             <button 
                                 className='homeButton'
                                 title="Dashboard"
-                                onClick={() => navigate('/Dashboard')}
+                                onClick={() => navigate('/dashboard')}
                             >
                                 <img 
                                     className='homeButtonIcon' 
@@ -1165,7 +1165,7 @@ export default function Exam() {
                             <button 
                                 className='collapsedSideButton'
                                 title="Upgrade Plan"
-                                onClick={()=>navigate('/Upgrade', { state: { userProfile: userProfile } })}
+                                onClick={()=>navigate('/upgrade', { state: { userProfile: userProfile } })}
                                 style={{display: userProfile.accountTier==='pro'? 'none' : 'flex'}}
                             >
                                 <img 
@@ -1222,7 +1222,7 @@ export default function Exam() {
                                 <div className="logoutPopup" ref={logoutPopupRef}>
                                     <div className='logoutPopupPFP'>
                                         <div className='PFPWrapper'>
-                                            <button className='PFPButtonPopup' onClick={() => navigate('/Settings')}>
+                                            <button className='PFPButtonPopup' onClick={() => navigate('/settings')}>
                                                 <img 
                                                     className='userPFPPopup' 
                                                     src={userPFP} 
@@ -1241,7 +1241,7 @@ export default function Exam() {
                                 
                                     <div className='logoutPopupContent'>
                                         <div className='popupUpgradePlan'>
-                                            <button className='bottomDashboardSideButtons'style={{display: userProfile.accountTier==='pro'? 'none' : 'flex'}} onClick={()=>navigate('/Upgrade', { state: { userProfile: userProfile } })}>
+                                            <button className='bottomDashboardSideButtons'style={{display: userProfile.accountTier==='pro'? 'none' : 'flex'}} onClick={()=>navigate('/upgrade', { state: { userProfile: userProfile } })}>
                                                 <img className='sidebarIcon' src='/starIcon.png' alt='Support icon'/>
                                                 <span>Upgrade Plan</span>
                                             </button>
@@ -1279,9 +1279,9 @@ export default function Exam() {
                     userEmail={userEmail}
                     userPFP={userPFP}
                     handleSignOut={handleSignOut}
-                    onNavigateDashboard={() => navigate('/Dashboard')}
-                    onUpgradePlan={() => {navigate('/Upgrade', { state: { userProfile: userProfile } })}}
-                    onSupport={() => {navigate('/Support')}}
+                    onNavigateDashboard={() => navigate('/dashboard')}
+                    onUpgradePlan={() => {navigate('/upgrade', { state: { userProfile: userProfile } })}}
+                    onSupport={() => {navigate('/support')}}
                     showIgnoredButton={!!isIgnoredRequest}
                     isIgnoredRequest={isIgnoredRequest}
                     />
@@ -1294,7 +1294,7 @@ export default function Exam() {
                             <button 
                                 className='homeButton'
                                 title="Dashboard"
-                                onClick={() => navigate('/Dashboard')}
+                                onClick={() => navigate('/dashboard')}
                             >
                                 <img 
                                     className='homeButtonIcon' 
@@ -1305,7 +1305,7 @@ export default function Exam() {
                             
                             <button 
                                 className='collapsedSideButton'
-                                onClick={()=>navigate('/Upgrade', { state: { userProfile: userProfile } })}
+                                onClick={()=>navigate('/upgrade', { state: { userProfile: userProfile } })}
                                 title="Upgrade Plan"
                             >
                                 <img 
@@ -1362,7 +1362,7 @@ export default function Exam() {
                                 <div className="logoutPopup" ref={logoutPopupRef}>
                                     <div className='logoutPopupPFP'>
                                         <div className='PFPWrapper'>
-                                            <button className='PFPButtonPopup'onClick={() => navigate('/Settings')}>
+                                            <button className='PFPButtonPopup'onClick={() => navigate('/settings')}>
                                                 <img 
                                                     className='userPFPPopup' 
                                                     src={userPFP} 
@@ -1381,7 +1381,7 @@ export default function Exam() {
                                 
                                     <div className='logoutPopupContent'>
                                         <div className='popupUpgradePlan'>
-                                            <button className='bottomDashboardSideButtons' onClick={()=>navigate('/Upgrade', { state: { userProfile: userProfile } })}>
+                                            <button className='bottomDashboardSideButtons' onClick={()=>navigate('/upgrade', { state: { userProfile: userProfile } })}>
                                                 <img className='sidebarIcon' src='/starIcon.png' alt='Support icon'/>
                                                 <span>Upgrade Plan</span>
                                             </button>
@@ -1417,9 +1417,9 @@ export default function Exam() {
                             userEmail={userEmail}
                             userPFP={userPFP}
                             handleSignOut={handleSignOut}
-                            onNavigateDashboard={() => navigate('/Dashboard')}
-                            onUpgradePlan={() => {navigate('/Upgrade', { state: { userProfile: userProfile } })}}
-                            onSupport={() => navigate('/Dashboard')}
+                            onNavigateDashboard={() => navigate('/dashboard')}
+                            onUpgradePlan={() => {navigate('/upgrade', { state: { userProfile: userProfile } })}}
+                            onSupport={() => navigate('/dashboard')}
                             showIgnoredButton={!!isIgnoredRequest}
                             isIgnoredRequest={isIgnoredRequest}
                         />

@@ -12,12 +12,17 @@ import AccountPage from "./Dashboard/AccountPage.jsx";
 import Upgrade from "./Dashboard/Upgrade.jsx";
 import Success from "./Dashboard/Success.jsx";
 import Support from "./LandingPage/Support.jsx";
+import ScrollToTop from "./ScrollToTop.jsx";
 
 import Exam from "./ViewBatches/Exam.jsx"
 import Quiz from "./ViewBatches/Quiz.jsx"
 import Flashcards from "./ViewBatches/Flashcards.jsx"
+
 import PrivacyPolicy from "./LandingPage/PrivacyPolicy.jsx";
 import TermsOfService from "./LandingPage/Terms.jsx";
+import Blog from "./LandingPage/blog.jsx";
+import BlogArticle from "./LandingPage/BlogArticle.jsx";
+
 
 function AppContent() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -92,75 +97,83 @@ function AppContent() {
       <Route
         path="/"
         element={
-          isAuthenticated ? <Navigate to="/Dashboard" replace /> : <LandingPage />
+          isAuthenticated ? <Navigate to="/dashboard" replace /> : <LandingPage />
         }
       />
       <Route 
         path="/signin" 
         element={
-          isAuthenticated ? <Navigate to="/Dashboard" replace /> : <SignIn />
+          isAuthenticated ? <Navigate to="/dashboard" replace /> : <SignIn />
         }
       />
       <Route 
         path="/signup" 
         element={
-          isAuthenticated ? <Navigate to="/Dashboard" replace /> : <SignUp />
+          isAuthenticated ? <Navigate to="/dashboard" replace /> : <SignUp />
         }
       />
        <Route 
-        path="/ForgotPassword" 
+        path="/forgot-password" 
         element={<ForgotPassword />}
       />
       <Route 
-        path="/Support" 
+        path="/support" 
         element={<Support />}
       />
       <Route 
-        path="/PrivacyPolicy" 
+        path="/privacy-policy" 
         element={<PrivacyPolicy />}
       />
        <Route 
-        path="/TermsOfService" 
+        path="/terms-of-service" 
         element={<TermsOfService/>}
       />
+       <Route 
+        path="/blog" 
+        element={<Blog/>}
+      />
       <Route 
-        path='/Dashboard' 
+        path="/blog/:slug" 
+        element={<BlogArticle/>}
+      />
+      <Route 
+        path='/dashboard' 
         element={
           isAuthenticated ? <Dashboard /> : <Navigate to="/" replace />
         }
       />
       <Route
-        path="/Exam/:batchID"
+        path="/exam/:batchID"
         element={
           isAuthenticated ? <Exam /> : <Navigate to="/" replace />
         }
       />
       <Route
-        path="/Quiz/:batchID"
+        path="/quiz/:batchID"
         element={
           isAuthenticated ? <Quiz /> : <Navigate to="/" replace />
         }
       />
       <Route
-        path="/Flashcards/:batchID"
+        path="/flashcards/:batchID"
         element={
           isAuthenticated ? <Flashcards /> : <Navigate to="/" replace />
         }
       />
       <Route 
-        path='/Settings' 
+        path='/settings' 
         element={
           isAuthenticated ? <AccountPage/> : <Navigate to="/" replace />
         }
         />
        <Route 
-        path='/Upgrade' 
+        path='/upgrade' 
         element={
           isAuthenticated ? <Upgrade/> : <Navigate to="/" replace />
         }
         />
-       <Route path="/Success/plus" element={<Success />} />
-       <Route path="/Success/pro" element={<Success />} />
+       <Route path="/success/plus" element={<Success />} />
+       <Route path="/success/pro" element={<Success />} />
     </Routes>
   );
 }
@@ -168,6 +181,7 @@ function AppContent() {
 function App() {
   return (
     <Router>
+      <ScrollToTop/>
       <AppContent />
     </Router>
   );

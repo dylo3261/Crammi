@@ -19,7 +19,7 @@ export default function SignIn() {
         username: email,
         password: password
       });
-      navigate('/Dashboard');
+      navigate('/dashboard');
     } catch (err) {
       setError(err.message || 'Failed to sign in');
     } finally {
@@ -95,7 +95,7 @@ export default function SignIn() {
           <button onClick={() => navigate('/signup')}>Sign Up</button>
         </div>
         <div className="auth-footer-text">
-          <button  onClick={() => navigate('/ForgotPassword')} >Forgot Your Password?</button>
+          <button  onClick={() => navigate('/forgot-password')} >Forgot Your Password?</button>
         </div>
       </div>
     </div>

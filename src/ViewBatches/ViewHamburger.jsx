@@ -116,7 +116,7 @@ export default function ViewHamburger({
         {/* User Profile Section at Bottom */}
         <div className='viewDropdownProfileSection'>
           <div className='viewPFPWrapper'>
-            <button className='viewPFPButton' onClick={() => navigate('/Settings')}>
+            <button className='viewPFPButton' onClick={() => navigate('/settings')}>
               <img 
                 className='viewUserPFP' 
                 src={userPFP} 

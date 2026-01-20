@@ -59,13 +59,13 @@ export default function BatchesSection({
                 type: batchType
               });
             if(batchType === 'Exams'){
-                navigate(`/Exam/${batchID}`, { state: { batchName, userProfile } });
+                navigate(`/exam/${batchID}`, { state: { batchName, userProfile } });
             }
             else if(batchType === 'Quizzes'){
-                navigate(`/Quiz/${batchID}`, { state: { batchName, userProfile } });
+                navigate(`/quiz/${batchID}`, { state: { batchName, userProfile } });
             }
             else if(batchType === 'Flashcards'){
-                navigate(`/Flashcards/${batchID}`, { state: { batchName, userProfile } });
+                navigate(`/flashcards/${batchID}`, { state: { batchName, userProfile } });
             }
         }
     };

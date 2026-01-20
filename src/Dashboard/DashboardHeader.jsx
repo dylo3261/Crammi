@@ -207,16 +207,13 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
     const batchName = recent.name;
     const batchID = recent.id;
     if(recent.type === 'Exams'){
-      navigate(`/Exam/${batchID}`, {state: {batchName, userProfile}});
+      navigate(`/exam/${batchID}`, {state: {batchName, userProfile}});
     }
     else if(recent.type === 'Quizzes'){
-      navigate(`/Quiz/${batchID}`, {state: {batchName, userProfile}});
+      navigate(`/quiz/${batchID}`, {state: {batchName, userProfile}});
     }
     else if(recent.type === 'Flashcards'){
-      navigate(`/Flashcards/${batchID}`, {state: {batchName, userProfile}});
-    }
-    else if(recent.type === 'Files'){
-      navigate(`/File/${batchID}`, {state: {batchName, userProfile}});
+      navigate(`/flashcards/${batchID}`, {state: {batchName, userProfile}});
     }
   };
 
@@ -311,7 +308,7 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
         <div className="logoutPopupContainer">
           <div className="logoutPopup" ref={logoutPopupRef}>
             <div className='logoutPopupPFP'>
-              <button className='PFPButtonPopup' onClick={()=>navigate('/Settings')}>
+              <button className='PFPButtonPopup' onClick={()=>navigate('/settings')}>
                 <img 
                   className='userPFPPopup' 
                   src={userPFP} 
@@ -328,12 +325,12 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
             </div>
             <div className='logoutPopupContent'>
               <div className='popupUpgradePlan'style={{display: userProfile.accountTier==="pro"? 'none': 'flex'}}>
-                <button className='bottomDashboardSideButtons' onClick={() => navigate('/Upgrade', { state: { userProfile: userProfile } })} style={{display: userProfile.accountTier==="pro"? 'none': 'flex'}}>
+                <button className='bottomDashboardSideButtons' onClick={() => navigate('/upgrade', { state: { userProfile: userProfile } })} style={{display: userProfile.accountTier==="pro"? 'none': 'flex'}}>
                   <img className='sidebarIcon' src='/starIcon.png' alt='Upgrade icon'/>
                   <span>Upgrade Plan</span>
                 </button>
               </div>
-              <button className='bottomDashboardSideButtons' onClick={() => navigate('/Support')} >
+              <button className='bottomDashboardSideButtons' onClick={() => navigate('/support')} >
                 <img className='sidebarIcon' src='/supportIcon.png' alt='Support icon'/>
                 <span>Support</span>
               </button>
@@ -365,7 +362,7 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
               <p className='accountTierDisplay'>{userProfile?.accountTier==='pro'? 'Pro Plan' : userProfile?.accountTier==='plus'? 'Plus Plan' : 'Free Plan'}</p>
             </div>
           </button>
-          <button className='upgradeButton' style={{display:userProfile?.accountTier==='pro'? 'none': 'block'}} onClick={() => navigate('/Upgrade', { state: { userProfile: userProfile } })}>
+          <button className='upgradeButton' style={{display:userProfile?.accountTier==='pro'? 'none': 'block'}} onClick={() => navigate('/upgrade', { state: { userProfile: userProfile } })}>
             Upgrade to Pro
           </button>
         </div>

@@ -75,7 +75,7 @@ export default function Hamburger({ userName, userEmail, userPFP, handleSignOut,
         <div className='dropdownLogOutSection'>
          
           
-          <button className='dropdownItem' onClick={() => navigate('/Support')}>
+          <button className='dropdownItem' onClick={() => navigate('/support')}>
             <img className='sidebarIcon' src='/supportIcon.png' alt='Support icon'/>
             <span>Support</span>
           </button>
@@ -89,7 +89,7 @@ export default function Hamburger({ userName, userEmail, userPFP, handleSignOut,
         {/* User Profile Section at Bottom */}
         <div className='dropdownProfileSection'>
           <div className='PFPWrapper'>
-            <button className='PFPButton' onClick={() => navigate('/Settings')} >
+            <button className='PFPButton' onClick={() => navigate('/settings')} >
               <img 
                 className='userPFP' 
                 src={userPFP} 
@@ -103,7 +103,7 @@ export default function Hamburger({ userName, userEmail, userPFP, handleSignOut,
                 <p className='accountTierDisplay'>Free Plan</p>
               </div>
             </button>
-            <button className='upgradeButton' onClick={() => navigate('/Upgrade', { state: { userProfile: userProfile } })}>
+            <button className='upgradeButton' onClick={() => navigate('/upgrade', { state: { userProfile: userProfile } })}>
               Upgrade to Pro
             </button>
           </div>

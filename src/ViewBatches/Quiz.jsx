@@ -834,9 +834,9 @@ export default function Quiz() {
                     userEmail={userEmail}
                     userPFP={userPFP}
                     handleSignOut={handleSignOut}
-                    onNavigateDashboard={() => navigate('/Dashboard')}
-                    onUpgradePlan={() => {navigate('/Upgrade', { state: { userProfile: userProfile } })}}
-                    onSupport={() => {navigate('/Support')}}
+                    onNavigateDashboard={() => navigate('/dashboard')}
+                    onUpgradePlan={() => {navigate('/upgrade', { state: { userProfile: userProfile } })}}
+                    onSupport={() => {navigate('/support')}}
                     showIgnoredButton={!!isIgnoredRequest}
                     isIgnoredRequest={isIgnoredRequest}
                 />
@@ -849,7 +849,7 @@ export default function Quiz() {
                     <button 
                         className='homeButton'
                         title="Dashboard"
-                        onClick={() => navigate('/Dashboard')}
+                        onClick={() => navigate('/dashboard')}
                     >
                         <img 
                             className='homeButtonIcon' 
@@ -862,7 +862,7 @@ export default function Quiz() {
                         className='collapsedSideButton'
                         title="Upgrade Plan"
                         style={{display: userProfile.accountTier==='pro'? 'none' : 'flex'}}
-                        onClick={()=>navigate('/Upgrade', { state: { userProfile: userProfile } })}
+                        onClick={()=>navigate('/upgrade', { state: { userProfile: userProfile } })}
                     >
                         <img 
                             className='collapsedSidebarIcon' 
@@ -918,7 +918,7 @@ export default function Quiz() {
                         <div className="logoutPopup" ref={logoutPopupRef}>
                             <div className='viewLogoutPopupPFP'>
                                 <div className='PFPWrapper'>
-                                    <button className='PFPButtonPopup' onClick={() => navigate('/Settings')}>
+                                    <button className='PFPButtonPopup' onClick={() => navigate('/settings')}>
                                         <img 
                                             className='userPFPPopup' 
                                             src={userPFP} 
@@ -937,7 +937,7 @@ export default function Quiz() {
                         
                             <div className='logoutPopupContent'>
                                 <div className='popupUpgradePlan'>
-                                    <button className='bottomDashboardSideButtons'style={{display: userProfile.accountTier==='pro'? 'none' : 'flex'}} onClick={()=>navigate('/Upgrade', { state: { userProfile: userProfile } })}
+                                    <button className='bottomDashboardSideButtons'style={{display: userProfile.accountTier==='pro'? 'none' : 'flex'}} onClick={()=>navigate('/upgrade', { state: { userProfile: userProfile } })}
                                     >
                                         <img className='sidebarIcon' src='/starIcon.png' alt='upgrade'/>
                                         <span>Upgrade Plan</span>

@@ -57,6 +57,11 @@ export default function LandingPage() {
     }
   };
 
+  const handleBlog=()=>{
+    if (typeof window !== 'undefined') {
+      navigate('/blog');
+    }
+  }
   const handleEmailSignIn = () => {
     if (typeof window !== 'undefined') {
       navigate('/signin');
@@ -195,6 +200,12 @@ export default function LandingPage() {
         <div className="header-box center-box">
           <a href="#how-it-works" className="centerBoxButtons">Product</a>
           <a href="#pricing" className="centerBoxButtons">Pricing</a>
+          <a onClick={ ()=>{
+             if (typeof window !== 'undefined') {
+              navigate('/blog');
+            }
+          } 
+          } className="centerBoxButtons">Blog</a>
         </div>
 
         {/* Right Buttons */}
@@ -216,7 +227,9 @@ export default function LandingPage() {
         <div ref={dropdownRef} className={`dropdown ${menuOpen ? "show" : ""}`}>
           <a href="#how-it-works">Product</a>
           <a href="#pricing">Pricing</a>
+          <a onClick={handleBlog}>Blog</a>
           <a onClick={handleEmailSignIn}>Log In</a>
+
         </div>
       </header>
 
@@ -245,7 +258,7 @@ export default function LandingPage() {
               className='bySigningUpSpan' 
               onClick={() => {
                 if (typeof window !== 'undefined') {
-                  navigate('/TermsOfService');
+                  navigate('/terms-of-service');
                 }
               }}
               style={{ cursor: 'pointer' }}
@@ -257,7 +270,7 @@ export default function LandingPage() {
               className='bySigningUpSpan'
               onClick={() => {
                 if (typeof window !== 'undefined') {
-                  navigate('/PrivacyPolicy');
+                  navigate('/privacy-policy');
                 }
               }}
               style={{ cursor: 'pointer' }}
@@ -490,6 +503,17 @@ export default function LandingPage() {
               <h4 className="footer-heading">Product</h4>
               <a href="#how-it-works" className="footer-link">Features</a>
               <a href="#pricing" className="footer-link">Pricing</a>
+              <a 
+                className="footer-link" 
+                style={{ cursor: 'pointer' }} 
+                onClick={() => {
+                  if (typeof window !== 'undefined') {
+                    navigate('/blog');
+                  }
+                }}
+                >
+            Blog
+            </a>          
             </div>
             <div className="footer-column">
               <h4 className="footer-heading">Company</h4>
@@ -498,7 +522,7 @@ export default function LandingPage() {
                 style={{ cursor: 'pointer' }} 
                 onClick={() => {
                   if (typeof window !== 'undefined') {
-                    navigate('/Support');
+                    navigate('/support');
                   }
                 }}
                 >
@@ -509,12 +533,12 @@ export default function LandingPage() {
               <h4 className="footer-heading">Legal</h4>
               <a style={{ cursor: 'pointer' }} onClick={() => {
                 if (typeof window !== 'undefined') {
-                  navigate('/PrivacyPolicy');
+                  navigate('/privacy-policy');
                 }
               }} className="footer-link">Privacy</a>
               <a style={{ cursor: 'pointer' }} onClick={() => {
                 if (typeof window !== 'undefined') {
-                  navigate('/TermsOfService');
+                  navigate('/terms-of-service');
                 }
               }} className="footer-link">Terms of Service</a>
             </div>

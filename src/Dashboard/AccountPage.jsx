@@ -92,7 +92,7 @@ export default function AccountPage(){
       const session = await fetchAuthSession();
       const token = session.tokens?.idToken?.toString();
       
-      const returnUrl = window.location.origin + '/Settings';
+      const returnUrl = window.location.origin + '/settings';
       
       const response = await fetch('https://js065tswp1.execute-api.us-west-2.amazonaws.com/billing', {
         method: 'POST',
@@ -159,7 +159,7 @@ export default function AccountPage(){
   };
 
   const handleResetPassword = () => {
-    navigate('/ForgotPassword');
+    navigate('/forgot-password');
   };
 
   const handleDeleteAccount = async () => {
@@ -288,7 +288,7 @@ export default function AccountPage(){
             className="crammi-settings-nav-item"
             onClick={()=>{
               setMobileMenuOpen(false);
-              navigate('/Dashboard');
+              navigate('/dashboard');
             }}
           >
             ← Back to Dashboard
@@ -442,7 +442,7 @@ export default function AccountPage(){
                   {userProfile?.accountTier?.toLowerCase() === 'plus' && (
                     <button 
                       className="crammi-upgrade-button-large"
-                      onClick={() => navigate('/Upgrade', { state: { userProfile: userProfile } })}
+                      onClick={() => navigate('/upgrade', { state: { userProfile: userProfile } })}
                     >
                       ⭐ Upgrade to Pro
                     </button>
@@ -464,7 +464,7 @@ export default function AccountPage(){
               ) : (
                 <button 
                   className="crammi-upgrade-button-large"
-                  onClick={() => navigate('/Upgrade', { state: { userProfile: userProfile } })}               
+                  onClick={() => navigate('/upgrade', { state: { userProfile: userProfile } })}               
                 >
                   ⭐ Upgrade to Pro
                 </button>

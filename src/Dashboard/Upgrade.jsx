@@ -99,7 +99,7 @@ export default function Upgrade() {
       // If action is 'modified', show success and refresh
       if (data.action === 'modified') {
         setShowConfirmation(false);
-        navigate(`/Success/${data.newPlan}`);
+        navigate(`/success/${data.newPlan}`);
         return;
       }
       
@@ -239,7 +239,7 @@ export default function Upgrade() {
         </div>
       )}
 
-      <button className="back-button" onClick={() => navigate('/Dashboard')}>
+      <button className="back-button" onClick={() => navigate('/dashboard')}>
         ← 
       </button>
       

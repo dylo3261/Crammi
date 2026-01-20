@@ -67,7 +67,7 @@ export default function SignUp() {
         
         try {
           await getCurrentUser();
-          navigate('/Dashboard');
+          navigate('/dashboard');
         } catch {
           setError('An account with this email already exists or was deleted recently. Please sign in with your email and password. If your account was recently deleted, please wait 7 days from the deletion date.');
         }
@@ -298,7 +298,7 @@ export default function SignUp() {
             By signing up, you agree to our{' '}
             <span 
               className='bySigningUpSpan' 
-              onClick={() => navigate('/TermsOfService')}
+              onClick={() => navigate('/terms-of-service')}
               style={{ cursor: 'pointer' }}
             >
               Terms of service
@@ -306,7 +306,7 @@ export default function SignUp() {
             {' '}and{' '}
             <span 
               className='bySigningUpSpan'
-              onClick={() => navigate('/PrivacyPolicy')}
+              onClick={() => navigate('/privacy-policy')}
               style={{ cursor: 'pointer' }}
             >
               Privacy Policy.

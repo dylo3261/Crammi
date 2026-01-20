@@ -78,7 +78,7 @@ export default function Success() {
           </ul>
         </div>
 
-        <button className="dashboard-button" onClick={() => navigate('/Dashboard')}>
+        <button className="dashboard-button" onClick={() => navigate('/dashboard')}>
           Go to Dashboard →
         </button>
 
