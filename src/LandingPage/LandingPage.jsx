@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './LandingPage.css';
 import { signInWithRedirect } from 'aws-amplify/auth';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 export default function LandingPage() {
   const navigate = typeof window !== 'undefined' ? useNavigate() : () => {};
@@ -57,11 +57,7 @@ export default function LandingPage() {
     }
   };
 
-  const handleBlog=()=>{
-    if (typeof window !== 'undefined') {
-      navigate('/blog');
-    }
-  }
+ 
   const handleEmailSignIn = () => {
     if (typeof window !== 'undefined') {
       navigate('/signin');
@@ -200,20 +196,16 @@ export default function LandingPage() {
         <div className="header-box center-box">
           <a href="#how-it-works" className="centerBoxButtons">Product</a>
           <a href="#pricing" className="centerBoxButtons">Pricing</a>
-          <a onClick={ ()=>{
-             if (typeof window !== 'undefined') {
-              navigate('/blog');
-            }
-          } 
-          } className="centerBoxButtons">Blog</a>
+          <a href="/blog" className="centerBoxButtons">Blog</a>
+
         </div>
 
         {/* Right Buttons */}
         <div className="header-box right-box">
-          <button className="header-btn headerButton" onClick={handleEmailSignIn}>Log In</button>
-          <button onClick={handleEmailSignUp} className="header-btn outline">
-            <span className='useCrammi'>Use Crammi, </span> It's Free
-          </button>
+        <a href="/signin" className="header-btn headerButton">Log In</a>          
+        <a href="/signup" className="header-btn outline">
+          <span className='useCrammi'>Use Crammi, </span> It's Free
+        </a>
         </div>
 
         {/* Hamburger */}
@@ -227,7 +219,7 @@ export default function LandingPage() {
         <div ref={dropdownRef} className={`dropdown ${menuOpen ? "show" : ""}`}>
           <a href="#how-it-works">Product</a>
           <a href="#pricing">Pricing</a>
-          <a onClick={handleBlog}>Blog</a>
+          <a href='/blog'>Blog</a>
           <a onClick={handleEmailSignIn}>Log In</a>
 
         </div>
@@ -252,32 +244,16 @@ export default function LandingPage() {
               Sign Up with Google
             </button>
           </div>
-            <p className='bySigningUp'>
-            By signing up, you agree to our{' '}
-            <span 
-              className='bySigningUpSpan' 
-              onClick={() => {
-                if (typeof window !== 'undefined') {
-                  navigate('/terms-of-service');
-                }
-              }}
-              style={{ cursor: 'pointer' }}
-            >
-              Terms of service
-            </span>
-            {' '}and{' '}
-            <span 
-              className='bySigningUpSpan'
-              onClick={() => {
-                if (typeof window !== 'undefined') {
-                  navigate('/privacy-policy');
-                }
-              }}
-              style={{ cursor: 'pointer' }}
-            >
-              Privacy Policy.
-            </span>
-          </p>        
+          <p className='bySigningUp'>
+          By signing up, you agree to our{' '}
+          <a href="/terms-of-service" className='bySigningUpSpan'>
+            Terms of service
+          </a>
+          {' '}and{' '}
+          <a href="/privacy-policy" className='bySigningUpSpan'>
+            Privacy Policy.
+          </a>
+        </p>
       </div>
         <div className="box hero-visual-box">
           <div className="floating-card card-1">
@@ -491,62 +467,34 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer className="footer">
-        <div className="footer-content">
-          <div className="footer-brand">
-            <div className="logo">
-             <img className='landingPageLogo'src='/CrammiFinalUppercase.png'/>
-            </div>
-            <p className="footer-tagline">Study smarter, not harder</p>
+      <div className="footer-content">
+        <div className="footer-brand">
+          <div className="logo">
+            <img className='landingPageLogo' src='/CrammiFinalUppercase.png' alt="Crammi Logo" />
           </div>
-          <div className="footer-links">
-            <div className="footer-column">
-              <h4 className="footer-heading">Product</h4>
-              <a href="#how-it-works" className="footer-link">Features</a>
-              <a href="#pricing" className="footer-link">Pricing</a>
-              <a 
-                className="footer-link" 
-                style={{ cursor: 'pointer' }} 
-                onClick={() => {
-                  if (typeof window !== 'undefined') {
-                    navigate('/blog');
-                  }
-                }}
-                >
-            Blog
-            </a>          
-            </div>
-            <div className="footer-column">
-              <h4 className="footer-heading">Company</h4>
-              <a 
-                className="footer-link" 
-                style={{ cursor: 'pointer' }} 
-                onClick={() => {
-                  if (typeof window !== 'undefined') {
-                    navigate('/support');
-                  }
-                }}
-                >
-            Contact
-            </a>           
-             </div>
-            <div className="footer-column">
-              <h4 className="footer-heading">Legal</h4>
-              <a style={{ cursor: 'pointer' }} onClick={() => {
-                if (typeof window !== 'undefined') {
-                  navigate('/privacy-policy');
-                }
-              }} className="footer-link">Privacy</a>
-              <a style={{ cursor: 'pointer' }} onClick={() => {
-                if (typeof window !== 'undefined') {
-                  navigate('/terms-of-service');
-                }
-              }} className="footer-link">Terms of Service</a>
-            </div>
+          <p className="footer-tagline">Study smarter, not harder</p>
+        </div>
+        <div className="footer-links">
+          <div className="footer-column">
+            <h4 className="footer-heading">Product</h4>
+            <a href="#how-it-works" className="footer-link">Features</a>
+            <a href="#pricing" className="footer-link">Pricing</a>
+            <a href="/blog" className="footer-link">Blog</a>
+          </div>
+          <div className="footer-column">
+            <h4 className="footer-heading">Company</h4>
+            <a href="/support" className="footer-link">Contact</a>
+          </div>
+          <div className="footer-column">
+            <h4 className="footer-heading">Legal</h4>
+            <a href="/privacy-policy" className="footer-link">Privacy</a>
+            <a href="/terms-of-service" className="footer-link">Terms of Service</a>
           </div>
         </div>
-        <div className="footer-bottom">
-          <p>© 2026 Crammi. All rights reserved.</p>
-        </div>
+      </div>
+      <div className="footer-bottom">
+        <p>© 2026 Crammi. All rights reserved.</p>
+      </div>
       </footer>
     </div>
   );

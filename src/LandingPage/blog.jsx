@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './Blog.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,Link } from 'react-router-dom';
 import { blogPosts, getPostsByCategory, getFeaturedPost } from './blogPosts';
 
 const Blog = () => {
@@ -53,24 +53,22 @@ const Blog = () => {
     <div className="blog-page">
       {/* Header */}
       <header className={`blog-header ${scrolled ? "blog-header-scrolled" : ""}`}>
-        <div className="blog-header-box blog-header-left">
-          <img 
-            className='blog-logo-image' 
-            src='/CrammiFinalUppercase.png' 
-            alt="Crammi Logo" 
-            style={{ cursor: 'pointer' }}
-            onClick={handleHome}
-          />
-        </div>
+      <a  href="/" className="blog-header-box blog-header-left">
+        <img 
+          className='blog-logo-image' 
+          src='/CrammiFinalUppercase.png' 
+          alt="Crammi Logo" 
+        />
+      </a>
 
         <div className="blog-header-box blog-header-center">
-          <a onClick={handleHome} className="blog-nav-link">Home</a>
-          <a href="#featured" className="blog-nav-link">Featured</a>
+        <a  href="/" className="blog-nav-link">Home</a>
+        <a href="#featured" className="blog-nav-link">Featured</a>
           <a href="#articles" className="blog-nav-link">Articles</a>
         </div>
 
         <div className="blog-header-box blog-header-right">
-          <button onClick={handleEmailSignIn} className="blog-header-btn blog-header-btn-login">Log In</button>
+        <a href="/signin" className="header-btn headerButton">Log In</a>          
           <button className="blog-header-btn blog-header-btn-signup" onClick={handleEmailSignUp}>
             Use Crammi, It's Free
           </button>
@@ -124,11 +122,10 @@ const Blog = () => {
         <section id="featured" className="blog-featured-section">
           <div className="blog-featured-container">
             <div className="blog-featured-badge">Featured Article</div>
-            <div 
-              className="blog-featured-post" 
-              onClick={() => handleArticleClick(featuredPost.slug)}
-              style={{ cursor: 'pointer' }}
-            >
+             <a 
+                href={`/blog/${featuredPost.slug}`}
+                className="blog-featured-post"
+              >
               <div className="blog-featured-image-wrapper">
                 <img src={featuredPost.image} alt={featuredPost.title} className="blog-featured-image" />
                 <div className="blog-featured-category-badge">{featuredPost.category}</div>
@@ -151,7 +148,7 @@ const Blog = () => {
                   <span className="blog-arrow">→</span>
                 </button>
               </div>
-            </div>
+            </a>
           </div>
         </section>
       )}
@@ -162,12 +159,11 @@ const Blog = () => {
           {regularPosts.length > 0 ? (
             <div className="blog-grid">
               {regularPosts.map(post => (
-                <article 
-                  key={post.id} 
-                  className="blog-card"
-                  onClick={() => handleArticleClick(post.slug)}
-                  style={{ cursor: 'pointer' }}
-                >
+                <a 
+                key={post.id}  
+                href={`/blog/${post.slug}`}
+                className="blog-card"
+              >
                   <div className="blog-card-image-wrapper">
                     <img src={post.image} alt={post.title} className="blog-card-image" />
                     <div className="blog-card-category">{post.category}</div>
@@ -190,7 +186,7 @@ const Blog = () => {
                       </button>
                     </div>
                   </div>
-                </article>
+                </a>
               ))}
             </div>
           ) : (
@@ -230,21 +226,21 @@ const Blog = () => {
             <p className="blog-footer-tagline">Study smarter, not harder</p>
           </div>
           <div className="blog-footer-links">
-            <div className="blog-footer-column">
-              <h4 className="blog-footer-heading">Product</h4>
-              <a href="/#how-it-works" className="blog-footer-link">Features</a>
-              <a href="/#pricing" className="blog-footer-link">Pricing</a>
-              <a href="/blog" className="blog-footer-link">Blog</a>
-            </div>
-            <div className="blog-footer-column">
-              <h4 className="blog-footer-heading">Company</h4>
-              <a href="/support" className="blog-footer-link">Contact</a>
-            </div>
-            <div className="blog-footer-column">
-              <h4 className="blog-footer-heading">Legal</h4>
-              <a href="/privacy-policy" className="blog-footer-link">Privacy</a>
-              <a href="/terms-of-service" className="blog-footer-link">Terms of Service</a>
-            </div>
+          <div className="blog-footer-column">
+            <h4 className="blog-footer-heading">Product</h4>
+            <a href="/#how-it-works" className="blog-footer-link">Features</a>
+            <a href="/#pricing" className="blog-footer-link">Pricing</a>
+            <a href="/blog" className="blog-footer-link">Blog</a>
+          </div>
+          <div className="blog-footer-column">
+            <h4 className="blog-footer-heading">Company</h4>
+            <a href="/support" className="blog-footer-link">Contact</a>
+          </div>
+          <div className="blog-footer-column">
+            <h4 className="blog-footer-heading">Legal</h4>
+            <a href="/privacy-policy" className="blog-footer-link">Privacy</a>
+            <a href="/terms-of-service" className="blog-footer-link">Terms of Service</a>
+          </div>
           </div>
         </div>
         <div className="blog-footer-bottom">

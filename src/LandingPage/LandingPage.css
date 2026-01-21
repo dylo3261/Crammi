@@ -366,6 +366,7 @@
   }
   .bySigningUpSpan{
     color: #AB9FF2;
+    text-decoration: none;
   }
   .bySigningUpSpan:hover{
     color: #9f8ff9;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { fetchAuthSession, fetchUserAttributes, signOut } from 'aws-amplify/auth';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import "./Quiz.css";
 import ViewHamburger from "./ViewHamburger";
 import LoadingAnimation from "../Dashboard/LoadingScreen";
@@ -862,18 +862,19 @@ export default function Quiz() {
                         />
                     </button>
                     
-                    <button 
-                        className='collapsedSideButton'
-                        title="Upgrade Plan"
-                        style={{display: userProfile.accountTier==='pro'? 'none' : 'flex'}}
-                        onClick={()=>navigate('/upgrade', { state: { userProfile: userProfile } })}
+                    <Link 
+                    to="/upgrade"
+                    state={{ userProfile: userProfile }}
+                    className='collapsedSideButton'
+                    title="Upgrade Plan"
+                    style={{display: userProfile.accountTier==='pro'? 'none' : 'flex'}}
                     >
-                        <img 
-                            className='collapsedSidebarIcon' 
-                            src='/starIcon.png' 
-                            alt='upgrade icon'
-                        />
-                    </button>
+                    <img 
+                        className='collapsedSidebarIcon' 
+                        src='/starIcon.png' 
+                        alt='upgrade icon'
+                    />
+                    </Link>
                     
                     {isIgnoredRequest && (
                         <button 
@@ -922,39 +923,43 @@ export default function Quiz() {
                         <div className="logoutPopup" ref={logoutPopupRef}>
                             <div className='viewLogoutPopupPFP'>
                                 <div className='PFPWrapper'>
-                                    <button className='PFPButtonPopup' onClick={() => navigate('/settings')}>
-                                        <img 
-                                            className='userPFPPopup' 
-                                            src={userPFP} 
-                                            alt='profile'
-                                            onError={(e) => {
-                                                e.target.src = "/crammipink.png";
-                                            }}
-                                        />
-                                        <div>
-                                            <span className='userNameText'>{userName}</span>
-                                            <p className='accountEmailDisplayPopup'>{userEmail}</p>
-                                        </div>
-                                    </button>
+                                <Link to="/settings" className='PFPButtonPopup'>
+                                <img 
+                                    className='userPFPPopup' 
+                                    src={userPFP} 
+                                    alt='profile picture'
+                                    onError={(e) => {
+                                    e.target.src = "/crammipink.png";
+                                    }}
+                                />
+                                <div>
+                                    <span className='userNameText'>{userName}</span>
+                                    <p className='accountEmailDisplayPopup'>{userEmail}</p>
+                                </div>
+                                </Link>
                                 </div>
                             </div>
                         
                             <div className='logoutPopupContent'>
-                                <div className='popupUpgradePlan'>
-                                    <button className='bottomDashboardSideButtons'style={{display: userProfile.accountTier==='pro'? 'none' : 'flex'}} onClick={()=>navigate('/upgrade', { state: { userProfile: userProfile } })}
-                                    >
-                                        <img className='sidebarIcon' src='/starIcon.png' alt='upgrade'/>
-                                        <span>Upgrade Plan</span>
-                                    </button>
-                                </div>
-                                <button className='bottomDashboardSideButtons'>
-                                    <img className='sidebarIcon' src='/supportIcon.png' alt='support'/>
-                                    <span>Support</span>
-                                </button>
-                                <button className='bottomDashboardSideButtons' onClick={handleSignOut}>
-                                    <img className='sidebarIcon' src='/signOutIcon.png' alt='logout'/>
-                                    <span>Sign Out</span>
-                                </button>
+                            <div className='popupUpgradePlan'>
+                            <Link 
+                                to="/upgrade" 
+                                state={{ userProfile: userProfile }}
+                                className='bottomDashboardSideButtons' 
+                                style={{display: userProfile.accountTier==='pro'? 'none' : 'flex'}}
+                            >
+                                <img className='sidebarIcon' src='/starIcon.png' alt='Upgrade icon'/>
+                                <span>Upgrade Plan</span>
+                            </Link>
+                            </div>
+                            <Link to="/support" className='bottomDashboardSideButtons'>
+                            <img className='sidebarIcon' src='/supportIcon.png' alt='Support icon'/>
+                            <span>Support</span>
+                            </Link>
+                            <button className='bottomDashboardSideButtons' onClick={handleSignOut}>
+                            <img className='sidebarIcon' src='/signOutIcon.png' alt='Logout icon'/>
+                            <span>Sign Out</span>
+                            </button>
                             </div>
                         </div>
                     </div>

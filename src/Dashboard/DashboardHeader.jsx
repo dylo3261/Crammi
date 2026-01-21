@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Hamburger from "./Hamburger.jsx";
 import { signOut } from 'aws-amplify/auth';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { fetchUserAttributes } from 'aws-amplify/auth';
 import { fetchAuthSession } from 'aws-amplify/auth';
 import BatchesSection from "./BatchesSection.jsx";
@@ -308,32 +308,37 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
         <div className="logoutPopupContainer">
           <div className="logoutPopup" ref={logoutPopupRef}>
             <div className='logoutPopupPFP'>
-              <button className='PFPButtonPopup' onClick={()=>navigate('/settings')}>
-                <img 
-                  className='userPFPPopup' 
-                  src={userPFP} 
-                  alt='profile picture'
-                  onError={(e) => {
-                    e.target.src = "/crammipink.png";
-                  }}
-                />
-                <div>
-                  <span className='userNameText'>{userName}</span>
-                  <p className='accountEmailDisplayPopup'>{userEmail}</p>
-                </div>
-              </button>
+            <Link to="/settings" className='PFPButtonPopup'>
+            <img 
+              className='userPFPPopup' 
+              src={userPFP} 
+              alt='profile picture'
+              onError={(e) => {
+                e.target.src = "/crammipink.png";
+              }}
+            />
+            <div>
+              <span className='userNameText'>{userName}</span>
+              <p className='accountEmailDisplayPopup'>{userEmail}</p>
+            </div>
+          </Link>
             </div>
             <div className='logoutPopupContent'>
               <div className='popupUpgradePlan'style={{display: userProfile.accountTier==="pro"? 'none': 'flex'}}>
-                <button className='bottomDashboardSideButtons' onClick={() => navigate('/upgrade', { state: { userProfile: userProfile } })} style={{display: userProfile.accountTier==="pro"? 'none': 'flex'}}>
-                  <img className='sidebarIcon' src='/starIcon.png' alt='Upgrade icon'/>
-                  <span>Upgrade Plan</span>
-                </button>
+              <Link 
+              to="/upgrade" 
+              state={{ userProfile: userProfile }}
+              className='bottomDashboardSideButtons' 
+              style={{display: userProfile.accountTier==="pro"? 'none': 'flex'}}
+            >
+              <img className='sidebarIcon' src='/starIcon.png' alt='Upgrade icon'/>
+              <span>Upgrade Plan</span>
+            </Link>
               </div>
-              <button className='bottomDashboardSideButtons' onClick={() => navigate('/support')} >
+              <Link to="/support" className='bottomDashboardSideButtons'>
                 <img className='sidebarIcon' src='/supportIcon.png' alt='Support icon'/>
                 <span>Support</span>
-              </button>
+              </Link>
               <button className='bottomDashboardSideButtons' onClick={handleSignOut}>
                 <img className='sidebarIcon' src='/signOutIcon.png' alt='Logout icon'/>
                 <span>Sign Out</span>
@@ -362,9 +367,14 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
               <p className='accountTierDisplay'>{userProfile?.accountTier==='pro'? 'Pro Plan' : userProfile?.accountTier==='plus'? 'Plus Plan' : 'Free Plan'}</p>
             </div>
           </button>
-          <button className='upgradeButton' style={{display:userProfile?.accountTier==='pro'? 'none': 'block'}} onClick={() => navigate('/upgrade', { state: { userProfile: userProfile } })}>
+          <Link 
+            to="/upgrade" 
+            state={{ userProfile: userProfile }}
+            className='upgradeButton' 
+            style={{display:userProfile?.accountTier==='pro'? 'none': 'block'}}
+          >
             Upgrade to Pro
-          </button>
+          </Link>
         </div>
       </div>
     </>

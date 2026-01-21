@@ -3,7 +3,25 @@
 /* ========================= */
 /* Blog Article Page */
 /* ========================= */
+/* Remove underlines from all Link components in blog article */
+.blog-page a,
+a.blog-nav-link,
+a.blog-breadcrumb-link,
+a.blog-back-btn,
+a.blog-footer-link,
+a.blog-featured-read-btn {
+  text-decoration: none;
+}
 
+/* Ensure no underline on hover */
+.blog-page a:hover,
+a.blog-nav-link:hover,
+a.blog-breadcrumb-link:hover,
+a.blog-back-btn:hover,
+a.blog-footer-link:hover,
+a.blog-featured-read-btn:hover {
+  text-decoration: none;
+}
 .blog-article {
     max-width: 800px;
     margin: 0 auto;

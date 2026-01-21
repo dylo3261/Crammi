@@ -24,7 +24,12 @@ html, body {
   filter: brightness(0) invert(1);
 
 }
-
+a.bottomDashboardSideButtons {
+  text-decoration: none;
+}
+a.PFPButtonPopup {
+  text-decoration: none;
+}
 .dashboardLogoSidebar{
   height: 45px;
   width: auto;
@@ -299,6 +304,9 @@ html, body {
   transition: all 0.3s ease;
   box-shadow: 0 2px 8px rgba(171, 159, 242, 0.3);
   margin-top: 1rem;
+  text-decoration: none; /* Remove underline */
+  text-align: center; /* Center the text */
+  display: block; /* Make it behave like a button */
 }
 
 .upgradeButton::before {
@@ -309,7 +317,6 @@ html, body {
   transform: translateY(-2px);
   box-shadow: 0 4px 15px rgba(171, 159, 242, 0.4);
 }
-
 /* LOGOUT POPUP */
 .logoutPopupContainer {
   position: fixed;

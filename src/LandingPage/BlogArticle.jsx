@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { getPostBySlug } from './blogPosts';
 import './BlogArticle.css';
 
@@ -35,20 +35,18 @@ const BlogArticle = ({ slug: slugProp }) => {
     <div className="blog-page">
       {/* Header */}
       <header className={`blog-header ${scrolled ? "blog-header-scrolled" : ""}`}>
-        <div className="blog-header-box blog-header-left">
-          <img 
-            className='blog-logo-image' 
-            src='/CrammiFinalUppercase.png' 
-            alt="Crammi Logo" 
-            style={{ cursor: 'pointer' }}
-            onClick={() => handleNavigation('/')}
-          />
-        </div>
+      <a href="/" className="blog-header-box blog-header-left">
+        <img 
+          className='blog-logo-image' 
+          src='/CrammiFinalUppercase.png' 
+          alt="Crammi Logo" 
+        />
+      </a>
 
-        <div className="blog-header-box blog-header-center">
-          <a onClick={() => handleNavigation('/')} className="blog-nav-link">Home</a>
-          <a onClick={() => handleNavigation('/blog')} className="blog-nav-link">Blog</a>
-        </div>
+            <div className="blog-header-box blog-header-center">
+            <a href="/" className="blog-nav-link">Home</a>
+            <a href="/blog" className="blog-nav-link">Blog</a>
+          </div>
 
         <div className="blog-header-box blog-header-right">
           <button onClick={() => handleNavigation('/signin')} className="blog-header-btn blog-header-btn-login">Log In</button>
@@ -73,11 +71,11 @@ const BlogArticle = ({ slug: slugProp }) => {
       {/* Article Header */}
       <article className="blog-article">
         <div className="blog-article-header">
-          <div className="blog-article-breadcrumb">
-            <a onClick={() => handleNavigation('/blog')} className="blog-breadcrumb-link">Blog</a>
-            <span className="blog-breadcrumb-separator">›</span>
-            <span className="blog-breadcrumb-current">{post.category}</span>
-          </div>
+        <div className="blog-article-breadcrumb">
+        <a href="/blog" className="blog-breadcrumb-link">Blog</a>
+        <span className="blog-breadcrumb-separator">›</span>
+        <span className="blog-breadcrumb-current">{post.category}</span>
+      </div>
           
           <h1 className="blog-article-title">{post.title}</h1>
           
@@ -139,23 +137,22 @@ const BlogArticle = ({ slug: slugProp }) => {
             <p className="blog-footer-tagline">Study smarter, not harder</p>
           </div>
           <div className="blog-footer-links">
-            <div className="blog-footer-column">
-            <h4 className="blog-footer-heading">Product</h4>
-              <a onClick={() => handleNavigation('/#how-it-works')} className="blog-footer-link" style={{ cursor: 'pointer' }}>Features</a>
-              <a onClick={() => handleNavigation('/#pricing')} className="blog-footer-link" style={{ cursor: 'pointer' }}>Pricing</a>
-              <a onClick={() => handleNavigation('/blog')} className="blog-footer-link" style={{ cursor: 'pointer' }}>Blog</a>
-
-            </div>
-            <div className="blog-footer-column">
-              <h4 className="blog-footer-heading">Company</h4>
-              <a onClick={() => handleNavigation('/support')} className="blog-footer-link" style={{ cursor: 'pointer' }}>Contact</a>
-            </div>
-            <div className="blog-footer-column">
-              <h4 className="blog-footer-heading">Legal</h4>
-              <a onClick={() => handleNavigation('/privacy-policy')} className="blog-footer-link" style={{ cursor: 'pointer' }}>Privacy</a>
-              <a onClick={() => handleNavigation('/terms-of-service')} className="blog-footer-link" style={{ cursor: 'pointer' }}>Terms of Service</a>
-            </div>
-          </div>
+        <div className="blog-footer-column">
+          <h4 className="blog-footer-heading">Product</h4>
+          <a href="/#how-it-works" className="blog-footer-link">Features</a>
+          <a href="/#pricing" className="blog-footer-link">Pricing</a>
+          <a href="/blog" className="blog-footer-link">Blog</a>
+        </div>
+        <div className="blog-footer-column">
+          <h4 className="blog-footer-heading">Company</h4>
+          <a href="/support" className="blog-footer-link">Contact</a>
+        </div>
+        <div className="blog-footer-column">
+          <h4 className="blog-footer-heading">Legal</h4>
+          <a href="/privacy-policy" className="blog-footer-link">Privacy</a>
+          <a href="/terms-of-service" className="blog-footer-link">Terms of Service</a>
+        </div>
+      </div>
         </div>
         <div className="blog-footer-bottom">
           <p>© 2026 Crammi. All rights reserved.</p>

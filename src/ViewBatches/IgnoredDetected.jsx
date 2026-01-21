@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export default function IgnoredDetected({ isDetected }) {
   const [isClosing, setIsClosing] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const navigate = useNavigate();
   
-  const handleUpgrade = () => {
-    navigate('/upgrade');
-  };
-
+  
   // Check if isDetected contains upgrade-related keywords
   const shouldShowUpgrade = () => {
     if (!isDetected || typeof isDetected !== 'string') return false;
@@ -43,16 +39,16 @@ export default function IgnoredDetected({ isDetected }) {
         <div className="errorTextWrapper">
           <h3 className="errorTitle">Ignored Special Instructions</h3>
           <p className="errorMessage">
-            {isDetected}{' '}
-            {shouldShowUpgrade() && (
-              <span
-                onClick={handleUpgrade}
-                style={{ textDecoration: 'underline', color: '#ab9ff2', cursor: 'pointer' }}
-              >
-                Upgrade Plan Now ⭐
-              </span>
-            )}
-          </p>
+          {isDetected}{' '}
+          {shouldShowUpgrade() && (
+            <Link
+              to="/upgrade"
+              style={{ textDecoration: 'underline', color: '#ab9ff2', cursor: 'pointer' }}
+            >
+              Upgrade Plan Now ⭐
+            </Link>
+          )}
+        </p>
         </div>
         <button 
           className="errorCloseButton"

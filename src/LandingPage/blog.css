@@ -7,7 +7,10 @@
     background: #f8f9fa;
     min-height: 100vh;
   }
-  
+  /* Remove all default link underlines in blog */
+.blog-page a {
+  text-decoration: none;
+}
   /* ========================= */
   /* Blog Header */
   /* ========================= */
