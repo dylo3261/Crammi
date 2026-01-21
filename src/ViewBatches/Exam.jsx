@@ -4,6 +4,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import "./Exam.css";
 import ViewHamburger from "./ViewHamburger";
 import LoadingAnimation from "../Dashboard/LoadingScreen";
+import IgnoredDetected from "./IgnoredDetected";
 // Load KaTeX once globally
 let katexLoaded = false;
 let katexLoadingPromise = null;
@@ -632,7 +633,7 @@ export default function Exam() {
     const [isScorePage, setIsScorePage] = useState(false);
     const [examResults, setExamResults] = useState(null);
 
-    const userProfile = location.state?.userProfile;
+    const userProfile = location.state?.userProfile || { accountTier: 'free' };
 
 
     const handleStartExam = () => {
@@ -916,7 +917,9 @@ export default function Exam() {
 
     return (
         <>  
-            
+            {isIgnoredRequest ? <IgnoredDetected 
+            isDetected={isIgnoredRequest}
+            /> : null}
             {!isExamStarted && !isScorePage ?  (
                 <>
                 <div className='DashboardHeader'>
@@ -974,7 +977,7 @@ export default function Exam() {
                                     }}
                                 >
                                     <img 
-                                        className='collapsedSidebarIcon' 
+                                        className='collapsedSidebarIcon ignoredIcon' 
                                         src='/ignoredIcon.png' 
                                         alt='ignored instructions icon'
                                     />
@@ -1186,7 +1189,7 @@ export default function Exam() {
                                     }}
                                 >
                                     <img 
-                                        className='collapsedSidebarIcon' 
+                                        className='collapsedSidebarIcon ignoredIcon' 
                                         src='/ignoredIcon.png' 
                                         alt='ignored instructions icon'
                                     />
@@ -1326,7 +1329,7 @@ export default function Exam() {
                                     }}
                                 >
                                     <img 
-                                        className='collapsedSidebarIcon' 
+                                        className='collapsedSidebarIcon ignoredIcon' 
                                         src='/ignoredIcon.png' 
                                         alt='ignored instructions icon'
                                     />

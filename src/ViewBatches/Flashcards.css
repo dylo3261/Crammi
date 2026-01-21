@@ -363,6 +363,9 @@
     z-index: 3000;
   }
   
+/* .ignoredIcon{
+  filter: brightness(0) saturate(100%) invert(16%) sepia(100%) saturate(7471%) hue-rotate(0deg) brightness(103%) contrast(119%)!important; 
+} */
   .ignoredPopup {
     background-color: white;
     border: 1px solid #d9d9d9;

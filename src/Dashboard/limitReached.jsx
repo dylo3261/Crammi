@@ -5,7 +5,7 @@ import './limitReached.css';
 
 export default function LimitReached({ isLimitReached, setIsLimitReached, limitReachedMessage, userProfile }) {
   const [isClosing, setIsClosing] = React.useState(false);
-  const [userTier,setUserTier]=useState('5/5');
+  const [userTier,setUserTier]=useState('3/3');
   useEffect(()=>{
     if(userProfile?.accountTier==='pro'||userProfile?.accountTier==='plus'){
       setUserTier('20/20')

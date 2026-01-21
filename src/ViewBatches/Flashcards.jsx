@@ -4,7 +4,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import ViewHamburger from "./ViewHamburger";
 import "./Flashcards.css";
 import LoadingAnimation from "../Dashboard/LoadingScreen";
-
+import IgnoredDetected from "./IgnoredDetected";
 // Load KaTeX once globally
 let katexLoaded = false;
 let katexLoadingPromise = null;
@@ -148,8 +148,7 @@ export default function Flashcards() {
   const ignoredButtonRef = useRef(null);
   const profileButtonRef = useRef(null);
 
-  const userProfile = location.state?.userProfile;
-
+  const userProfile = location.state?.userProfile || { accountTier: 'free' };
   // Memoize current card to prevent unnecessary re-renders
   const currentCard = useMemo(() => {
     return batchJSON?.[currentIndex];
@@ -433,6 +432,9 @@ export default function Flashcards() {
 
   return (
     <>
+    {isIgnoredRequest ? <IgnoredDetected 
+                isDetected={isIgnoredRequest}
+                /> : null}
       <div className='flashcardDashboardHeader'>
         <div className="flashcardMobileHamburger">
           <ViewHamburger 
@@ -480,7 +482,7 @@ export default function Flashcards() {
               }}
             >
               <img 
-                className='collapsedSidebarIcon' 
+                className='collapsedSidebarIcon ignoredIcon' 
                 src='/ignoredIcon.png' 
                 alt='warning icon'
               />

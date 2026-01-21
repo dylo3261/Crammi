@@ -30,9 +30,31 @@ export default function Upgrade() {
   const [loadingPlan, setLoadingPlan] = useState(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [confirmationDetails, setConfirmationDetails] = useState(null);
+  const [userProfile, setUserProfile] = useState(null);
 
   const location = useLocation();
-  const userProfile = location.state?.userProfile;
+  const stateUserProfile = location.state?.userProfile;
+
+  // Fetch user profile every time
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const session = await fetchAuthSession();
+        const token = session.tokens?.idToken?.toString();
+  
+        const response = await fetch('https://gwq0u2sdai.execute-api.us-west-2.amazonaws.com/prod/profile', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+  
+        const data = await response.json();
+        setUserProfile(data);
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      }
+    };
+  
+    fetchUserProfile();
+  }, []);
 
   const handleUpgrade = async (planId, billingCycle) => {
     // Block downgrades - Pro users can't click Plus button
@@ -94,7 +116,7 @@ export default function Upgrade() {
       }
 
       const data = await response.json();
-      console.log('Lambda response:', data); // Add this to debug
+      console.log('Lambda response:', data);
       
       // If action is 'modified', show success and refresh
       if (data.action === 'modified') {
@@ -133,7 +155,10 @@ export default function Upgrade() {
     processUpgrade(confirmationDetails.planId, confirmationDetails.billingCycle);
   };
 
+  // Update tier states when userProfile changes
   useEffect(() => {
+    if (!userProfile) return;
+    
     switch(userProfile?.accountTier){
         case 'plus':
             setIsFree(false);
@@ -160,7 +185,7 @@ export default function Upgrade() {
       price: { monthly: 0, annual: 0 },
       description: 'Perfect for trying out Crammi',
       features: [
-        '5 uploads per month',
+        '3 uploads per month',
         'Up to 5 photos per upload',
         'Max 15 flashcards per set',
         'Max 10 exam questions',

@@ -4,6 +4,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import "./Quiz.css";
 import ViewHamburger from "./ViewHamburger";
 import LoadingAnimation from "../Dashboard/LoadingScreen";
+import IgnoredDetected from "./IgnoredDetected";
 // Load KaTeX once globally
 let katexLoaded = false;
 let katexLoadingPromise = null;
@@ -562,7 +563,7 @@ export default function Quiz() {
     const [isQuizScorePage, setIsQuizScorePage] = useState(false);
     const [quizResults, setQuizResults] = useState(null);
 
-    const userProfile = location.state?.userProfile;
+    const userProfile = location.state?.userProfile || { accountTier: 'free' };
 
     useEffect(() => {
         getUserName();
@@ -827,6 +828,9 @@ export default function Quiz() {
 
     return (
         <>  
+        {isIgnoredRequest ? <IgnoredDetected 
+                    isDetected={isIgnoredRequest}
+                    /> : null}
         <div className='quizDashboardHeader'>
                 <div className="quizMobileHamburger">
                 <ViewHamburger 
@@ -882,7 +886,7 @@ export default function Quiz() {
                             }}
                         >
                             <img 
-                                className='collapsedSidebarIcon' 
+                                className='collapsedSidebarIcon ignoredIcon' 
                                 src='/ignoredIcon.png' 
                                 alt='warning icon'
                             />

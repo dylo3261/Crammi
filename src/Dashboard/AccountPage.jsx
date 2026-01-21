@@ -73,7 +73,7 @@ export default function AccountPage(){
     if (!userProfile?.accountTier) return 'Free Plan';
     
     const tier = userProfile.accountTier.toLowerCase();
-    
+
     switch(tier) {
       case 'free':
         return 'Free Plan';
@@ -85,7 +85,62 @@ export default function AccountPage(){
         return tier.charAt(0).toUpperCase() + tier.slice(1) + ' Plan';
     }
   };
-
+  const renderUserPlanDisplay = () => {
+    if (!userProfile?.accountTier) return <div>Free Plan</div>;
+  
+    const tier = userProfile.accountTier.toLowerCase();
+  
+    switch (tier) {
+      case 'free':
+        return (
+          <div>
+            <ul>
+              <li>✓ 3 uploads per month</li>
+              <li>✓ Up to 5 photos per upload</li>
+              <li>✓ Max 15 flashcards per set</li>
+              <li>✓ Max 10 exam questions</li>
+              <li>✓ Max 8 quiz questions</li>
+            </ul>
+          </div>
+        );
+  
+      case 'plus':
+        return (
+          <div>
+          
+            <ul>
+              <li>✓ 50 uploads per month</li>
+              <li>✓ Up to 20 photos per upload</li>
+              <li>✓ Max 50 flashcards per set</li>
+              <li>✓ Max 25 exam questions</li>
+              <li>✓ Max 15 quiz questions</li>
+            </ul>
+          </div>
+        );
+  
+      case 'pro':
+        return (
+          <div>
+         
+            <ul>
+              <li>✓ Unlimited uploads</li>
+              <li>✓ Up to 50 photos per upload</li>
+              <li>✓ Max 100 flashcards per set</li>
+              <li>✓ Max 60 exam questions</li>
+              <li>✓ Max 30 quiz questions</li>
+            </ul>
+          </div>
+        );
+  
+      default:
+        return (
+          <div>
+            {tier.charAt(0).toUpperCase() + tier.slice(1)} Plan
+          </div>
+        );
+    }
+  };
+  
   const handleManageBilling = async () => {
     try {
       setPortalLoading(true);
@@ -405,6 +460,10 @@ export default function AccountPage(){
                 <div className="crammi-info-item">
                   <span className="crammi-info-label">Account Type:</span>
                   <span className="crammi-info-value">{getUserPlanDisplay()}</span>
+                </div>
+                <div className="crammi-info-item">
+                  <span className="crammi-info-label">Account Permissions:</span>
+                  <span className="crammi-info-value">{renderUserPlanDisplay()}</span>
                 </div>
               </div>
             </section>
