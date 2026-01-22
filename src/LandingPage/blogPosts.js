@@ -307,7 +307,7 @@ Ready or not this is the new normal.
       
       ## My favorite part
       
-      CRAMMI IS SO AFFORDABLE. Their free tier is 5 uploads a month, which is whatever. But you only get limited question caps and flashcards. Their paid tiers cost less than a happy meal. 
+      CRAMMI IS SO AFFORDABLE. Their free tier is 3 uploads a month, which is whatever. But you only get limited question caps and flashcards. Their paid tiers cost less than a happy meal. 
       
       Other study tools charge you $20-$30 a month... We're students. How are we expected to willingly pay for that? Crammi does the same thing as expensive study tools at a fraction of the price. I love it.
       
