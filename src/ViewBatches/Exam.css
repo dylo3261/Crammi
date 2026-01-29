@@ -307,8 +307,8 @@
 }
 
 .examQuestionItem.current {
-    background-color: #1a1a1a;
-    color: white;
+   background:black;
+  color: white;
     border: none;
 }
 

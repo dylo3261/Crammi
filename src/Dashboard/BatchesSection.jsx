@@ -67,6 +67,9 @@ export default function BatchesSection({
             else if(batchType === 'Flashcards'){
                 navigate(`/flashcards/${batchID}`, { state: { batchName, userProfile } });
             }
+            else if(batchType === 'Course Mode'){
+                navigate(`/course/${batchID}`, { state: { batchName, userProfile } });
+            }
         }
     };
 
@@ -428,6 +431,7 @@ export default function BatchesSection({
         if (activeTab === 'Exams') return batch.type === 'Exams';
         if (activeTab === 'Quizzes') return batch.type === 'Quizzes';
         if (activeTab === 'Flashcards') return batch.type === 'Flashcards';
+        if (activeTab === 'Course Mode') return batch.type === 'Course Mode';
         if (activeTab === 'Files') return batch;
         return false;
     });
@@ -491,10 +495,14 @@ export default function BatchesSection({
     const getStatusDisplay = (batch) => {
         switch(batch.status) {
             case 'PENDING':
+                if(batch.type!== 'Course Mode'){
                 if (stuckBatches.has(batch.batchID)) {
                     return '🕒 Taking longer than usual... Check back later';
                 }
                 return '⏳ Processing...';
+            }else{
+                return '⏳ Processing... Courses take longer to process (~10m).';
+            }
             case 'FAILED':
                 return `❌ Failed: ${batch.failureReason}`;
             case 'COMPLETE':
@@ -588,6 +596,7 @@ export default function BatchesSection({
                     setIsLimitReached={setIsLimitReached}
                     limitReachedMessage={limitReachedMessage}
                     userProfile={userProfile}
+                    activeTab={activeTab}
                     
                 />            
                 </div>

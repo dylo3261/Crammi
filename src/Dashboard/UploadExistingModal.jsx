@@ -196,13 +196,13 @@ export default function UploadExistingModal({isOpen, close, activeTab, batches, 
                         value={uploadInstructions}
                         onChange={(e) => setUploadInstructions(e.target.value)}
                         rows={2}
-                        maxLength={200}
+                        maxLength={300}
                     />
                     <p className="numChars" style={{
                         display: uploadInstructions.length > 0 && selectedBatch ? "block" : "none"
                     }}>
-                        <span style={{color: uploadInstructions.length === 200 ? "red" : "#555"}}>
-                            Characters: {uploadInstructions.length} / 200
+                        <span style={{color: uploadInstructions.length === 300 ? "red" : "#555"}}>
+                            Characters: {uploadInstructions.length} / 300
                         </span>
                     </p>
                 </div>

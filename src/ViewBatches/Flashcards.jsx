@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { fetchAuthSession, fetchUserAttributes, signOut } from 'aws-amplify/auth';
-import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
+import { useParams, useNavigate, useLocation, Link, useSearchParams } from 'react-router-dom';
 import ViewHamburger from "./ViewHamburger";
 import "./Flashcards.css";
 import LoadingAnimation from "../Dashboard/LoadingScreen";
@@ -122,6 +122,7 @@ const LatexText = React.memo(({ text }) => {
 
 export default function Flashcards() {
   const { batchID } = useParams();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [batchJSON, setBatchJSON] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -130,8 +131,14 @@ export default function Flashcards() {
   const [isFlipped, setIsFlipped] = useState(false);
   const [slideDirection, setSlideDirection] = useState('');
   const [isNavigating, setIsNavigating] = useState(false);
+  const [startWithAnswer, setStartWithAnswer] = useState(false); 
+
   const location = useLocation();
-  const [batchName, setBatchName] = useState(location.state?.batchName || 'Unknown Batch');
+ const [batchName, setBatchName] = useState(
+        location.state?.batchName || 
+        searchParams.get('batchName') || 
+        'Unknown Batch'
+    );
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [editingName, setEditingName] = useState('');
   const titleInputRef = useRef(null);
@@ -148,7 +155,9 @@ export default function Flashcards() {
   const ignoredButtonRef = useRef(null);
   const profileButtonRef = useRef(null);
 
-  const userProfile = location.state?.userProfile || { accountTier: 'free' };
+  const userProfile = location.state?.userProfile || { 
+    accountTier: searchParams.get('tier') || 'free' 
+};
   // Memoize current card to prevent unnecessary re-renders
   const currentCard = useMemo(() => {
     return batchJSON?.[currentIndex];
@@ -273,9 +282,8 @@ export default function Flashcards() {
     if (!batchJSON || currentIndex >= batchJSON.length - 1 || isNavigating) return;
     
     setIsNavigating(true);
-    setIsFlipped(false);
+    setIsFlipped(startWithAnswer); // Changed from false
     
-    // Small delay to ensure flip animation completes before slide
     setTimeout(() => {
       setSlideDirection('slide-left');
       
@@ -285,15 +293,14 @@ export default function Flashcards() {
         setIsNavigating(false);
       }, 150);
     }, 50);
-  }, [batchJSON, currentIndex, isNavigating]);
-
+  }, [batchJSON, currentIndex, isNavigating, startWithAnswer]);
+  
   const goToPrevious = useCallback(() => {
     if (!batchJSON || currentIndex <= 0 || isNavigating) return;
     
     setIsNavigating(true);
-    setIsFlipped(false);
+    setIsFlipped(startWithAnswer); // Changed from false
     
-    // Small delay to ensure flip animation completes before slide
     setTimeout(() => {
       setSlideDirection('slide-right');
       
@@ -303,7 +310,7 @@ export default function Flashcards() {
         setIsNavigating(false);
       }, 150);
     }, 50);
-  }, [batchJSON, currentIndex, isNavigating]);
+  }, [batchJSON, currentIndex, isNavigating, startWithAnswer]); 
 
   const handleCardClick = useCallback(() => {
     setIsFlipped(prev => !prev);
@@ -315,9 +322,8 @@ export default function Flashcards() {
     const shuffled = [...batchJSON].sort(() => Math.random() - 0.5);
     setBatchJSON(shuffled);
     setCurrentIndex(0);
-    setIsFlipped(false);
-  }, [batchJSON]);
-
+    setIsFlipped(startWithAnswer); 
+  }, [batchJSON, startWithAnswer]); 
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -622,6 +628,7 @@ export default function Flashcards() {
           <p className="instructions">
             Click card or press Space/↑/↓ to flip • ← → to navigate
           </p>
+          
         </div>
 
         <div className="card-and-controls-wrapper">
@@ -630,19 +637,21 @@ export default function Flashcards() {
               className={`card ${isFlipped ? 'flipped' : ''} ${slideDirection}`}
               onClick={handleCardClick}
             >
-              <div className="card-face card-front">
-                <div className="card-label">QUESTION</div>
-                <div className="card-content">
-                  <LatexText text={currentCard?.front || ''} />
-                </div>
-              </div>
-              <div className="card-face card-back">
-                <div className="card-label">ANSWER</div>
-                <div className="card-content">
-                  <LatexText text={currentCard?.back || ''} />
-                </div>
-              </div>
+                    <div className="card-face card-front">
+            <div className="card-label">QUESTION</div>
+            <div className="card-content">
+              <LatexText text={currentCard?.front || ''} />
             </div>
+          </div>
+          <div className="card-face card-back">
+            <div className="card-label">ANSWER</div>
+            <div className="card-content">
+              <LatexText text={currentCard?.back || ''} />
+            </div>
+          </div>
+          
+          </div>
+          
           </div>
 
           <button
@@ -656,9 +665,21 @@ export default function Flashcards() {
               alt='shuffle'
             />
           </button>
+          <button
+          onClick={() => {
+            setStartWithAnswer(!startWithAnswer);
+            setIsFlipped(!isFlipped);
+          }}
+          className="qa-toggle-button"
+          title={startWithAnswer ? "Start with Question" : "Start with Answer"}
+          style={{ marginLeft: '10px' }}
+        >
+          {startWithAnswer ? "Q" : "A"}
+        </button>
         </div>
 
         <div className="navigation-controls">
+          
           <button
             onClick={goToPrevious}
             disabled={currentIndex === 0}
@@ -674,6 +695,7 @@ export default function Flashcards() {
           >
             <span className="arrow">→</span>
           </button>
+  
         </div>
       </div>
     </>

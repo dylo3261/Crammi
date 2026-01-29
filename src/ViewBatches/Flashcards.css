@@ -15,7 +15,30 @@
 .flashcard-container.empty {
   height: 100dvh;
 }
+/* Q/A Toggle Button - bottom left */
+.qa-toggle-button {
+  position: absolute;
+  bottom: -5.7rem;
+  left: 0;
+  padding: 1rem 1.25rem;
+  background-color: white;
+  border: 2px solid #AB9FF2;
+  border-radius: 2.5rem;
+  box-shadow: 0 10px 15px -3px rgba(171, 159, 242, 0.2), 0 4px 6px -2px rgba(171, 159, 242, 0.1);
+  cursor: pointer;
+  color: #AB9FF2;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  min-width: 60px;
+  text-align: center;
+}
 
+.qa-toggle-button:hover {
+  background-color: #AB9FF2;
+  color: white;
+  box-shadow: 0 20px 25px -5px rgba(171, 159, 242, 0.3), 0 10px 10px -5px rgba(171, 159, 242, 0.2);
+}
 .message {
   font-size: 1.25rem;
   color: #374151;
@@ -384,7 +407,7 @@
     left: 0;
     width: 50px;
     z-index: 998;
-    background-color: rgb(246, 246, 246);
+    background-color: rgb(255, 255, 255);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -412,7 +435,7 @@
   }
   
   .collapsedSideButton:hover {
-    background-color: rgb(234, 233, 233);
+    background-color: rgb(250, 250, 250);
   }
   
   
@@ -430,7 +453,7 @@
     left: 0;
     width: 50px;
     padding: 0.5rem 0;
-    background-color: rgb(246, 246, 246);
+    background-color: rgb(255, 255, 255);
     display: flex;
     justify-content: center;
   }
@@ -446,7 +469,7 @@
   }
   
   .collapsedPFPWrapper:hover {
-    background-color: rgb(234, 233, 233);
+    background-color: rgb(249, 249, 249);
   }
   
   .activeCollapsedPFPWrapper {
@@ -456,7 +479,7 @@
     border-radius: 6px;
     width: 40px;
     height: 40px;
-    background-color: rgb(238, 238, 238);
+    background-color: rgb(255, 255, 255);
   }
   
   .collapsedPFPButton {
@@ -489,7 +512,7 @@
   
   /* Reuse existing popup styles */
   .collapsedLogoutPopupContainer .logoutPopup {
-    background-color: rgb(240, 240, 240);
+    background-color: rgb(255, 255, 255);
     border: 1px solid #d9d9d9;
     border-radius: 15px;
     padding: 0.5rem;

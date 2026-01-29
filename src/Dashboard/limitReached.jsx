@@ -3,13 +3,17 @@
 import React, { useEffect, useState } from 'react';
 import './limitReached.css';
 
-export default function LimitReached({ isLimitReached, setIsLimitReached, limitReachedMessage, userProfile }) {
-  const [isClosing, setIsClosing] = React.useState(false);
+export default function LimitReached({ isLimitReached, setIsLimitReached, limitReachedMessage, userProfile, activeTab }) {
+  const [isClosing, setIsClosing] = useState(false);
   const [userTier,setUserTier]=useState('3/3');
   useEffect(()=>{
-    if(userProfile?.accountTier==='pro'||userProfile?.accountTier==='plus'){
-      setUserTier('20/20')
+    if(userProfile?.accountTier==='plus'){
+      setUserTier('50/50')
     }
+    else if(userProfile?.accountTier==='pro'){
+      setUserTier('300/300')
+    }
+  
   },[userProfile]);
   useEffect(() => {
     if (isLimitReached) {
@@ -43,7 +47,8 @@ export default function LimitReached({ isLimitReached, setIsLimitReached, limitR
         <div className="errorTextWrapper">
           <h3 className="errorTitle">Upload Failed</h3>
           <p className="errorMessage">
-            {userTier} Monthly Uploads reached! Upgrade your account plan or {limitReachedMessage || "try again next month."}.
+            { activeTab==='Course Mode' ?`5/5 Monthly Course Uploads Reached! Please ${limitReachedMessage || "try again next month."}` 
+            : `${userTier} Monthly Uploads reached! Upgrade your account plan or ${limitReachedMessage || "try again next month."}.`}
           </p>
         </div>
         <button 

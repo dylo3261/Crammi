@@ -478,8 +478,24 @@
 
     .batch-card {
         padding: 1.25rem;
+        min-width: 0; 
+
+    }
+    .batch-title {
+        white-space: normal;
+        word-break: break-word;
+        overflow-wrap: break-word;
     }
 
+    .batch-title-input {
+        max-width: 100%;
+        min-width: 0;
+    }
+
+    .batch-description {
+        word-break: break-word;
+        overflow-wrap: break-word;
+    }
     .notification-toast {
         left: 1rem;
         right: 1rem;

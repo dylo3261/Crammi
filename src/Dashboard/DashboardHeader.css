@@ -52,7 +52,6 @@ a.PFPButtonPopup {
   width: 282px;
   z-index: 998;
   background: white;
-  border-right: 1px solid #e2e8f0;
   display: flex;
   flex-direction: column;
   padding: 2rem 1.5rem;
@@ -75,6 +74,7 @@ a.PFPButtonPopup {
   color: #94a3b8;
   margin-bottom: 1rem;
   letter-spacing: 0.5px;
+  padding-left: 2px;
   font-family: 'apple', -apple-system, sans-serif;
 }
 
@@ -220,11 +220,10 @@ a.PFPButtonPopup {
   position: fixed;
   bottom: 0;
   left: 0;
-  width: 280px;
+  width: 281px;
   padding: 2rem 1.5rem;
   z-index: 2000;
   background: white;
-  border-right: 1px solid #e2e8f0;
   border-top: 1px solid #e2e8f0;
 }
 
@@ -447,7 +446,6 @@ a.PFPButtonPopup {
 /* DASHBOARD BODY */
 .dashboardBody {
   position: fixed;
-  top: 0;
   left: 280px;
   right: 0;
   bottom: 0;
@@ -455,6 +453,16 @@ a.PFPButtonPopup {
   background-color: #f8f9fa;
   overflow-y: auto;
   overflow-x: hidden;
+  border-top-left-radius: 20px;
+
+  border-top-right-radius: 20px;
+  right: 10px;
+  border-right: 1px solid #e2e8f0;
+
+
+  border-left: 1px solid #e2e8f0; /* Adjust color and width as needed */
+  border-top: 1px solid #e2e8f0;
+  top: 10px; /* Adjust this value to control how much shorter */
 }
  
 /* DASHBOARD BODY HEADER */
@@ -464,6 +472,16 @@ a.PFPButtonPopup {
   justify-content: space-between;
   margin-bottom: 2rem;
 } 
+.sideBar::after {
+  content: '';
+  position: absolute;
+  top: 23px; /* Start 10px from the top */
+  right: 0;
+  bottom: 0; /* Continue to the bottom */
+  width: 1px;
+  background-color: #e2e8f0;
+}
+
 
 .bodyActiveTabLabel { 
   font-family: 'apple', -apple-system, sans-serif; 
@@ -591,6 +609,7 @@ a.PFPButtonPopup {
   .DashboardHeader {
     display: none;
   }
+
 }
 
 @media (max-width: 1100px) {
@@ -615,6 +634,11 @@ a.PFPButtonPopup {
     left: 0;
     top: 6vh;
     padding: 1rem;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    right:0;
+
+    border-top: none;
   }
   
   .dashboardBodyHeader { 

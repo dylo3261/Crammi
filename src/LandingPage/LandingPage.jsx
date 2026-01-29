@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './LandingPage.css';
 import { signInWithRedirect } from 'aws-amplify/auth';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export default function LandingPage() {
   const navigate = typeof window !== 'undefined' ? useNavigate() : () => {};
@@ -170,10 +170,11 @@ export default function LandingPage() {
       id: 'pro',
       name: 'Pro',
       emoji: '🚀',
-      price: { monthly: 7.99, annual: 79.99 },
+      price: { monthly: 11.99, annual: 119.99 },
       description: 'For serious students who need unlimited power',
       features: [
         'Unlimited uploads',
+        '*NEW* Course Mode (x5/month)',
         'Up to 50 photos per upload',
         'Max 100 flashcards per set',
         'Max 60 exam questions',
@@ -394,6 +395,94 @@ export default function LandingPage() {
             </div>
         </div>
       </section>
+      {/* Repeat the instructions 3 times for smooth infinite scroll */}
+
+{/* Course Mode Section */}
+<section className="landing-course-mode-section">
+        <div className="landing-course-mode-content">
+            <div className="landing-course-mode-visual">
+              <div className="landing-document-stack-container">
+                <div className="landing-upload-zone">
+                  <div className="landing-upload-icon">📤</div>
+                  <div className="landing-upload-text">Drop Your Semester</div>
+                </div>
+                
+                <div className="landing-flying-documents">
+                  {[
+                    { emoji: '📄', label: 'Lecture 1', delay: 0 },
+                    { emoji: '📑', label: 'Slides Ch.3', delay: 0.3 },
+                    { emoji: '📕', label: 'Lecture 32', delay: 0.6 },
+                    { emoji: '📝', label: 'Lecture Notes', delay: 0.9 },
+                    { emoji: '📊', label: 'Data Set', delay: 1.2 },
+                    { emoji: '📘', label: 'Chapter 1-25', delay: 1.5 }
+                  ].map((doc, index) => (
+                    <div 
+                      key={index} 
+                      className="landing-flying-doc"
+                      style={{ animationDelay: `${doc.delay}s` }}
+                    >
+                      <div className="landing-doc-emoji">{doc.emoji}</div>
+                      <div className="landing-doc-label">{doc.label}</div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="landing-ai-processor">
+                  <div className="landing-processor-glow"></div>
+                  <div className="landing-processor-core">
+                    <div className="landing-ai-icon">🤖</div>
+                    <div className="landing-processing-text">Processing...</div>
+                  </div>
+                  <div className="landing-progress-bar">
+                    <div className="landing-progress-fill"></div>
+                  </div>
+                </div>
+
+                <div className="landing-output-materials">
+                  {[
+                    { icon: '📚', label: 'Study Guide', color: '#ab9ff2' },
+                    { icon: '📋', label: 'Quizzes', color: '#6366f1' },
+                    { icon: '📝', label: 'Exams', color: '#8b5cf6' },
+                    { icon: '🃏', label: 'Flashcards', color: '#a78bfa' }
+                  ].map((output, index) => (
+                    <div 
+                      key={index} 
+                      className="landing-output-card"
+                      style={{ 
+                        animationDelay: `${2 + index * 0.2}s`,
+                        borderColor: output.color 
+                      }}
+                    >
+                      <div className="landing-output-icon">{output.icon}</div>
+                      <div className="landing-output-label">{output.label}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            
+            <div className="landing-course-mode-text">
+              <h2 className="section-title-special">Dump your entire semester with Course Mode 🚚 📚</h2>
+              <p className="section-subtitle">
+                Dump your entire semester into Crammi. Upload up to 1,500 pages of lectures, slides, and textbooks and get a complete, AI-generated study guide. Course Mode uses advanced AI to analyze your material at a course level — organizing content into units, generating summaries, quizzes, exams, and flashcards that actually follow your class from start to finish.
+              </p>
+              <div className="landing-course-stats">
+                <div className="landing-stat-item">
+                  <div className="landing-stat-number">1,500</div>
+                  <div className="landing-stat-label">Pages Max</div>
+                </div>
+                <div className="landing-stat-item">
+                  <div className="landing-stat-number">5×</div>
+                  <div className="landing-stat-label">Per Month</div>
+                </div>
+                <div className="landing-stat-item">
+                  <div className="landing-stat-number">100%</div>
+                  <div className="landing-stat-label">AI-Powered</div>
+                </div>
+              </div>
+            </div>
+        </div>
+      </section>
 
       {/* Pricing Section */}
       <section id="pricing" className="pricing">
@@ -412,7 +501,7 @@ export default function LandingPage() {
               className={`toggle-btn ${billingCycle === 'annual' ? 'active' : ''}`}
               onClick={() => setBillingCycle('annual')}
             >
-              Annual <span className="save-badge">Save 20%</span>
+              Annual <span className="save-badge">Save ~17%</span>
             </button>
           </div>
         </div>

@@ -76,6 +76,24 @@
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
+  .uploadButton {
+    flex-direction: column-reverse;
+    width: 100%;
+    gap: 0.75rem !important;
+
+  }
+  
+  .closeUploadModal {
+    width: 100%;
+  }
+  .uploadButton {
+    flex-direction: column-reverse;
+  }
+  
+  .closeUploadModal {
+    width: 100%;
+  }
+
   .paginationControls {
     bottom: 5.5rem;
     gap: 0.5rem;
@@ -206,6 +224,11 @@
     margin-bottom: -10px!important;
     margin-top: -10px!important;
   }
+  .bottomHeader2{
+    margin-bottom: 0px!important;
+
+    margin-top: -15px!important;
+  }
 
   .specialInstructions{
     margin-top: -10px;
@@ -223,7 +246,6 @@
     min-height: 170px !important;
     max-height: 170px !important;
     padding: 12px !important;
-    margin-top: 10px;
     gap: 6px !important;
   }
 
@@ -235,7 +257,7 @@
 
   /* File list compact but readable */
   .fileList {
-    max-height: 150px !important;
+    max-height: 140px !important;
     overflow-y: auto;
   }
 
@@ -411,6 +433,11 @@
   margin-bottom: 1rem;
   margin-top: 0.5rem;
 }
+.bottomHeader2 {
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 1rem;
+  margin-top: 0.5rem;
+}
 
 .uploadModalIcon {
   width: 64px;
@@ -546,49 +573,57 @@
 }
 
 .removeFile {
-  cursor: pointer;
-  flex-shrink: 0;
-  color: #ef4444;
-  font-size: 1.25rem;
-  font-weight: 700;
-  transition: all 0.2s ease;
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
+  color: #dc2626;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.3rem;
+  font-weight: bold;
+  transition: all 0.2s;
+  line-height: 1;
 }
 
 .removeFile:hover {
-  background-color: #fee2e2;
-  color: #dc2626;
+  background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%);
+  transform: scale(1.1);
 }
 
 /* Buttons */
 .closeUploadModal {
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
-  color: white;
-  border: none;
+  background: white;
+  color: #0f172a;
+  border: 2px solid #e2e8f0;
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: 'apple', -apple-system, sans-serif;
   font-size: 0.95rem;
   font-weight: 600;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 0rem;
-  box-shadow: 0 2px 8px rgba(171, 159, 242, 0.3);
 }
 
 .closeUploadModal:hover {
+  border-color: #cbd5e1;
+  background: #f8f9fa;
+  transform: translateY(-1px);
+}
+
+/* Upload button - keep gradient */
+.closeUploadModal:last-child {
+  background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
+  color: white;
+  border: none;
+  box-shadow: 0 2px 8px rgba(171, 159, 242, 0.3);
+}
+
+.closeUploadModal:last-child:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 15px rgba(171, 159, 242, 0.4);
 }
-
 .selectPageHeader {
   display: inline;
   letter-spacing: 0.5px;
@@ -602,6 +637,7 @@
   flex-shrink: 0;
   flex-grow: 0;
   align-self: center;
+
 }
 
 .uploadBoxDescription {
@@ -821,6 +857,6 @@
   font-family: 'applethin', -apple-system, sans-serif;
   color: #64748b;
   font-size: 0.75rem;
-  margin-top: 0.5rem;
+  padding-top: 0.5rem;
   height: 0px;
 }

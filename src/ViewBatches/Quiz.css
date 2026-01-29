@@ -13,7 +13,7 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: white;
+    background: #f8f9fa;
     padding: 20px;
 }
 
@@ -24,6 +24,7 @@ html, body {
     padding: 78px;
     max-width: 600px;
     width: 100%;
+    background-color: white;
 }
 
 .quizViewTitle {
@@ -73,7 +74,7 @@ html, body {
 .quizInterfaceContainer {
     margin-left: 50px;
     min-height: 100vh;
-    background: white;
+    background: #f8f9fa;
     display: flex;
     padding-bottom: 2rem;
 }
@@ -98,7 +99,7 @@ html, body {
     margin-bottom: 1rem;
     position: sticky;
     top: 0;
-    background: white;
+    background: transparent;
     z-index: 10;
 }
 
@@ -433,7 +434,7 @@ html, body {
     left: 0;
     width: 50px;
     z-index: 998;
-    background-color: rgb(246, 246, 246);
+    background-color: rgb(255, 255, 255);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -477,7 +478,7 @@ html, body {
     left: 0;
     width: 50px;
     padding: 0.5rem 0;
-    background-color: rgb(246, 246, 246);
+    background-color: rgb(255, 255, 255);
     display: flex;
     justify-content: center;
 }
@@ -503,7 +504,7 @@ html, body {
     border-radius: 6px;
     width: 40px;
     height: 40px;
-    background-color: rgb(238, 238, 238);
+    background-color: rgb(255, 255, 255);
 }
 
 .collapsedPFPButton {
@@ -534,7 +535,7 @@ html, body {
 }
 
 .collapsedLogoutPopupContainer .logoutPopup {
-    background-color: rgb(240, 240, 240);
+    background-color: rgb(255, 255, 255);
     border: 1px solid #d9d9d9;
     border-radius: 15px;
     padding: 0.5rem;
@@ -558,6 +559,7 @@ html, body {
     cursor: pointer;
     padding: 0.5rem;
     border-radius: 8px;
+    background-color: white;
     transition: background-color 0.2s;
 }
 

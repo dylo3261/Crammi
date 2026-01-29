@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef,useMemo } from "react";
 import { fetchAuthSession, fetchUserAttributes, signOut } from 'aws-amplify/auth';
-import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
+import { useParams, useNavigate, useLocation, Link, useSearchParams } from 'react-router-dom';
 import "./Exam.css";
 import ViewHamburger from "./ViewHamburger";
 import LoadingAnimation from "../Dashboard/LoadingScreen";
@@ -218,9 +218,9 @@ function ExamInterface({ examData, timeLimit, onExamEnd,userName,userEmail,userP
 
     return (
         <div className="examInterfaceContainer">
+            
             <div className={`examSidebar ${isSidebarOpen ? 'open' : ''}`}>
-                
-                <div className="examFilterSection">
+            <div className="examFilterSection">
                     <select
                         className="examFilterSelect"
                         value={filterMode}
@@ -232,6 +232,7 @@ function ExamInterface({ examData, timeLimit, onExamEnd,userName,userEmail,userP
                         <option value="unanswered">Unanswered</option>
                     </select>
                 </div>
+            
 
                 <div className="examQuestionsList">
                     {examData.map((q, index) => {
@@ -604,12 +605,17 @@ function ExamScorePage({ examResults, examData, setIsScorePage, timeLimit }) {
 
 export default function Exam() {
     const { batchID } = useParams();
+    const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const location = useLocation();
     const [batchJSON, setBatchJSON] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [batchName, setBatchName] = useState(location.state?.batchName || 'Unknown Batch');
+const [batchName, setBatchName] = useState(
+        location.state?.batchName || 
+        searchParams.get('batchName') || 
+        'Unknown Batch'
+    );
     const [isIgnoredRequest, setIsIgnoredRequest] = useState('');
     const [timeLimit, setTimeLimit] = useState(60);
     const [isTimeMenuOpen, setIsTimeMenuOpen] = useState(false);
@@ -633,8 +639,9 @@ export default function Exam() {
     const [isScorePage, setIsScorePage] = useState(false);
     const [examResults, setExamResults] = useState(null);
 
-    const userProfile = location.state?.userProfile || { accountTier: 'free' };
-
+    const userProfile = location.state?.userProfile || { 
+        accountTier: searchParams.get('tier') || 'free' 
+    };
 
     const handleStartExam = () => {
         setIsExamStarted(true);

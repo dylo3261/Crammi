@@ -55,10 +55,10 @@
     text-align: center;
     position: relative;
     z-index: 2;
-    animation: slideUp 0.6s ease-out;
+    animation: success-slideUp 0.6s ease-out;
   }
   
-  @keyframes slideUp {
+  @keyframes success-slideUp {
     from {
       opacity: 0;
       transform: translateY(30px);

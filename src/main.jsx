@@ -22,6 +22,9 @@ const isLocalhost = Boolean(
 const redirectUri = isLocalhost 
   ? 'http://localhost:5173/dashboard' 
   : `${window.location.origin}/dashboard`;
+  const upgradeUri = isLocalhost 
+  ? 'http://localhost:5173/upgrade' 
+  : `${window.location.origin}/upgrade`;
 
 const logoutUri = isLocalhost 
   ? 'http://localhost:5173/' 
@@ -37,7 +40,7 @@ if (typeof window !== 'undefined') {
           oauth: {
             domain: 'auth.crammi.com', 
             scopes: ['openid', 'email', 'phone', 'profile', 'aws.cognito.signin.user.admin'],
-            redirectSignIn: [redirectUri], 
+            redirectSignIn: [redirectUri, upgradeUri], 
             redirectSignOut: [logoutUri],
             responseType: 'code',
           },

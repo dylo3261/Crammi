@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import * as pdfjsLib from "pdfjs-dist/build/pdf.mjs";
 import { fetchAuthSession } from 'aws-amplify/auth';
-import LimitReached from "./limitReached";
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker.mjs?url";
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 import "./uploadModal.css";
@@ -550,10 +549,10 @@ export default function UploadModal({ isOpen, close, activeTab, userProfile, set
                 setSpecialInstructions(e.target.value);
               }}
               rows={2}
-              maxLength={200}
+              maxLength={300}
             />
             <p className="numChars" style={{display: (specialInstructions.length > 0 && selectedFiles.length > 0) && isMobile ? "block" : "none"}}>
-              <span style={{color: specialInstructions.length === 200 ? "red" : "#555"}}>Characters: {specialInstructions.length} / 200</span>
+              <span style={{color: specialInstructions.length === 300 ? "red" : "#555"}}>Characters: {specialInstructions.length} / 300</span>
             </p>
           </div>
       
@@ -618,9 +617,6 @@ export default function UploadModal({ isOpen, close, activeTab, userProfile, set
               ))}
             </ul>
           )}
-
-          <div className="bottomHeader" style={{ display: selectedFiles.length > 0 ? "flex" : "none" }}></div>
-        
           <div className="specialInstructionsCharacters">
             <textarea
               style={{
@@ -634,10 +630,10 @@ export default function UploadModal({ isOpen, close, activeTab, userProfile, set
                 setSpecialInstructions(e.target.value);
               }}
               rows={2}
-              maxLength={200}
+              maxLength={300}
             />
             <p className="numChars" style={{display: (specialInstructions.length > 0 && selectedFiles.length > 0) && !isMobile ? "block" : "none"}}>
-              <span style={{color: specialInstructions.length === 200 ? "red" : "#555"}}>Characters: {specialInstructions.length} / 200</span>
+              <span style={{color: specialInstructions.length === 300 ? "red" : "#555"}}>Characters: {specialInstructions.length} / 300</span>
             </p>
           </div>
 

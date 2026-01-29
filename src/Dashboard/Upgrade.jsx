@@ -215,10 +215,11 @@ export default function Upgrade() {
       id: 'pro',
       name: 'Pro',
       emoji: '🚀',
-      price: { monthly: 7.99, annual: 79.99 },
+      price: { monthly: 11.99, annual: 119.99 },
       description: 'For serious students who need unlimited power',
       features: [
         'Unlimited uploads',
+        '*NEW* Course Mode (x5/month)',
         'Up to 50 photos per upload',
         'Max 100 flashcards per set',
         'Max 60 exam questions',
@@ -286,7 +287,7 @@ export default function Upgrade() {
             onClick={() => setBillingCycle('annual')}
           >
             Annual
-            <span className="save-badge">Save 20%</span>
+            <span className="save-badge">2 months free</span>
           </button>
         </div>
       </div>

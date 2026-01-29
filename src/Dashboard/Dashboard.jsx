@@ -1,6 +1,7 @@
 import DashboardHeader from "./DashboardHeader";
 import UploadModal from "./uploadModal";
 import UploadExistingModal from "./UploadExistingModal";
+import UploadCourseModal from "./UploadCourseModal"
 import Hamburger from "./Hamburger";
 import React, { useState, useEffect } from "react";
 import { fetchAuthSession } from 'aws-amplify/auth';
@@ -13,6 +14,7 @@ export default function Dashboard(){
     });
     const [activeUploadExisting, changeActiveUploadExisting]= useState(false);
     const [activeUpload, changeActiveUpload] = useState(false);
+    const [activeCourseUpload, changeActiveCourseUpload]=useState(false);
     const [userProfile, setUserProfile] = useState(null);
     const [idToken, setIdToken] = useState(null);
     //to pass down to uploadexisting and batchessection
@@ -67,11 +69,12 @@ export default function Dashboard(){
     
     return(
        <>
-        <DashboardHeader openUpload={()=>changeActiveUpload(true)} changeActiveTab={changeActiveTab} activeTab={activeTab} openUploadExisting={()=>changeActiveUploadExisting(true)} batches={batches} setBatches={setBatches} isLimitReached={isLimitReached} setIsLimitReached={setIsLimitReached} limitReachedMessage={limitReachedMessage} userProfile={userProfile}>
+        <DashboardHeader openUpload={()=>changeActiveUpload(true)} changeActiveTab={changeActiveTab} activeTab={activeTab} openUploadExisting={()=>changeActiveUploadExisting(true)} batches={batches} setBatches={setBatches} isLimitReached={isLimitReached} setIsLimitReached={setIsLimitReached} limitReachedMessage={limitReachedMessage} userProfile={userProfile} openCourseUpload={()=>{changeActiveCourseUpload(true)}}>
             <Hamburger changeActiveTab={changeActiveTab} activeTab={activeTab} />
         </DashboardHeader>
         <UploadModal isOpen={activeUpload} close={() => changeActiveUpload(false)} activeTab={activeTab} userProfile={userProfile} setUserProfile={setUserProfile} setIsLimitReached={setIsLimitReached} setLimitReachedMessage={setLimitReachedMessage} />
         <UploadExistingModal isOpen={activeUploadExisting} close={()=>changeActiveUploadExisting(false)} activeTab={activeTab} batches={batches} setIsLimitReached={setIsLimitReached} setLimitReachedMessage={setLimitReachedMessage}/>
+        <UploadCourseModal isOpen={activeCourseUpload} close={()=>{changeActiveCourseUpload(false)}} userProfile={userProfile} setIsLimitReached={setIsLimitReached} setLimitReachedMessage={setLimitReachedMessage}/>
         </>
     )
 }

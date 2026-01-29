@@ -6,9 +6,9 @@ import { fetchUserAttributes } from 'aws-amplify/auth';
 import { fetchAuthSession } from 'aws-amplify/auth';
 import BatchesSection from "./BatchesSection.jsx";
 
-function UploadBar({activeTab, openUpload, openUploadExisting, searchQuery, setSearchQuery}) {
-  const showUploadButtons = activeTab !== "Files";
-  
+function UploadBar({activeTab, openUpload, openUploadExisting, openCourseUpload, searchQuery, setSearchQuery}) {
+  const showUploadButtons = activeTab !== "Files" && activeTab !== "Course Mode";
+  const courseMode= activeTab === "Course Mode";
   return (
     <>
       <h1 className="bodyActiveTabLabel">{activeTab}</h1>
@@ -28,6 +28,12 @@ function UploadBar({activeTab, openUpload, openUploadExisting, searchQuery, setS
               <span className="dashboardHeaderTextUpload">Upload existing</span>
             </button>
           </>
+        )}
+        { courseMode && (
+           <button onClick={openCourseUpload} className="bodyUploadButton">
+           <span className="plusButtonIcon">➕</span>
+           <span className="dashboardHeaderText">Upload New</span>
+         </button>
         )}
         <div className="searchBarContainer">
           <input 
@@ -51,15 +57,14 @@ function RecentsSection({recents, onRecentClick}) {
       case 'Exams': return '📝';
       case 'Quizzes': return '📋';
       case 'Flashcards': return '🃏';
+      case 'Course Mode': return '📚'
       default: return '🗂️';
     }
   };
 
   return (
     <>
-     <div className="recentsSectionHeader">
-        <span className="recentsSectionTitle">RECENT</span>
-      </div>
+     
     <div className="recentsSection">
       <div className="recentsList">
         {recents.slice(0, 5).map((recent, index) => (
@@ -79,7 +84,7 @@ function RecentsSection({recents, onRecentClick}) {
   );
 }
 
-export default function DashboardHeader({openUpload, changeActiveTab, activeTab, openUploadExisting, batches, setBatches, isLimitReached, setIsLimitReached, limitReachedMessage,userProfile}) {
+export default function DashboardHeader({openUpload, changeActiveTab, activeTab, openUploadExisting, batches, setBatches, isLimitReached, setIsLimitReached, limitReachedMessage, userProfile, openCourseUpload}) {
   const [userName, setUserName] = useState('');
   const [userPFP, setUserPFP] = useState(null);
   const [userEmail, setUserEmail] = useState('');
@@ -215,6 +220,9 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
     else if(recent.type === 'Flashcards'){
       navigate(`/flashcards/${batchID}`, {state: {batchName, userProfile}});
     }
+    else if(recent.type === 'Course Mode'){
+      navigate(`/course/${batchID}`, { state: { batchName, userProfile } });
+    }
   };
 
   return (
@@ -243,7 +251,7 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
         </div>
         
         <div className='sideBarButtonDiv'>
-          <div className="nav-section-label">MENU</div>
+          <div className="nav-section-label">STUDY</div>
           <button 
             data-emoji="📝"
             onClick={() => changeActiveTab("Exams")} 
@@ -272,8 +280,17 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
           >
             <span>Files</span>
           </button>
+          <div className="nav-section-label">COURSES</div>
+        <button 
+            data-emoji="📚"
+            onClick={() => changeActiveTab("Course Mode")} 
+            className={activeTab === "Course Mode" ? 'activeDashboardSideButtons' : 'dashboardSideButtons'}
+          >
+            <span>Course Mode</span>
+          </button>
         </div>
-        <RecentsSection recents={recents} onRecentClick={handleRecentClick} />
+        <div className="nav-section-label" style={{display: recents && recents.length > 0 ? "flex": "none"}}>RECENT</div>
+          <RecentsSection recents={recents} onRecentClick={handleRecentClick} />
       </div>
 
       <div className='dashboardBody'>
@@ -282,6 +299,7 @@ export default function DashboardHeader({openUpload, changeActiveTab, activeTab,
             activeTab={activeTab} 
             openUpload={openUpload} 
             openUploadExisting={openUploadExisting}
+            openCourseUpload={openCourseUpload}
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
           />

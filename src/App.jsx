@@ -14,9 +14,11 @@ import Success from "./Dashboard/Success.jsx";
 import Support from "./LandingPage/Support.jsx";
 import ScrollToTop from "./ScrollToTop.jsx";
 
+
 import Exam from "./ViewBatches/Exam.jsx"
 import Quiz from "./ViewBatches/Quiz.jsx"
 import Flashcards from "./ViewBatches/Flashcards.jsx"
+import CourseMode from "./ViewBatches/CourseMode.jsx";
 
 import PrivacyPolicy from "./LandingPage/PrivacyPolicy.jsx";
 import TermsOfService from "./LandingPage/Terms.jsx";
@@ -149,6 +151,12 @@ function AppContent() {
         }
       />
       <Route
+        path="/course/:batchID"
+        element={
+          isAuthenticated ? <CourseMode /> : <Navigate to="/" replace />
+        }
+      />
+      <Route
         path="/quiz/:batchID"
         element={
           isAuthenticated ? <Quiz /> : <Navigate to="/" replace />
@@ -166,12 +174,14 @@ function AppContent() {
           isAuthenticated ? <AccountPage/> : <Navigate to="/" replace />
         }
         />
-       <Route 
+        <Route 
         path='/upgrade' 
         element={
-          isAuthenticated ? <Upgrade/> : <Navigate to="/" replace />
+          isLoading ? <LoadingAnimation /> : (
+            isAuthenticated ? <Upgrade/> : <Navigate to="/" replace />
+          )
         }
-        />
+      />
        <Route path="/success/plus" element={<Success />} />
        <Route path="/success/pro" element={<Success />} />
     </Routes>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { fetchAuthSession, fetchUserAttributes, signOut } from 'aws-amplify/auth';
-import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
+import { useParams, useNavigate, useLocation, Link, useSearchParams } from 'react-router-dom';
 import "./Quiz.css";
 import ViewHamburger from "./ViewHamburger";
 import LoadingAnimation from "../Dashboard/LoadingScreen";
@@ -538,12 +538,17 @@ function QuizScorePage({ results, onReturnToStart, batchName }) {
 
 export default function Quiz() {
     const { batchID } = useParams();
+    const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const location = useLocation();
     const [batchJSON, setBatchJSON] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [batchName, setBatchName] = useState(location.state?.batchName || 'Unknown Batch');
+    const [batchName, setBatchName] = useState(
+        location.state?.batchName || 
+        searchParams.get('batchName') || 
+        'Unknown Batch'
+    );
     const [isIgnoredRequest, setIsIgnoredRequest] = useState('');
     const [isEditingTitle, setIsEditingTitle] = useState(false);
     const [editingName, setEditingName] = useState('');
@@ -563,8 +568,9 @@ export default function Quiz() {
     const [isQuizScorePage, setIsQuizScorePage] = useState(false);
     const [quizResults, setQuizResults] = useState(null);
 
-    const userProfile = location.state?.userProfile || { accountTier: 'free' };
-
+    const userProfile = location.state?.userProfile || { 
+        accountTier: searchParams.get('tier') || 'free' 
+    };
     useEffect(() => {
         getUserName();
         getUserEmail();
