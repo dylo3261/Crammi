@@ -12,6 +12,12 @@ const Support = ({ onBack }) => {
         answer: "Special instructions allow you to provide context or specific requirements for your batch. For example, you can specify topics to focus on, whether to use only your notes or create new content, formatting preferences like true/false, or the number of questions (within account limits).",
         tags: ["instructions", "special", "context"]
       },
+      {
+        emoji: "💭",
+        question: "What is Course Mode?",
+        answer: "Course Mode is Crammi's most unique feature. It ties everything Crammi has to offer into one bundle. Download all your class's lecture notes and feed it into Crammi. Our advanced AI technology will organize your entire course into a comprehensive study guide that you can refer back to over and over again. Course mode lets you go unit by unit with flashcards and quizzes, along with a cumalative final exam that covers all topics.",
+        tags: ["instructions", "special", "context", "course","course mode", "upload"]
+      },
     {
       emoji: "📤",
       question: "How do I upload files?",
