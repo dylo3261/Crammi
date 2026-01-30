@@ -3,15 +3,26 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  right: 0;
+  bottom: 0;
   background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 3000;
-  backdrop-filter: blur(4px);
+  animation: fade-in 0.2s ease-out;
 }
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 /* Pagination Controls - separate row above action buttons */
 .paginationControls {
   display: flex;
@@ -114,23 +125,38 @@
     padding-bottom: 10rem;
   }
 }
+
 /* Upload Modal Content */
 .uploadModalContent {
   position: fixed;
-  background-color: #ffffff;
-  width: 600px;
-  max-width: 90%;
+  background: linear-gradient(to bottom, #ffffff, #fefefe);
+  width: 650px;
+  max-width: 92%;
   height: auto;
-  max-height: 550px;
+  max-height: 85vh;
   padding: 2rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 20px 60px rgba(171, 159, 242, 0.25), 
+              0 0 0 1px rgba(171, 159, 242, 0.1);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   font-family: 'apple', -apple-system, sans-serif;
   text-align: center;
   border-radius: 16px;
-  border: 1px solid #e2e8f0;
+  position: relative;
+  overflow: visible;
+  animation: slide-up 0.3s ease-out;
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 @media (max-width: 768px) {
@@ -171,82 +197,87 @@
   }
   
   .infoIcon{
-    width:15px !important;
-    height:15px !important;
+    width: 20px !important;
+    height: 20px !important;
   }
   
   .filesRemaining{
-    margin-top: 4px!important;
-    box-sizing: border-box;
-    text-align: left;
-    margin-left: -1rem !important;
-    margin-right: -1rem !important;
-    width: calc(100% + 2rem) !important;
-    padding: 0.4rem 1rem !important;
+    font-size: 0.85rem !important;
+    margin-top: 0.25rem !important;
   }
   
   .uploadFileText{
     z-index: 9999 !important;
-    font-size: 2rem !important;
+    font-size: 1.4rem !important;
   }
   
   /* Compact modal — but still readable */
   .uploadModalContent {
-    width: 90% !important;
-    max-width: 90% !important;
-    max-height: 70vh !important;
-    padding: 12px !important;
+    width: 95% !important;
+    max-width: 95% !important;
+    max-height: 90vh !important;
+    padding: 1.5rem !important;
     border-radius: 10px !important;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 0;
     overflow-y: auto;
     overflow-x: hidden;
-  }
-  
-  /* SAFE text shrink — not too small */
-  .uploadModalContent * {
-    font-size: 14px !important;
-    line-height: 1.2 !important;
   }
 
   /* Shrink header padding */
   .uploadFileHeader {
-    margin-bottom: -25px;
+    margin-bottom: 1rem;
+    padding-right: 0 !important;
   }
  
   .fileNameHeader,
   .fileSizeHeader{
-    margin-top: -10px;
+    font-size: 0.7rem !important;
   }
   
   .bottomHeader{
-    margin-bottom: -10px!important;
-    margin-top: -10px!important;
+    margin-bottom: 0.5rem !important;
+    margin-top: 0.25rem !important;
   }
   .bottomHeader2{
-    margin-bottom: 0px!important;
-
-    margin-top: -15px!important;
+    margin-bottom: 0.5rem !important;
+    margin-top: 0.25rem !important;
   }
 
   .specialInstructions{
-    margin-top: -10px;
-    margin-bottom: 10px;
-    font-size: 16px!important;
-    height: 45px;
+    font-size: 0.9rem !important;
+    min-height: 45px;
+    padding: 0.6rem 0.8rem !important;
+    margin-bottom: 0.75rem !important;
   }
   
   .numChars{
-    margin-bottom: 20px;
+    font-size: 0.7rem !important;
+    margin-top: -0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .addAnotherFile {
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .addAnotherFile p {
+    font-size: 0.85rem !important;
+  }
+
+  .warning {
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem !important;
+    margin-bottom: 0.75rem;
   }
 
   /* Perfect small dropzone */
   .uploadDropZone {
-    min-height: 170px !important;
-    max-height: 170px !important;
-    padding: 12px !important;
-    gap: 6px !important;
+    min-height: 160px !important;
+    padding: 2rem 1rem !important;
+    gap: 0.5rem !important;
   }
 
   /* Reduce icon size cleanly */
@@ -255,23 +286,49 @@
     height: 50px !important;
   }
 
+  .uploadBoxDescription {
+    font-size: 1rem !important;
+  }
+
+  .fileTypeSpecify {
+    font-size: 0.75rem !important;
+  }
+
   /* File list compact but readable */
   .fileList {
-    max-height: 140px !important;
+    max-height: 200px !important;
     overflow-y: auto;
+  }
+
+  .fileList li {
+    padding: 0.75rem 0.8rem !important;
+    font-size: 0.85rem !important;
   }
 
   /* File rows spacing */
   .fileName {
-    max-width: 60%;
+    max-width: 55%;
+    font-size: 0.85rem !important;
+  }
+
+  .chosenFileSize {
+    font-size: 0.8rem !important;
+    margin-right: 0.5rem !important;
   }
 
   /* Buttons shrink proportionally */
+  .uploadButton {
+    flex-direction: column-reverse;
+    gap: 0.5rem !important;
+    margin-top: 1rem !important;
+    padding-top: 1rem !important;
+  }
+
   .closeUploadModal {
-    padding: 10px !important;
-    font-size: 14px !important;
-    border-radius: 6px !important;
-    margin-top: 6px !important;
+    width: 100%;
+    padding: 0.7rem 1.5rem !important;
+    font-size: 0.9rem !important;
+    border-radius: 8px !important;
   }
 }
 
@@ -297,119 +354,131 @@
   flex-direction: column;
   align-items: flex-start;
   margin-bottom: 1.5rem;
+  padding-right: 0;
 }
 
 .uploadFileText {
   font-family: 'apple', -apple-system, sans-serif;
   font-size: 1.75rem;
   font-weight: 700;
-  color: #0f172a;
-  margin: 0;
+  color: #1f2937;
+  margin: 0 0 0.5rem 0;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .filesRemaining {
   font-family: 'applethin', -apple-system, sans-serif;
-  font-size: 1.1rem;
-  font-weight: 400;
+  font-size: 0.95rem;
+  font-weight: 500;
   letter-spacing: 0.3px;
-  margin-top: 0.60rem;
-  margin-bottom: 0;
-  background-color: #f8f9fa;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: calc(100% + 4rem);
-  margin-left: -2rem;
-  margin-right: -2rem;
-  padding: 0.75rem 2rem;
-  text-align: left;
-  color: #64748b;
-  border-top: 1px solid #e2e8f0;
-  border-bottom: 1px solid #e2e8f0;
+  margin: 0;
+  color: #6b7280;
 }
 
 .asterik {
-  color: #6366f1;
+  color: #AB9FF2;
   font-weight: 700;
 }
 
 /* Drag & Drop Zone */
 .uploadDropZone {
   flex: 1;
-  min-height: 280px;
-  border: 2px dashed #cbd5e1;
+  min-height: 200px;
+  border: 3px dashed #cbd5e1;
+  background: #f8f9fa;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  padding: 2rem;
+  padding: 3rem 2rem;
   margin-bottom: 1rem;
   gap: 1rem;
   overflow-y: auto;
   transition: all 0.3s ease;
-  background-color: #f8f9fa;
   border-radius: 12px;
 }
 
 @media (max-width: 400px) {
   .uploadDropZone {
-    padding: 1rem;
-    border-width: 2px;
+    padding: 2rem 1rem;
+    border-width: 3px;
   }
 }
 
 .uploadDropZone.dragOver {
-  background-color: #f0f4ff;
-  border-color: #ab9ff2;
-  border-width: 2px;
-  box-shadow: 0 0 0 4px rgba(171, 159, 242, 0.1);
+  border-color: #9ca3af;
+  background: #ececec;
+  transform: scale(1.02);
+  box-shadow: 0 8px 20px rgba(107, 114, 128, 0.2);
+}
+
+.uploadDropZone:hover {
+  border-color: #9ca3af;
+  background: #f0f1f2;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(107, 114, 128, 0.2);
 }
 
 .addFileButton {
   border: none;
   background: transparent;
   color: #6366f1;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   cursor: pointer;
   padding: 0;
-  text-decoration: none;
   text-decoration: underline;
   font-style: normal;
   font-family: 'applemedium', -apple-system, sans-serif;
+  font-weight: 600;
   transition: color 0.2s ease;
 }
 
 .addFileButton:hover {
-  color: #ab9ff2;
+  color: #4c4ff6;
 }
 
 .addAnotherFile {
-  display: flex;
-  margin-bottom: 0.75rem;
+  background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+  border: 1px dashed #AB9FF2;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.addAnotherFile p {
+  margin: 0;
   font-family: 'applethin', -apple-system, sans-serif;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   font-style: normal;
-  color: #64748b;
+  color: #4b5563;
 }
 
 .fileListHeader {
   display: flex;
   align-items: center;
+  padding: 0.7rem 1rem;
+  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+  border-radius: 8px 8px 0 0;
   font-family: 'applemedium', -apple-system, sans-serif;
-  font-size: 0.75rem;
-  color: #94a3b8;
+  font-size: 0.85rem;
+  color: #6b7280;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-weight: 600;
+  margin-bottom: 0;
 }
 
 /* Name column — takes leftover space */
 .fileNameHeader {
-  flex-grow: 1;
+  flex: 1;
   overflow: hidden;
   text-align: left;
 }
@@ -420,6 +489,8 @@
   margin-right: 0.5rem;
   white-space: nowrap;
   flex-shrink: 0;
+  width: 100px;
+  text-align: right;
 }
 
 /* Spacer for the delete button column */
@@ -429,28 +500,29 @@
 }
 
 .bottomHeader {
-  border-bottom: 1px solid #e2e8f0;
-  margin-bottom: 1rem;
-  margin-top: 0.5rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, #e5e7eb 50%, transparent 100%);
+  margin: 0;
 }
+
 .bottomHeader2 {
-  border-bottom: 1px solid #e2e8f0;
-  margin-bottom: 1rem;
-  margin-top: 0.5rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, #e5e7eb 50%, transparent 100%);
+  margin: 0;
 }
 
 .uploadModalIcon {
   width: 64px;
   height: 64px;
-  opacity: 0.4;
-  filter: brightness(0) saturate(100%) invert(40%) sepia(20%) saturate(500%) hue-rotate(200deg) brightness(95%) contrast(90%);
+  opacity: 0.7;
 }
 
 .infoIcon {
   filter: invert(58%) sepia(32%) saturate(2650%) hue-rotate(185deg) brightness(103%) contrast(94%);
-  width: 18px;
-  height: 18px;
-  opacity: 0.7;
+  width: 20px;
+  height: 20px;
+  opacity: 0.6;
+  cursor: help;
   transition: opacity 0.2s ease;
 }
 
@@ -462,30 +534,36 @@
   position: relative;
   display: inline-block;
   margin-left: 0.5rem;
+  z-index: 10;
 }
 
-.tooltipBox {
+.etooltipBox {
   position: absolute;
   top: -5px;
   left: 100%;
   transform: translateY(-100%);
-  background: #0f172a;
-  color: white;
+  background: #0f172a !important;
+  color: #ffffff !important;
   padding: 0.5rem 0.75rem;
   border-radius: 8px;
-  font-style: normal;
-  font-family: 'applethin', -apple-system, sans-serif;
-  font-weight: 400;
-  font-size: 0.9rem;
+  font-style: normal !important;
+  font-family: 'applethin', -apple-system, sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 0.9rem !important;
+  line-height: 1.4 !important;  
   white-space: nowrap;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   visibility: hidden;
   opacity: 0;
   transition: opacity 0.2s ease;
-  z-index: 9999;
+  z-index: 99999;
+  pointer-events: none;
+  -webkit-text-fill-color: #ffffff !important;  
+  background-clip: initial !important;  
+  -webkit-background-clip: initial !important; 
 }
 
-.tooltipBox::before {
+.etooltipBox::before {
   content: '';
   position: absolute;
   bottom: -4px;
@@ -496,19 +574,20 @@
   transform: rotate(45deg);
 }
 
-.tooltipWrapper:hover .tooltipBox {
+.tooltipWrapper:hover .etooltipBox {
   visibility: visible;
   opacity: 1;
 }
+
 @media (max-width: 768px) {
-  .tooltipBox {
+  .etooltipBox {
     top: 100%;
     left: 300%;
     transform: translateX(-50%);
     margin-top: 8px;
   }
 
-  .tooltipBox::before {
+  .etooltipBox::before {
     top: -4px;
     bottom: auto;
     left: 50%;
@@ -518,42 +597,64 @@
 
 /* File List */
 .fileList {
-  list-style-type: none;
+  list-style: none;
   padding: 0;
   margin: 0;
   width: 100%;
-  max-height: 250px;
+  max-height: 300px;
   overflow-y: auto;
   text-align: left;
   align-self: flex-start;
+  border: 1px solid #e5e7eb;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+}
+
+.fileList::-webkit-scrollbar {
+  width: 8px;
+}
+
+.fileList::-webkit-scrollbar-track {
+  background: #f9fafb;
+}
+
+.fileList::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #AB9FF2 0%, #8B7CD8 100%);
+  border-radius: 4px;
+}
+
+.fileList::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #9B8CE8 0%, #8B7CD8 100%);
 }
 
 .fileList li {
   background-color: #ffffff;
-  border: 1px solid #e2e8f0;
-  margin: 0.5rem 0;
-  padding: 0.75rem 1rem;
-  font-size: 0.875rem;
-  color: #0f172a;
+  border-bottom: 1px solid #f3f4f6;
+  padding: 0.9rem 1rem;
+  font-size: 0.9rem;
+  color: #1f2937;
   word-break: break-all;
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-family: 'applemedium', -apple-system, sans-serif;
-  border-radius: 8px;
   transition: all 0.2s ease;
 }
 
 .fileList li:hover {
-  background-color: #f8f9fa;
-  border-color: #cbd5e1;
+  background: linear-gradient(135deg, #faf5ff 0%, #f9fafb 100%);
+}
+
+.fileList li:last-child {
+  border-bottom: none;
 }
 
 .fileName {
+  flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: #0f172a;
+  color: #1f2937;
   font-weight: 500;
 }
 
@@ -562,14 +663,16 @@
   margin-right: 0.75rem;
   white-space: nowrap;
   flex-shrink: 0;
-  color: #64748b;
-  font-size: 0.8rem;
+  color: #6b7280;
+  font-size: 0.85rem;
   font-family: 'applethin', -apple-system, sans-serif;
+  width: 100px;
+  text-align: right;
 }
 
 .colorizeFileSize {
-  color: #94a3b8;
-  font-family: 'applethin', -apple-system, sans-serif;
+  color: #AB9FF2;
+  font-weight: 600;
 }
 
 .removeFile {
@@ -594,22 +697,21 @@
 
 /* Buttons */
 .closeUploadModal {
-  padding: 0.75rem 1.5rem;
+  padding: 0.7rem 1.8rem;
   background: white;
-  color: #0f172a;
-  border: 2px solid #e2e8f0;
-  border-radius: 10px;
+  color: #374151;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   font-family: 'apple', -apple-system, sans-serif;
   font-size: 0.95rem;
   font-weight: 600;
 }
 
 .closeUploadModal:hover {
-  border-color: #cbd5e1;
-  background: #f8f9fa;
-  transform: translateY(-1px);
+  border-color: #d1d5db;
+  background: #f9fafb;
 }
 
 /* Upload button - keep gradient */
@@ -617,13 +719,14 @@
   background: linear-gradient(135deg, #ab9ff2 0%, #6366f1 100%);
   color: white;
   border: none;
-  box-shadow: 0 2px 8px rgba(171, 159, 242, 0.3);
+  box-shadow: 0 4px 12px rgba(171, 159, 242, 0.4);
 }
 
 .closeUploadModal:last-child:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(171, 159, 242, 0.4);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(171, 159, 242, 0.5);
 }
+
 .selectPageHeader {
   display: inline;
   letter-spacing: 0.5px;
@@ -633,25 +736,27 @@
 .uploadButton {
   display: flex;
   justify-content: center;
-  gap: 1rem;
+  gap: 0.75rem;
   flex-shrink: 0;
   flex-grow: 0;
   align-self: center;
-
+  padding-top: 1.5rem;
 }
 
 .uploadBoxDescription {
   font-family: 'apple', -apple-system, sans-serif;
-  font-size: 1.125rem;
-  color: #64748b;
-  margin-bottom: 0.25rem;
-  font-weight: 500;
+  font-size: 1.1rem;
+  color: #374151;
+  margin: 0rem 0;
+  font-weight: 600;
 }
 
 .fileTypeSpecify {
   font-family: 'applethin', -apple-system, sans-serif;
-  color: #94a3b8;
-  font-size: 0.875rem;
+  color: #AB9FF2;
+  font-size: 0.85rem;
+  margin: 0.3rem 0 0 0;
+  font-weight: 500;
 }
 
 /* PDF Page Grid Modal */
@@ -785,15 +890,15 @@
 }
 
 .warning {
-  display: flex;
-  margin-bottom: 0.75rem;
-  font-family: 'applethin', -apple-system, sans-serif;
-  font-size: 0.875rem;
-  color: #ef4444;
-  background-color: #fee2e2;
-  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  border-left: 4px solid #ef4444;
+  color: #991b1b;
+  padding: 0.9rem 1.2rem;
+  margin-bottom: 1rem;
   border-radius: 8px;
-  border-left: 3px solid #ef4444;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.1);
+  font-family: 'applethin', -apple-system, sans-serif;
 }
 
 /* Selected state */
@@ -837,6 +942,8 @@
   box-sizing: border-box;
   transition: all 0.2s ease;
   margin-bottom: 0.75rem;
+  resize: none;
+  min-height: 60px;
 }
 
 /* Focus ring */
@@ -859,4 +966,9 @@
   font-size: 0.75rem;
   padding-top: 0.5rem;
   height: 0px;
+}
+
+.specialInstructionsCharacters {
+  position: relative;
+  z-index: 10;
 }

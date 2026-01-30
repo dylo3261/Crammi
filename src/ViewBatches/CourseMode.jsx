@@ -6,6 +6,117 @@ import LoadingAnimation from "../Dashboard/LoadingScreen";
 import ViewHamburger from "./ViewHamburger";
 import LimitReached from "../Dashboard/limitReached";
 
+// Load KaTeX once globally
+let katexLoaded = false;
+let katexLoadingPromise = null;
+
+function loadKaTeX() {
+    if (katexLoaded) {
+        return Promise.resolve();
+    }
+    
+    if (katexLoadingPromise) {
+        return katexLoadingPromise;
+    }
+    
+    katexLoadingPromise = new Promise((resolve) => {
+        if (window.katex) {
+            katexLoaded = true;
+            resolve();
+            return;
+        }
+
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css';
+        document.head.appendChild(link);
+
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js';
+        script.onload = () => {
+            katexLoaded = true;
+            resolve();
+        };
+        document.head.appendChild(script);
+    });
+    
+    return katexLoadingPromise;
+}
+
+// Memoized LaTeX Rendering Component
+const LatexText = React.memo(({ text }) => {
+    const containerRef = useRef(null);
+    const [isReady, setIsReady] = useState(katexLoaded);
+    const lastTextRef = useRef(null);
+
+    useEffect(() => {
+        loadKaTeX().then(() => setIsReady(true));
+    }, []);
+
+    useEffect(() => {
+        if (!containerRef.current || !text || !isReady || lastTextRef.current === text) {
+            return;
+        }
+
+        lastTextRef.current = text;
+        const container = containerRef.current;
+        container.innerHTML = '';
+        
+        let textContent = text;
+        
+        if (!textContent.includes('$') && (textContent.includes('\\text') || textContent.includes('\\,'))) {
+            textContent = '$' + textContent + '$';
+        }
+        
+        if (!textContent.includes('$')) {
+            container.textContent = textContent;
+            return;
+        }
+        
+        let currentPos = 0;
+        
+        while (currentPos < textContent.length) {
+            const dollarPos = textContent.indexOf('$', currentPos);
+            
+            if (dollarPos === -1) {
+                const textNode = document.createTextNode(textContent.substring(currentPos));
+                container.appendChild(textNode);
+                break;
+            }
+            
+            if (dollarPos > currentPos) {
+                const textNode = document.createTextNode(textContent.substring(currentPos, dollarPos));
+                container.appendChild(textNode);
+            }
+            
+            const closingDollarPos = textContent.indexOf('$', dollarPos + 1);
+            
+            if (closingDollarPos === -1) {
+                const textNode = document.createTextNode(textContent.substring(dollarPos));
+                container.appendChild(textNode);
+                break;
+            }
+            
+            const latexContent = textContent.substring(dollarPos + 1, closingDollarPos);
+            const span = document.createElement('span');
+            
+            try {
+                window.katex.render(latexContent, span, {
+                    displayMode: false,
+                    throwOnError: false
+                });
+                container.appendChild(span);
+            } catch (e) {
+                const textNode = document.createTextNode('$' + latexContent + '$');
+                container.appendChild(textNode);
+            }
+            
+            currentPos = closingDollarPos + 1;
+        }
+    }, [text, isReady]);
+
+    return <span ref={containerRef}>{!isReady ? text : ''}</span>;
+});
 export default function CourseMode() {
   const { batchID } = useParams();
   const [batchJSON, setBatchJSON] = useState(null);
@@ -1036,7 +1147,9 @@ useEffect(() => {
               {unit_summaries[selectedUnit] && (
                 <div className="course-overview-section">
                   <h3 className="course-section-heading">📖 Overview</h3>
-                  <p className="course-overview-text">{unit_summaries[selectedUnit].overview}</p>
+                  <p className="course-overview-text">
+                    <LatexText text={unit_summaries[selectedUnit].overview} />
+                  </p>
                 </div>
               )}
 
@@ -1151,7 +1264,9 @@ useEffect(() => {
                   {table_of_contents.units[selectedUnit].topics.map((topic, idx) => (
                     <div key={idx} className="course-topic-card">
                       <div className="course-topic-icon">•</div>
-                      <div className="course-topic-text">{topic}</div>
+                      <div className="course-topic-text">
+                        <LatexText text={topic} />
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -1277,14 +1392,16 @@ useEffect(() => {
                             className="course-definition-header"
                             onClick={() => toggleDefinition(selectedUnit, idx)}
                           >
-                            <div className="course-definition-term">{def.term}</div>
+                            <div className="course-definition-term">
+                              <LatexText text={def.term} />
+                            </div>
                             <div className={`course-expand-icon ${isExpanded ? 'course-expanded' : ''}`}>
                               ▼
                             </div>
                           </button>
                           {isExpanded && (
                             <div className="course-definition-content">
-                              <p>{def.definition}</p>
+                              <p><LatexText text={def.definition} /></p>
                             </div>
                           )}
                         </div>

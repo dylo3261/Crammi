@@ -514,7 +514,7 @@ export default function UploadModal({ isOpen, close, activeTab, userProfile, set
                   src="/infoIcon.png"
                   alt="info about remaining files"
                 />
-                <span className="tooltipBox">
+                <span className="etooltipBox">
                   *Your account plan limits the number of files <br /> you can upload in a single batch.
                 </span>
               </div>
