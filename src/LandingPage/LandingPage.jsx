@@ -170,7 +170,7 @@ export default function LandingPage() {
       id: 'pro',
       name: 'Pro',
       emoji: '🚀',
-      price: { monthly: 11.99, annual: 119.99 },
+      price: { monthly: 9.99, annual: 99.99 },
       description: 'For serious students who need unlimited power',
       features: [
         'Unlimited uploads',

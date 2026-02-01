@@ -4,7 +4,23 @@
     margin-bottom: 1rem;
     width: 100%;
 }
+/* Scrollbar styling for existing file selection */
+.existingFileSelection::-webkit-scrollbar {
+  width: 8px;
+}
 
+.existingFileSelection::-webkit-scrollbar-track {
+  background: #f9fafb;
+}
+
+.existingFileSelection::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #AB9FF2 0%, #8B7CD8 100%);
+  border-radius: 4px;
+}
+
+.existingFileSelection::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #9B8CE8 0%, #8B7CD8 100%);
+}
 .existingSearchIcon {
     position: absolute;
     left: 0.75rem;
@@ -206,8 +222,9 @@
   }
   
   .existingFileList li:hover {
-    background-color: #f0f0f0;
-  }
+    background-color: #f0edff;
+    border-color: #AB9FF2;
+    }
 /* Batch Item Styling */
 .batchItem {
     cursor: pointer;

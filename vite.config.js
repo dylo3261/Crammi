@@ -9,13 +9,13 @@ export default defineConfig({
     vitePrerenderPlugin({
       renderTarget: '#root',
       additionalPrerenderRoutes: [
-        '/Support', 
-        '/PrivacyPolicy', 
-        '/TermsOfService',
+        '/support',          
+        '/privacy-policy',    
+        '/terms-of-service',  
         '/blog',
-        // Add all blog post routes dynamically
         ...blogPosts.map(post => `/blog/${post.slug}`)
       ]
+      
     })
   ]
 });

@@ -325,6 +325,76 @@ Ready or not this is the new normal.
           "Crammi",
           "student productivity"
         ]
+      },
+      {
+        id: 5,
+        slug: "course-study-system",
+        title: "How to Turn an Entire College Course into a Structured Study System",
+        excerpt:
+          "Most college classes don't feel hard because the material is impossible, they feel hard because everything is scattered.",
+        category: "Productivity",
+        author: "Dylan Long",
+        date: "Feb 1, 2025",
+        readTime: "5 min read",
+        image:
+          "https://images.pexels.com/photos/4145190/pexels-photo-4145190.jpeg",
+        featured: false,
+        content: `
+      # The worst part about class materials
+      Class materials are all over the place, and our professors expect us to navigate every single course module on Canvas. 
+      - Lecture slides in separate weekly modules
+      - Notes in another
+      - Quizzes somewhere else (especially if the class uses Moodle..)
+      And by midterms? You're scrambling around Canvas at two in the morning trying to find that one lecture about the super niche topic that was on one singular slide.
+
+      Studying becomes more about organization rather than learning.
+
+      Luckily for us, Crammi's Course Mode was built to solve this problem. Course Mode helps students turn lecture slides and PDFs into a complete course study system for the entire semester.
+      
+      ## The problem with studying by chapter, not course
+      Go ahead and try other study tools. I guarantee you 99% of them treat learning as a series of disconnected uploads.
+      One lecture at a time. One chapter. One set of slides for a specific week.
+      This works fine until you're on week six of class! By then, concepts start overlapping. Topics get drowned out. Next thing you know, you've lost the bigger picture of the course. And it all comes crashing down on you when the final exam is cumulative.
+
+      Students don't just need quizzes. They need structure for the entire duration of the semester.
+      
+     
+      ## What Course Mode actually means
+      Course Mode is designed to turn an ENTIRE CLASS into one singular, organized study system that students can refer back to over and over again throughout the entire semester.
+      It does this by taking each upload and:
+      - Grouping material into all the specific units
+      - Generating summaries for each unit
+      - Extracting all the key terms and their definitions
+      - Letting users create flashcards and quizzes with explanations for each individual unit WHILE ALSO giving them the same customization options as normal Crammi uploads
+      - Builds cumulative exams that pull from the entire course from beginning to end
+
+      Nobody does this better than Crammi. Everything lives in one place. Forget scrolling each module in Moodle/Canvas at three in the morning looking for something specific. Use your time better and just learn.
+      
+      ## When Course Mode actually makes sense
+      Course mode SHINES with:
+      - Cumulative classes
+      - HEAVY lecture slides every week
+      - Students that want to spend their time doing more productive work
+
+      ## My closing thought to hopefully get you to try Course Mode
+      College courses may be (ostensibly) structured, but I gurantee you other study tools aren't. Course mode bridges that gap by treating your class like a flowing river rather than a bunch of small puddles. 
+
+      If your studying could be more organized, the issue isnt your inability to scroll through Canvas the day before a midterm, its structure.
+
+      Let Crammi do it for you. Course Mode was built to fix that.
+      
+        `,
+        metaDescription:
+          "Take all the lecture note PDFs from your course and turn them into a structured study system with summaries, flashcards, quizzes, and cumulative exams - all in one place.",
+        keywords: [
+          "Course Study System",
+          "AI study tool for college",
+          "Study tool for entire semester",
+          "Cumulative exam study tool",
+          "Crammi",
+          "Organize lecture slides",
+          "Semester-long study tool"
+        ]
       }
   ];
   
