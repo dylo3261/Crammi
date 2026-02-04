@@ -124,6 +124,7 @@ export default function AccountPage(){
          
             <ul>
               <li>✓ Unlimited uploads</li>
+              <li>✓ Course Mode x5/Month</li>
               <li>✓ Up to 50 photos per upload</li>
               <li>✓ Max 100 flashcards per set</li>
               <li>✓ Max 60 exam questions</li>

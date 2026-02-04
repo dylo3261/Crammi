@@ -30,24 +30,34 @@ const logoutUri = isLocalhost
   ? 'http://localhost:5173/' 
   : `${window.location.origin}/`;
 
-if (typeof window !== 'undefined') {
-  Amplify.configure({
-    Auth: {
-      Cognito: {
-        userPoolId: import.meta.env.VITE_COGNITO_USER_POOL_ID,
-        userPoolClientId: import.meta.env.VITE_COGNITO_CLIENT_ID,
-        loginWith: {
-          oauth: {
-            domain: 'auth.crammi.com', 
-            scopes: ['openid', 'email', 'phone', 'profile', 'aws.cognito.signin.user.admin'],
-            redirectSignIn: [redirectUri, upgradeUri], 
-            redirectSignOut: [logoutUri],
-            responseType: 'code',
+  if (typeof window !== 'undefined') {
+    Amplify.configure({
+      Auth: {
+        Cognito: {
+          userPoolId: import.meta.env.VITE_COGNITO_USER_POOL_ID,
+          userPoolClientId: import.meta.env.VITE_COGNITO_CLIENT_ID,
+          loginWith: {
+            oauth: {
+              domain: 'auth.crammi.com', 
+              scopes: ['openid', 'email', 'phone', 'profile', 'aws.cognito.signin.user.admin'],
+              redirectSignIn: [redirectUri, upgradeUri], 
+              redirectSignOut: [logoutUri],
+              responseType: 'code',
+            },
           },
+          cookieStorage: {
+            domain: window.location.hostname.includes('localhost') 
+              ? 'localhost' 
+              : window.location.hostname,
+            path: '/',
+            expires: 365,
+            sameSite: "lax", 
+            secure: !isLocalhost 
+          }
         },
       },
-    },
-  });}
+    });
+  }
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 

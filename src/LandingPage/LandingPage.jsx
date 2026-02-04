@@ -102,7 +102,7 @@ export default function LandingPage() {
     {
       icon: '🎯',
       title: 'Exam Ready',
-      description: 'Practice tests that mirror real exam formats and difficulty'
+      description: 'Practice tests that mirror real exam formats with custom time limits and difficulty'
     },
     {
       icon: '💡',

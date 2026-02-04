@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import * as pdfjsLib from "pdfjs-dist/build/pdf.mjs";
+import { Link } from "react-router-dom";
 import { fetchAuthSession } from 'aws-amplify/auth';
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker.mjs?url";
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
@@ -560,10 +561,20 @@ export default function UploadModal({ isOpen, close, activeTab, userProfile, set
             Please make sure to upload either photos or PDFs.
           </p> 
           <p className="warning" style={{ display: isWarning2 ? "block" : "none" }}>
-            Batch file size limit exceeded. You can Upload up to {maxFileSize / (1024 * 1024)} MBs.
+            Batch file size limit exceeded. You can Upload up to {maxFileSize / (1024 * 1024)} MBs. <Link
+              to="/upgrade"
+              style={{ textDecoration: 'underline', color: '#ab9ff2', cursor: 'pointer', display: userProfile?.accountTier==='pro'? 'none' : 'inline-block' }}
+            >
+              Upgrade Plan Now ⭐
+            </Link>
           </p> 
           <p className="warning" style={{ display: isWarning3 ? "block" : "none" }}>
-            File upload limit reached. You can only upload up to {maxNumFiles} files.
+            File upload limit reached. You can only upload up to {maxNumFiles} files. <Link
+              to="/upgrade"
+              style={{ textDecoration: 'underline', color: '#ab9ff2', cursor: 'pointer', display: userProfile?.accountTier==='pro'? 'none' : 'inline-block' }}
+            >
+              Upgrade Plan Now ⭐
+            </Link>
           </p> 
 
           <div className="fileListHeader" style={{ display: selectedFiles.length > 0 ? "flex" : "none" }}>

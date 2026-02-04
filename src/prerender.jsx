@@ -84,7 +84,7 @@ export async function prerender(data) {
         { type: 'meta', props: { property: 'og:url', content: url } },
         { type: 'meta', props: { property: 'og:title', content: title } },
         { type: 'meta', props: { property: 'og:description', content: description } },
-        { type: 'meta', props: { property: 'og:image', content: 'https://crammi.com/cropped_circle_image.png' } },
+        { type: 'meta', props: { property: 'og:image', content: 'https://crammi.com/crammipink.png' } },
         { type: 'meta', props: { property: 'og:site_name', content: 'Crammi' } },
         
         // Twitter
@@ -92,7 +92,7 @@ export async function prerender(data) {
         { type: 'meta', props: { property: 'twitter:url', content: url } },
         { type: 'meta', props: { property: 'twitter:title', content: title } },
         { type: 'meta', props: { property: 'twitter:description', content: description } },
-        { type: 'meta', props: { property: 'twitter:image', content: 'https://crammi.com/cropped_circle_image.png' } },
+        { type: 'meta', props: { property: 'twitter:image', content: 'https://crammi.com/crammipink.png' } },
         
         // Canonical URL
         { type: 'link', props: { rel: 'canonical', href: url } },

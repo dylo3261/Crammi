@@ -1,6 +1,7 @@
 // LimitReached.jsx
 
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import './limitReached.css';
 
 export default function LimitReached({ isLimitReached, setIsLimitReached, limitReachedMessage, userProfile, activeTab }) {
@@ -23,7 +24,7 @@ export default function LimitReached({ isLimitReached, setIsLimitReached, limitR
           setIsLimitReached(false);
           setIsClosing(false);
         }, 400);
-      }, 8000);
+      }, 15000);
       return () => clearTimeout(timer);
     }
   }, [isLimitReached, setIsLimitReached]);
@@ -47,9 +48,22 @@ export default function LimitReached({ isLimitReached, setIsLimitReached, limitR
         <div className="errorTextWrapper">
           <h3 className="errorTitle">Upload Failed</h3>
           <p className="errorMessage">
-            { activeTab==='Course Mode' ?`5/5 Monthly Course Uploads Reached! Please ${limitReachedMessage || "try again next month."}` 
-            : `${userTier} Monthly Uploads reached! Upgrade your account plan or ${limitReachedMessage || "try again next month."}.`}
-          </p>
+          {activeTab === 'Course Mode' ? (
+            `5/5 Monthly Course Uploads Reached! Please ${limitReachedMessage || "try again next month."}`
+          ) : (
+            <>
+              {userTier} Monthly Uploads reached!{' '}
+              <Link
+                to="/upgrade"
+                style={{ textDecoration: 'underline', color: '#ab9ff2', cursor: 'pointer'}}
+              >
+                Upgrade your account plan here
+              </Link>{' '}
+              or {limitReachedMessage || "try again next month."}.
+            </>
+          )}
+        </p>
+
         </div>
         <button 
           className="errorCloseButton"

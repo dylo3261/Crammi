@@ -39,8 +39,9 @@ export default function Upgrade() {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const session = await fetchAuthSession();
+        const session = await fetchAuthSession({ forceRefresh: true });
         const token = session.tokens?.idToken?.toString();
+        
   
         const response = await fetch('https://gwq0u2sdai.execute-api.us-west-2.amazonaws.com/prod/profile', {
           headers: { 'Authorization': `Bearer ${token}` }

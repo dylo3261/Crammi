@@ -174,11 +174,12 @@ function AppContent() {
           isAuthenticated ? <AccountPage/> : <Navigate to="/" replace />
         }
         />
-        <Route 
+      <Route 
         path='/upgrade' 
         element={
           isLoading ? <LoadingAnimation /> : (
-            isAuthenticated ? <Upgrade/> : <Navigate to="/" replace />
+            isAuthenticated ? <Upgrade/> : 
+            <Navigate to="/signin" state={{ returnTo: '/upgrade' }} replace />
           )
         }
       />
