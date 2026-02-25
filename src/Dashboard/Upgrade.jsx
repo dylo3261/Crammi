@@ -35,6 +35,19 @@ export default function Upgrade() {
   const location = useLocation();
   const stateUserProfile = location.state?.userProfile;
 
+  //refresh upgrade page
+  useEffect(() => {
+    const handlePageShow = (event) => {
+      // pageshow fires when page is restored from bfcache
+      if (event.persisted) {
+        setIsLoading(false);
+        setLoadingPlan(null);
+      }
+    };
+  
+    window.addEventListener('pageshow', handlePageShow);
+    return () => window.removeEventListener('pageshow', handlePageShow);
+  }, []);
   // Fetch user profile every time
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -220,7 +233,7 @@ export default function Upgrade() {
       description: 'For serious students who need unlimited power',
       features: [
         'Unlimited uploads',
-        '*NEW* Course Mode (x5/month)',
+        '*NEW* Course Mode',
         'Up to 50 photos per upload',
         'Max 100 flashcards per set',
         'Max 60 exam questions',

@@ -174,7 +174,7 @@ export default function LandingPage() {
       description: 'For pro students who need unlimited power',
       features: [
         'Unlimited uploads',
-        '*NEW* Course Mode (x5/month)',
+        '*NEW* Course Mode',
         'Up to 50 photos per upload',
         'Max 100 flashcards per set',
         'Max 60 exam questions',
@@ -462,7 +462,7 @@ export default function LandingPage() {
             </div>
             
             <div className="landing-course-mode-text">
-              <h2 className="section-title-special">Dump your entire semester with Course Mode 🚚 📚</h2>
+              <h2 className="section-title-special">Dump your entire semester with Course Mode 📚</h2>
               <p className="section-subtitle">
                 Dump your entire semester into Crammi. Upload up to 1,500 pages of lectures, slides, and textbooks and get a complete, AI-generated study guide. Course Mode uses advanced AI to analyze your material at a course level — organizing content into units, generating summaries, quizzes, exams, and flashcards that actually follow your class from start to finish.
               </p>
@@ -472,7 +472,7 @@ export default function LandingPage() {
                   <div className="landing-stat-label">Pages Max</div>
                 </div>
                 <div className="landing-stat-item">
-                  <div className="landing-stat-number">5×</div>
+                  <div className="landing-stat-number">Unlimited</div>
                   <div className="landing-stat-label">Per Month</div>
                 </div>
                 <div className="landing-stat-item">

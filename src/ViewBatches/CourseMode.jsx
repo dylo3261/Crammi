@@ -143,7 +143,7 @@ export default function CourseMode() {
 const [finalExamInput, setFinalExamInput] = useState('');
   const pollIntervalRef = useRef(null);
 const pollCountRef = useRef(0);
-const MAX_POLLS = 18;
+const MAX_POLLS = 60;
 const [isLimitReached, setIsLimitReached] = useState(false);
 const [limitReachedMessage, setLimitReachedMessage] = useState('');
 const [newQuizBatchID, setNewQuizBatchID] = useState(null);

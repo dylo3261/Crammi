@@ -47,7 +47,7 @@ export default function Success() {
     } else {
       return [
         'Unlimited uploads',
-        '*NEW* Course Mode (x5/month)',
+        '*NEW* Course Mode',
         '50 photo batches',
         'Limit 60 question exams',
         'Limit 30 quiz questions',

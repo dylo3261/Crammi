@@ -49,7 +49,7 @@ export default function LimitReached({ isLimitReached, setIsLimitReached, limitR
           <h3 className="errorTitle">Upload Failed</h3>
           <p className="errorMessage">
           {activeTab === 'Course Mode' ? (
-            `5/5 Monthly Course Uploads Reached! Please ${limitReachedMessage || "try again next month."}`
+            `30/30 Monthly Course Uploads Reached! Please ${limitReachedMessage || "try again next month."}`
           ) : (
             <>
               {userTier} Monthly Uploads reached!{' '}
