@@ -30,7 +30,7 @@ export default function BatchesSection({
     const inputRef = useRef(null);
     const navigate = useNavigate();
     const pollCountRef = useRef(0);
-    const MAX_POLLS = 18;
+    const MAX_POLLS = 60;
 
     useEffect(() => {
     if (batches.length > 0) {

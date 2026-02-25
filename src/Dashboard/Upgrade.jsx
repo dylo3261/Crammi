@@ -199,7 +199,7 @@ export default function Upgrade() {
       id: 'plus',
       name: 'Plus',
       emoji: '⚡',
-      price: { monthly: 3.99, annual: 39.99 },
+      price: { monthly: 3.99, annual: 29.99 },
       description: 'Great for regular students',
       features: [
         '50 uploads per month',
@@ -216,7 +216,7 @@ export default function Upgrade() {
       id: 'pro',
       name: 'Pro',
       emoji: '🚀',
-      price: { monthly: 9.99, annual: 99.99 },
+      price: { monthly: 8.49, annual: 69.99 },
       description: 'For serious students who need unlimited power',
       features: [
         'Unlimited uploads',
@@ -288,7 +288,7 @@ export default function Upgrade() {
             onClick={() => setBillingCycle('annual')}
           >
             Annual
-            <span className="save-badge">2 months free</span>
+            <span className="save-badge">~4 mo/free</span>
           </button>
         </div>
       </div>

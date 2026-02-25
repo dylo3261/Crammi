@@ -155,7 +155,7 @@ export default function LandingPage() {
       id: 'plus',
       name: 'Plus',
       emoji: '⚡',
-      price: { monthly: 3.99, annual: 39.99 },
+      price: { monthly: 3.99, annual: 29.99 },
       description: 'Great for regular students',
       features: [
         '50 uploads per month',
@@ -170,8 +170,8 @@ export default function LandingPage() {
       id: 'pro',
       name: 'Pro',
       emoji: '🚀',
-      price: { monthly: 9.99, annual: 99.99 },
-      description: 'For serious students who need unlimited power',
+      price: { monthly: 8.49, annual: 69.99 },
+      description: 'For pro students who need unlimited power',
       features: [
         'Unlimited uploads',
         '*NEW* Course Mode (x5/month)',
@@ -501,7 +501,7 @@ export default function LandingPage() {
               className={`toggle-btn ${billingCycle === 'annual' ? 'active' : ''}`}
               onClick={() => setBillingCycle('annual')}
             >
-              Annual <span className="save-badge">Save ~17%</span>
+              Annual <span className="save-badge">Save ~35%</span>
             </button>
           </div>
         </div>
