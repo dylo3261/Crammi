@@ -32,7 +32,14 @@ export default function CourseModeDenied({ isOpen, onClose, onUpgrade }) {
             <li><span className="denied-check">✓</span>Organize multiple courses</li>
             <li><span className="denied-check">✓</span>Priority Processing</li>
           </ul>
-
+          <a 
+          href="https://crammi.com/course-mode-demo.mp4" 
+          className="denied-see-how" 
+          target="_blank" 
+          rel="noopener noreferrer"
+        >
+          See how it works →
+        </a>
           <div className="denied-buttons">
             <button className="denied-btn-cancel" onClick={onClose}>Maybe Later</button>
             <button className="denied-btn-upgrade" onClick={onUpgrade}>Upgrade to PRO</button>

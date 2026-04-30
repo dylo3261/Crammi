@@ -13,6 +13,7 @@ export default function LandingPage() {
   const hamburgerRef = useRef(null);
   const [activeInstruction, setActiveInstruction] = useState(1);
 
+  
   useEffect(() => {
     // Small delay ensures smooth animation start
     const timer = setTimeout(() => {
