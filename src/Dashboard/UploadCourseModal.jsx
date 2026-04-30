@@ -408,11 +408,7 @@ export default function UploadCourseModal({ isOpen, close, userProfile,setIsLimi
           <h1 className="course-file-text">
             Upload PDFs
           </h1>
-          {userProfile?.courseUploadsLeft !== -1 && (
-            <h4 className="course-uploads-remaining">
-              Monthly Uploads Left: {userProfile?.courseUploadsLeft}
-            </h4>
-          )}       
+     
           <h4 className="course-files-remaining">
             <span><span className="course-asterisk">★</span> Pages Remaining: {remainingPages} / {MAX_PAGES}</span>
           </h4>

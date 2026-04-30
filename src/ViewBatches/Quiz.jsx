@@ -811,6 +811,7 @@ export default function Quiz() {
         setQuizResults(results);
         setIsQuizStarted(false);
         setIsQuizScorePage(true);
+        window.scrollTo({ top: 0, behavior: 'instant' });
     };
 
     const handleReturnToStart = () => {

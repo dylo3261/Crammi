@@ -467,7 +467,11 @@
     height: 16px;
     width: 40%;
 }
-
+a.batch-card {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
 /* Mobile Responsive */
 @media screen and (max-width: 768px) {
     .batches-grid {

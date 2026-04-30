@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { fetchAuthSession } from 'aws-amplify/auth';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import "./BatchesSection.css";
 import LimitReached from "./limitReached";
 
@@ -48,30 +48,30 @@ export default function BatchesSection({
     }
 }, [batches, stuckBatches]);
 
-    const handleCardClick = (batchID, status, batchName, batchType) => {
-        if (status === 'COMPLETE') {
-            // Track when batch was opened with user-specific key
-            const key = userEmail ? `batch_${batchID}_lastOpened_${userEmail}` : `batch_${batchID}_lastOpened`;
-            localStorage.setItem(key, new Date().toISOString());
-            addToRecents({
-                id: batchID,
-                name: batchName,
-                type: batchType
-              });
-            if(batchType === 'Exams'){
-                navigate(`/exam/${batchID}`, { state: { batchName, userProfile } });
-            }
-            else if(batchType === 'Quizzes'){
-                navigate(`/quiz/${batchID}`, { state: { batchName, userProfile } });
-            }
-            else if(batchType === 'Flashcards'){
-                navigate(`/flashcards/${batchID}`, { state: { batchName, userProfile } });
-            }
-            else if(batchType === 'Course Mode'){
-                navigate(`/course/${batchID}`, { state: { batchName, userProfile } });
-            }
-        }
-    };
+    // const handleCardClick = (batchID, status, batchName, batchType) => { if cards are usenavigate
+    //     if (status === 'COMPLETE') {
+    //         // Track when batch was opened with user-specific key
+    //         const key = userEmail ? `batch_${batchID}_lastOpened_${userEmail}` : `batch_${batchID}_lastOpened`;
+    //         localStorage.setItem(key, new Date().toISOString());
+    //         addToRecents({
+    //             id: batchID,
+    //             name: batchName,
+    //             type: batchType
+    //           });
+    //         if(batchType === 'Exams'){
+    //             navigate(`/exam/${batchID}`, { state: { batchName, userProfile } });
+    //         }
+    //         else if(batchType === 'Quizzes'){
+    //             navigate(`/quiz/${batchID}`, { state: { batchName, userProfile } });
+    //         }
+    //         else if(batchType === 'Flashcards'){
+    //             navigate(`/flashcards/${batchID}`, { state: { batchName, userProfile } });
+    //         }
+    //         else if(batchType === 'Course Mode'){
+    //             navigate(`/course/${batchID}`, { state: { batchName, userProfile } });
+    //         }
+    //     }
+    // };
 
     const getTimeAgo = (timestamp) => {
         const now = new Date();
@@ -202,16 +202,19 @@ export default function BatchesSection({
 
     const handleMenuClick = (batchID, event) => {
         event.stopPropagation();
+        event.preventDefault();
         setOpenMenuId(prevId => prevId === batchID ? null : batchID);
     };
 
     const handleDelete = async (batchID, event, batchName, batchType) => {
         event.stopPropagation();
+        event.preventDefault();
         await deleteBatch(batchID, batchName, batchType);
     };
 
     const handleRename = (batchID, currentName, event) => {
         event.stopPropagation();
+        event.preventDefault();
         setEditingBatchId(batchID);
         setEditingName(currentName);
         setOpenMenuId(null);
@@ -525,68 +528,100 @@ export default function BatchesSection({
         </div>
     );
 
-    const renderBatchCard = (batch) => (
-        <div 
-            key={batch.batchID} 
-            className={`batch-card ${batch.status === 'PENDING' ? 'processing' : ''} ${batch.status === 'FAILED' ? 'failed' : ''} ${stuckBatches.has(batch.batchID) ? 'stuck' : ''}`} 
-            onClick={() => handleCardClick(batch.batchID, batch.status, batch.batchName, batch.type)}
-        >
-            <div className="batch-header">
-                <span className="batch-type-badge">{batch.type}</span>
-                <div className="batch-menu-container">
-                    
-                    <button 
-                        className="batch-menu" 
-                        onClick={(e) => handleMenuClick(batch.batchID, e)}
-                        style={{display: batch.status === "PENDING" ? 'none' : 'flex'}}
-                    >
-                        ⋯
-                    </button>
-                    {openMenuId === batch.batchID && (
-                        <div className="batch-dropdown-menu" ref={menuRef}>
-                            <button 
-                                className="dropdown-item"
-                                onClick={(e) => handleRename(batch.batchID, batch.batchName, e)}
-                            >
-                                Rename
-                            </button>
-                            <button 
-                                className="dropdown-item delete"
-                                onClick={(e) => handleDelete(batch.batchID, e, batch.batchName, batch.type)}
-                            >
-                                Delete
-                            </button>
-                        </div>
-                    )}
+    const renderBatchCard = (batch) => {
+        const isComplete = batch.status === 'COMPLETE';
+        const path = (() => {
+            if (batch.type === 'Exams') return `/exam/${batch.batchID}`;
+            if (batch.type === 'Quizzes') return `/quiz/${batch.batchID}`;
+            if (batch.type === 'Flashcards') return `/flashcards/${batch.batchID}`;
+            if (batch.type === 'Course Mode') return `/course/${batch.batchID}`;
+            return null;
+        })();
+    
+        const cardContents = (
+            <>
+                <div className="batch-header">
+                    <span className="batch-type-badge">{batch.type}</span>
+                    <div className="batch-menu-container">
+                        <button 
+                            className="batch-menu" 
+                            onClick={(e) => handleMenuClick(batch.batchID, e)}
+                            style={{display: batch.status === "PENDING" ? 'none' : 'flex'}}
+                        >
+                            ⋯
+                        </button>
+                        {openMenuId === batch.batchID && (
+                            <div className="batch-dropdown-menu" ref={menuRef}>
+                                <button 
+                                    className="dropdown-item"
+                                    onClick={(e) => handleRename(batch.batchID, batch.batchName, e)}
+                                >
+                                    Rename
+                                </button>
+                                <button 
+                                    className="dropdown-item delete"
+                                    onClick={(e) => handleDelete(batch.batchID, e, batch.batchName, batch.type)}
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
+                <h3 className="batch-title">
+                    {editingBatchId === batch.batchID ? (
+                        <input
+                            ref={inputRef}
+                            type="text"
+                            className="batch-title-input"
+                            value={editingName}
+                            onChange={(e) => setEditingName(e.target.value)}
+                            onBlur={() => handleRenameSubmit(batch.batchID, batch.type)}
+                            onKeyDown={(e) => handleRenameKeyDown(e, batch.batchID, batch.type)}
+                            onClick={(e) => e.stopPropagation()}
+                        />
+                    ) : (
+                        batch.batchName
+                    )}
+                </h3>
+                <p className="batch-description">{batch.description}</p>
+                <p className="batch-timestamp" style={{
+                    color: batch.status === 'FAILED' ? '#d32f2f' : 
+                           (batch.status === 'PENDING' && stuckBatches.has(batch.batchID)) ? '#ff9800' :
+                           batch.status === 'PENDING' ? '#f57c00' : '#5f6368'
+                }}>
+                    {getStatusDisplay(batch)}
+                </p>
+            </>
+        );
+    
+        if (isComplete && path) {
+            return (
+                <Link
+                    key={batch.batchID}
+                    to={`${path}?batchName=${encodeURIComponent(batch.batchName)}`}
+                    state={{ batchName: batch.batchName, userProfile }}
+                    className={`batch-card ${stuckBatches.has(batch.batchID) ? 'stuck' : ''}`}
+                    onClick={() => {
+                        const key = userEmail ? `batch_${batch.batchID}_lastOpened_${userEmail}` : `batch_${batch.batchID}_lastOpened`;
+                        localStorage.setItem(key, new Date().toISOString());
+                        addToRecents({ id: batch.batchID, name: batch.batchName, type: batch.type });
+                    }}
+                >
+                    {cardContents}
+                </Link>
+            );
+        }
+    
+        return (
+            <div
+                key={batch.batchID}
+                className={`batch-card ${batch.status === 'PENDING' ? 'processing' : ''} ${batch.status === 'FAILED' ? 'failed' : ''} ${stuckBatches.has(batch.batchID) ? 'stuck' : ''}`}
+            >
+                {cardContents}
             </div>
-            <h3 className="batch-title">
-                {editingBatchId === batch.batchID ? (
-                    <input
-                        ref={inputRef}
-                        type="text"
-                        className="batch-title-input"
-                        value={editingName}
-                        onChange={(e) => setEditingName(e.target.value)}
-                        onBlur={() => handleRenameSubmit(batch.batchID, batch.type)}
-                        onKeyDown={(e) => handleRenameKeyDown(e, batch.batchID, batch.type)}
-                        onClick={(e) => e.stopPropagation()}
-                    />
-                ) : (
-                    batch.batchName
-                )}
-            </h3>
-            <p className="batch-description">{batch.description}</p>
-            <p className="batch-timestamp" style={{
-                color: batch.status === 'FAILED' ? '#d32f2f' : 
-                       (batch.status === 'PENDING' && stuckBatches.has(batch.batchID)) ? '#ff9800' :
-                       batch.status === 'PENDING' ? '#f57c00' : '#5f6368'
-            }}>
-                {getStatusDisplay(batch)}
-            </p>
-        </div>
-    );
-
+        );
+    };
     return(
         <>
         <div className="mainSection">
