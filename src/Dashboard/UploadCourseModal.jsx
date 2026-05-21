@@ -22,7 +22,6 @@ export default function UploadCourseModal({ isOpen, close, userProfile,setIsLimi
   const fileInputRef = useRef(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const pdfjsLib = useRef(null);
-  const [showUpgradePopup, setShowUpgradePopup] = useState(false);
   const navigate = useNavigate();
 
 
@@ -379,20 +378,24 @@ export default function UploadCourseModal({ isOpen, close, userProfile,setIsLimi
           setIsUploadingPhotos(false); // Hide loading on error
         });
     }
-    else if (userProfile.accountTier !== 'pro') {
-      setShowUpgradePopup(true);
-    }
   };
-  const handleUpgrade = () => {
-    setShowUpgradePopup(false);
-    handleClose();
-    navigate('/upgrade')
-  };
+  
   return (
     <>
     <div className='uploadModalOverlay' style={{display: isUploadingPhotos ? 'flex' : 'none'}}>
           <StudyLoader/>
         </div>
+         {/* Show denied popup directly if not pro, skip the upload modal entirely */}
+    {isOpen && userProfile.accountTier !== 'pro' ? (
+      <CourseModeDenied
+        isOpen={true}
+        onClose={close}
+        onUpgrade={() => {
+          close();
+          navigate('/upgrade');
+        }}
+      />
+    ) : (
     <div
       className="course-modal-overlay"
       style={{ display: isOpen ? "flex" : "none" }}
@@ -517,15 +520,9 @@ export default function UploadCourseModal({ isOpen, close, userProfile,setIsLimi
           )}
         </div>
       </div>
-      <CourseModeDenied 
-      isOpen={showUpgradePopup}
-      onClose={() => {
-        setShowUpgradePopup(false);
-        handleClose();
-      }}
-      onUpgrade={handleUpgrade}
-    />
+      
     </div>
+    )}
     </>
   );
 }

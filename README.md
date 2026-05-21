@@ -11,6 +11,7 @@ A React Native (Expo) mobile frontend
 AWS cloud infrastructure for uploads, authentication, and data storage
 
 Python services deployed as AWS Lambda functions for OCR and NLP
+![Architecture Diagram](architecture/architecture.png)
 
 ## Features
 PDF Processing
