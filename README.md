@@ -1,6 +1,8 @@
 # Crammi
 
-Crammi is an open-source study tool that converts PDFs, uploaded notes, and handwritten notes (via mobile camera) into structured flashcards and quizzes. It includes a React Native mobile application and an AWS-based backend using Python microservices for OCR, text extraction, and NLP-driven flashcard generation.
+Crammi is a study tool that converts PDFs, uploaded notes, and handwritten notes (via mobile camera) into structured flashcards and quizzes. It includes a React Native mobile application and an AWS-based backend using Python microservices for OCR, text extraction, and NLP-driven flashcard generation.
+
+*backend logic has been separated from this repo for security.
 
 ## Overview
 
